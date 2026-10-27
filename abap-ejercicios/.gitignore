@@ -1,0 +1,9 @@
+*.ics
+*.pyc
+__pycache__/
+.DS_Store
+_site/
+.jekyll-cache/
+Gemfile.lock
+*.token
+.env

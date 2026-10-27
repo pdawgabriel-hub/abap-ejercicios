@@ -1,0 +1,21 @@
+title: Apuntes SAP ABAP Cloud
+description: Apuntes y ejercicios de ABAP Cloud y RAP
+lang: es
+remote_theme: just-the-docs/just-the-docs
+url: https://pdawgabriel-hub.github.io
+baseurl: /abap-ejercicios
+plugins:
+  - jekyll-remote-theme
+  - jekyll-relative-links
+relative_links:
+  enabled: true
+  collections: false
+search_enabled: true
+heading_anchors: true
+color_scheme: light
+aux_links:
+  "Repositorio en GitHub":
+    - "https://github.com/pdawgabriel-hub/abap-ejercicios"
+exclude:
+  - Gemfile
+  - Gemfile.lock
