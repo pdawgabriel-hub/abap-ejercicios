@@ -1,11 +1,11 @@
 ---
-title: "7. Proyecto gestion_bd"
+title: "7. Proyecto ERP de Obras y Reformas"
 nav_order: 8
 has_children: true
 permalink: /bloque_B7.html
 ---
 
-# 7. Proyecto gestion_bd
+# 7. Proyecto ERP de Obras y Reformas
 
 El módulo de Odoo migrado a SAP: mapa de entidades, fases, lógica y presentación.
 

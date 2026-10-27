@@ -7,7 +7,7 @@ nav_order: 9
 # 1.9. Proyecto: del modelo de Odoo a tablas ABAP
 
 {% raw %}
-Este es el primer paso de tu proyecto: **traducir tu modelo de Odoo a tablas de base de datos ABAP**, sin escribir todavía código en el sistema. El resultado será el germen de `docs/diseno.md` en el repositorio `gestion-bd-sap`.
+Este es el primer paso de tu proyecto: **traducir tu modelo de Odoo a tablas de base de datos ABAP**, sin escribir todavía código en el sistema. El resultado será el germen de `docs/diseno.md` en el repositorio `erp-obras-reformas-sap`.
 
 ## Qué tienes que entregar
 
@@ -42,7 +42,7 @@ Respeta la [convención de nombres](B_nombres.html): tablas de 16 caracteres com
 
 1. **Diseño del núcleo.** Entrega el diseño de las 4 entidades: campos, tipos, claves y relaciones.
 2. **DDL de Clientes.** Escribe el DDL de la tabla de Clientes con la sintaxis de [2.1](2_1_tablas.html) (aunque aún no la actives).
-3. **Subida al repo.** Guarda el diseño en `docs/diseno.md` del repositorio `gestion-bd-sap` y pásaselo a Claude para revisarlo antes de tocar el sistema.
+3. **Subida al repo.** Guarda el diseño en `docs/diseno.md` del repositorio `erp-obras-reformas-sap` y pásaselo a Claude para revisarlo antes de tocar el sistema.
 
 
 ---

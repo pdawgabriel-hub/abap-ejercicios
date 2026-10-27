@@ -11,7 +11,7 @@ El código ABAP vive en el sistema, no en ficheros. **abapGit** lo serializa y l
 
 ## Preparación
 
-1. Crea en GitHub el repositorio vacío (`abap-ejercicios` o `gestion-bd-sap`).
+1. Crea en GitHub el repositorio vacío (`abap-ejercicios` o `erp-obras-reformas-sap`).
 2. Crea un **Personal Access Token** con permiso de escritura sobre repositorios (*Settings → Developer settings → Personal access tokens*). Guárdalo en un gestor de contraseñas. **Nunca lo subas.**
 
 ## Primer enlace

@@ -1,6 +1,6 @@
 ---
 title: "7.1. Mapa de entidades Odoo a SAP"
-parent: "7. Proyecto gestion_bd"
+parent: "7. Proyecto ERP de Obras y Reformas"
 nav_order: 1
 ---
 

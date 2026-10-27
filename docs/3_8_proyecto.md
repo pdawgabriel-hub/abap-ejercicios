@@ -7,7 +7,7 @@ nav_order: 8
 # 3.8. Proyecto: comportamiento de Clientes y Obras
 
 {% raw %}
-Aplica el bloque 3 a las dos primeras entidades de `gestion_bd`.
+Aplica el bloque 3 a las dos primeras entidades del ERP de Obras y Reformas.
 
 ## Criterio de «listo»
 

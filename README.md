@@ -3,7 +3,7 @@
 Apuntes y ejercicios de **SAP ABAP Cloud y RAP** (SAP BTP ABAP Environment, trial gratuito).
 
 - Apuntes: https://pdawgabriel-hub.github.io/abap-ejercicios/
-- Proyecto asociado: https://github.com/pdawgabriel-hub/gestion-bd-sap
+- Proyecto asociado: https://github.com/pdawgabriel-hub/erp-obras-reformas-sap
 
 ## Contenido
 

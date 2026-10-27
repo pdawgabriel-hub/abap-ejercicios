@@ -6,9 +6,9 @@ nav_order: 0
 # Apuntes de SAP ABAP Cloud y RAP
 
 {% raw %}
-**Apuntes de SAP ABAP Cloud y RAP** para aprender el lenguaje y portar el módulo `gestion_bd` de Odoo a SAP. Teoría breve, código que puedes ejecutar y ejercicios con comprobación automática cuando se puede.
+**Apuntes de SAP ABAP Cloud y RAP** para aprender el lenguaje construyendo el **ERP de Obras y Reformas**: el port a SAP del módulo `gestion_bd` de Odoo. Teoría breve, código que puedes ejecutar y ejercicios con comprobación automática cuando se puede.
 
-> **Estructura por bloques.** Cada bloque agrupa unidades con teoría, ejemplos y ejercicios, y termina con una unidad de **Proyecto** donde aplicas lo aprendido a `gestion_bd`. Las unidades con `ABAP Unit` incluyen una comprobación automática opcional.
+> **Estructura por bloques.** Cada bloque agrupa unidades con teoría, ejemplos y ejercicios, y termina con una unidad de **Proyecto** donde aplicas lo aprendido al ERP de Obras y Reformas. Las unidades con `ABAP Unit` incluyen una comprobación automática opcional.
 
 > **Aviso importante.** El código de estos apuntes se ha escrito siguiendo la documentación de SAP, pero **no se ha podido compilar contra un sistema real**. Si algo da error al activar, copia el mensaje exacto: es parte del aprendizaje.
 
@@ -17,7 +17,7 @@ nav_order: 0
 | Repositorio | Contiene | Se sincroniza con |
 |---|---|---|
 | `abap-ejercicios` | Estos apuntes (`docs/`), los esqueletos y los tests de los ejercicios, tus soluciones | El paquete `ZEJ` (carpeta `src/`) |
-| `gestion-bd-sap` | El proyecto: diseño, README, código generado | El paquete `ZGOR` (carpeta `src/`) |
+| `erp-obras-reformas-sap` | El proyecto: diseño, README, código generado | El paquete `ZGOR` (carpeta `src/`) |
 
 ## La regla de los 90 días
 

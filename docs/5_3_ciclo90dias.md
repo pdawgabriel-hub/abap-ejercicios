@@ -12,7 +12,7 @@ El trial de SAP BTP dura **90 días desde el registro** y al final se elimina la
 ## Estrategia
 
 - El **GitHub es la copia de seguridad**; el sistema es desechable.
-- Un repositorio por tipo de trabajo: ejercicios (`abap-ejercicios`) y proyecto (`gestion-bd-sap`).
+- Un repositorio por tipo de trabajo: ejercicios (`abap-ejercicios`) y proyecto (`erp-obras-reformas-sap`).
 - Datos de prueba reproducibles con `herramientas/generar_carga.py`.
 
 ## Calendario

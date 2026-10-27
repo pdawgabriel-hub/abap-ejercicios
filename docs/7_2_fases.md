@@ -1,6 +1,6 @@
 ---
 title: "7.2. Fases y checklist"
-parent: "7. Proyecto gestion_bd"
+parent: "7. Proyecto ERP de Obras y Reformas"
 nav_order: 2
 ---
 

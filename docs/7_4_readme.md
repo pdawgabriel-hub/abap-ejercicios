@@ -1,6 +1,6 @@
 ---
 title: "7.4. README y explicación en 5 minutos"
-parent: "7. Proyecto gestion_bd"
+parent: "7. Proyecto ERP de Obras y Reformas"
 nav_order: 4
 ---
 

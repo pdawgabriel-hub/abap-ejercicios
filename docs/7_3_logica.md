@@ -1,6 +1,6 @@
 ---
 title: "7.3. Lógica de negocio por entidad"
-parent: "7. Proyecto gestion_bd"
+parent: "7. Proyecto ERP de Obras y Reformas"
 nav_order: 3
 ---
 

@@ -1,7 +1,7 @@
 title: Apuntes SAP ABAP Cloud
 description: Apuntes y ejercicios de ABAP Cloud y RAP
 lang: es
-remote_theme: just-the-docs/just-the-docs
+remote_theme: just-the-docs/just-the-docs@v0.10.0
 url: https://pdawgabriel-hub.github.io
 baseurl: /abap-ejercicios
 plugins:

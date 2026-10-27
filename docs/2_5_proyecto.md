@@ -7,7 +7,7 @@ nav_order: 5
 # 2.5. Proyecto: CDS de Clientes y Obras
 
 {% raw %}
-Pon en práctica el bloque 2 con las dos primeras entidades de `gestion_bd`.
+Pon en práctica el bloque 2 con las dos primeras entidades del ERP de Obras y Reformas.
 
 ## Qué cambiar al clonar el ejemplo RuedaLibre
 
