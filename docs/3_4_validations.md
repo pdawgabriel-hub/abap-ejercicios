@@ -177,6 +177,8 @@ Si el guardado falla, no se escribe nada en la base de datos: puedes comprobarlo
 
 `new_message_with_text` sirve para el portfolio. En un proyecto real, los textos van en una **clase de mensajes** (objeto *Message Class* en ADT) y la excepción implementa `IF_T100_MESSAGE`, para poder traducirlos sin tocar el código. Si en la empresa ves `%msg = NEW zcx_...( textid = ... )`, es eso. El cambio desde nuestro diseño es pequeño: solo cambia cómo se construye la excepción.
 
+> **Código completo del taller:** [zbp_i_tlpresupuesto](./materiales/taller/src/bus/zbp_i_tlpresupuesto.clas.locals_imp.abap) (y validations con `ASSIGN COMPONENT` en [zbp_i_tltitular](./materiales/taller/src/bus/zbp_i_tltitular.clas.locals_imp.abap)). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Trabajas sobre objetos que ya existen: las BDEF de 3.1 y sus clases de comportamiento (paquete `ZGOR_BUS`), y la clase de consola `ZCL_GOR_EML_DEMO` (paquete `ZGOR_TEST`, de 3.2). No hay que crear objetos nuevos.

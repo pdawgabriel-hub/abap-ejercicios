@@ -1,0 +1,79 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Presupuesto', typeNamePlural: 'Presupuestos',
+                  title: { value: 'PresupuestoRef' }, description: { value: 'TitularNombre' } }
+annotate entity ZC_TlPresupuesto with
+{
+  @UI.facet: [
+    { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Datos', position: 10 },
+    { id: 'Partidas', purpose: #STANDARD, type: #LINEITEM_REFERENCE, targetElement: '_Partidas',
+      label: 'Partidas', position: 20 },
+    { id: 'Previstos', purpose: #STANDARD, type: #LINEITEM_REFERENCE, targetElement: '_Previstos',
+      label: 'Distribuidores previstos', position: 30 },
+    { id: 'Notas', purpose: #STANDARD, type: #LINEITEM_REFERENCE, targetElement: '_Notas',
+      label: 'Notas', position: 40 },
+    { id: 'Avisos', purpose: #STANDARD, type: #LINEITEM_REFERENCE, targetElement: '_Avisos',
+      label: 'Avisos', position: 50 },
+    { id: 'Fotos', purpose: #STANDARD, type: #LINEITEM_REFERENCE, targetElement: '_Fotos',
+      label: 'Fotos y adjuntos', position: 60 }
+  ]
+
+  @UI.hidden: true
+  PresupuestoUUID;
+
+  // En la lista: la columna y, ademas, un boton en la barra
+  @UI.lineItem: [ { position: 10, label: 'Presupuesto' },
+                  { type: #FOR_ACTION, dataAction: 'aceptar', label: 'Aceptar' } ]
+  // En la pagina de detalle: los botones
+  @UI.identification: [ { position: 10, label: 'Presupuesto' },
+                        { type: #FOR_ACTION, dataAction: 'aceptar', label: 'Aceptar' },
+                        { type: #FOR_ACTION, dataAction: 'volverABorrador', label: 'Volver a borrador' },
+                        { type: #FOR_ACTION, dataAction: 'vincularAOrden', label: 'Vincular a orden' },
+                        { type: #FOR_ACTION, dataAction: 'exportarPresupuesto', label: 'Exportar a Excel' } ]
+  @UI.selectionField: [ { position: 10 } ]
+  PresupuestoRef;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  @UI.selectionField: [ { position: 20 } ]
+  Fecha;
+
+  @UI.lineItem: [ { position: 30, label: 'Titular' } ]
+  @UI.identification: [ { position: 30, label: 'Titular' } ]
+  @UI.selectionField: [ { position: 30 } ]
+  @UI.textArrangement: #TEXT_ONLY
+  TitularUUID;
+
+  @UI.identification: [ { position: 40, label: 'Orden' } ]
+  @UI.textArrangement: #TEXT_ONLY
+  OrdenUUID;
+
+  @UI.identification: [ { position: 50, label: 'Documento del titular' } ]
+  TitularDocumento;
+
+  @UI.identification: [ { position: 60 } ]
+  Impuesto;
+
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 70 } ]
+  @UI.selectionField: [ { position: 40 } ]
+  Situacion;
+
+  @UI.identification: [ { position: 80 } ]
+  Neto;
+
+  @UI.identification: [ { position: 90 } ]
+  Cuota;
+
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.identification: [ { position: 100 } ]
+  Importe;
+
+  @UI.hidden: true
+  Moneda;
+
+  @UI.hidden: true
+  TitularNombre;
+
+  @UI.hidden: true
+  OrdenRef;
+}

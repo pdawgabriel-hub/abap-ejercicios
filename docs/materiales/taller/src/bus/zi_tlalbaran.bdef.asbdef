@@ -1,0 +1,52 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed implementation in class zbp_i_tlalbaran unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlAlbaran alias Albaran
+persistent table ztl_alb
+draft table ztl_alb_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) OrdenUUID, DistribuidorUUID, ImporteNeto;
+
+  // 3.4: el importe neto tiene que ser mayor que 0
+  validation validarImporte on save { create; field ImporteNeto; }
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validarImporte;
+  }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) AlbaranUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_alb corresponding
+  {
+    AlbaranUUID        = albaran_uuid;
+    OrdenUUID          = orden_uuid;
+    DistribuidorUUID   = distribuidor_uuid;
+    Fecha              = fecha;
+    ImporteNeto        = importe_neto;
+    Liquidado          = liquidado;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

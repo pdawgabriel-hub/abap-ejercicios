@@ -1,0 +1,55 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed implementation in class zbp_i_tldistribuidor unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlDistribuidor alias Distribuidor
+persistent table ztl_dis
+draft table ztl_dis_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) DistribuidorRef, Bruto, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Nombre;
+
+  // 3.3: bruto = neto + impuesto
+  determination calcularBruto on modify { create; field Neto, Impuesto; }
+  // 3.4: impuesto entre 0 y 100
+  validation validarImpuesto on save { create; field Impuesto; }
+  determination numerar on save { create; }
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validarImpuesto;
+  }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) DistribuidorUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_dis corresponding
+  {
+    DistribuidorUUID   = distribuidor_uuid;
+    DistribuidorRef    = distribuidor_ref;
+    Nombre             = nombre;
+    Neto               = neto;
+    Impuesto           = impuesto;
+    Bruto              = bruto;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

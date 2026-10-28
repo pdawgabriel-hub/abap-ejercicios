@@ -77,6 +77,8 @@ Después, `componer_codigo( iv_serie = `TIT` iv_numero = CONV #( lv_numero ) )` 
 
 > **Variante poco verificada.** El nombre exacto de los parámetros y excepciones de la API, y cómo se mantienen los intervalos del rango, dependen de la versión del sistema. Antes de usarla, mira la documentación de `CL_NUMBERRANGE_RUNTIME` con **F2** en Eclipse. Para el portfolio, el máximo + 1 es suficiente si lo explicas en el README.
 
+> **Código completo del taller:** el método `numerar` de cada clase de comportamiento, por ejemplo [zbp_i_tltitular](./materiales/taller/src/bus/zbp_i_tltitular.clas.locals_imp.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Se amplían tu `ZCL_GOR_REGLAS` (y su pestaña de tests) y tus BDEF y clases de los ocho BO con código.
@@ -110,7 +112,7 @@ Se amplían tu `ZCL_GOR_REGLAS` (y su pestaña de tests) y tus BDEF y clases de 
     Como el método es casi igual en los ocho, piensa si merece la pena sacar el `SELECT MAX` a un método de una clase auxiliar. Si lo haces, ten en cuenta que cada uno lee una tabla distinta.
 4. **La obra y su ficha.**
     - **Dónde:** `ZCL_GOR_EML_DEMO`, bloque `" 3.7 Codigos`.
-    - **Qué hace:** crea una obra con EML, guarda y lee `ObraId, \_Gasto-GastoId` de `zi_gorobra` para esa obra.
+    - **Qué hace:** crea una obra con EML, guarda y lee `ObraId, \_Gasto-GastoId AS GastoId` de `zi_gorobra` para esa obra.
     - **Comprueba:** la obra tiene `OBR0005` **y** su ficha de gastos `GAS0005`: la ficha la creó una determination *on modify* de la obra (3.3), y su código, la determination *on save* del gasto.
 5. **Investiga.** En tu ERP, ¿qué pasa con los códigos si borras el cliente `CLI0007` y creas otro? ¿Y si borras `CLI0005`? Compáralo con lo que hace `ir.sequence` en Odoo. Anota la diferencia en `diseno.md`, junto con el límite de varios usuarios, para el README.
 

@@ -1,0 +1,17 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Mecanico', typeNamePlural: 'Ranking de mecanicos', title: { value: 'MecanicoUUID' } }
+// Top 5 por euros: ordenada de mas a menos y limitada a 5 filas
+@UI.presentationVariant: [ { sortOrder: [ { by: 'Euros', direction: #DESC } ], maxItems: 5 } ]
+annotate entity ZI_TlKpiMecanicos with
+{
+  @UI.lineItem: [ { position: 10, label: 'Mecanico' } ]
+  MecanicoUUID;
+  // El periodo se elige filtrando por dia
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  Dia;
+  @UI.lineItem: [ { position: 30, label: 'Horas' } ]
+  Tiempo;
+  @UI.lineItem: [ { position: 40 } ]
+  Euros;
+}

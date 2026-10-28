@@ -201,7 +201,9 @@ Esto escribe con SQL en tablas de **otros** BO, saltándose su comportamiento. E
 - **Funciona sin dejar números atrasados**: la mano de obra, los costes de la orden… se calculan al leer (2.4), así que no hay nada que recalcular. En tu ERP, compáralo con el motivo por el que Odoo tenía que borrar por el ORM (§3.5).
 - **Limitaciones**: el ATC (5.1) avisará de que se modifican tablas ajenas; si alguien tuviera un **borrador** abierto de una de esas jornadas, quedaría huérfano; y la fecha de modificación de los presupuestos no cambia. Para el volumen de un taller (o de una empresa de reformas), es aceptable.
 
-En 3.6, el guardado adicional tendrá que borrar también los avisos y fotos de las jornadas, albaranes y facturas.
+En 3.6, la orden tendrá además notas, avisos y fotos: esas no hay que borrarlas aquí, porque son hijas de su composición y se borran con ella.
+
+> **Código completo del taller:** [BDEF del presupuesto](./materiales/taller/src/bus/zi_tlpresupuesto.bdef.asbdef), [sus acciones](./materiales/taller/src/bus/zbp_i_tlpresupuesto.clas.locals_imp.abap) y el borrado de la orden en [zbp_i_tlorden](./materiales/taller/src/bus/zbp_i_tlorden.clas.locals_imp.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 
 ## Preparación del entorno de trabajo
 

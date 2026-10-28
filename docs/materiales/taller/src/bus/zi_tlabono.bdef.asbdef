@@ -1,0 +1,55 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed with additional save implementation in class zbp_i_tlabono unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlAbono alias Abono
+persistent table ztl_abo
+draft table ztl_abo_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) AbonoRef, TitularUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) OrdenUUID, CantidadAbonada;
+
+  // El titular del abono es el de su orden
+  determination titularDeOrden on modify { create; field OrdenUUID; }
+  // 3.7: ABO0001...
+  determination numerar on save { create; }
+
+  // 6.7: el abono anuncia que se ha registrado
+  event AbonoRegistrado parameter ZA_TlAbonoRegistrado;
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) AbonoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_abo corresponding
+  {
+    AbonoUUID          = abono_uuid;
+    AbonoRef           = abono_ref;
+    OrdenUUID          = orden_uuid;
+    TitularUUID        = titular_uuid;
+    Fecha              = fecha;
+    CantidadAbonada    = cantidad_abonada;
+    MedioPago          = medio_pago;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

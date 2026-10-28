@@ -1,0 +1,39 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Registro de jornada', typeNamePlural: 'Registros de jornada',
+                  title: { value: 'Trabajo' } }
+annotate entity ZC_TlJornada with
+{
+  // Secciones de la pagina de detalle
+  @UI.facet: [
+    { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Datos', position: 10 },
+    { id: 'Tramos', purpose: #STANDARD, type: #LINEITEM_REFERENCE, targetElement: '_Tramos', label: 'Tramos', position: 20 }
+  ]
+
+  @UI.hidden: true
+  JornadaUUID;
+
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  @UI.textArrangement: #TEXT_ONLY
+  OrdenUUID;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  Dia;
+
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 30 } ]
+  Trabajo;
+
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 40 } ]
+  TiempoTotal;
+
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.identification: [ { position: 50 } ]
+  CosteTotal;
+
+  @UI.hidden: true
+  OrdenRef;
+}

@@ -1,0 +1,29 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Distribuidor previsto', typeNamePlural: 'Distribuidores previstos',
+                  title: { value: 'DistribuidorNombre' } }
+annotate entity ZC_TlPresuDis with
+{
+  // Secciones de la pagina de detalle
+  @UI.facet: [
+    { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Datos', position: 10 }
+  ]
+
+  @UI.hidden: true
+  PrevistoUUID;
+
+  @UI.hidden: true
+  PresupuestoUUID;
+
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  @UI.textArrangement: #TEXT_ONLY
+  DistribuidorUUID;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  Observacion;
+
+  @UI.hidden: true
+  DistribuidorNombre;
+}

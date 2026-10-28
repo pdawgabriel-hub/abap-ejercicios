@@ -1,0 +1,23 @@
+@Metadata.layer: #CORE
+annotate entity ZI_TlOrdenResumen with
+{
+  // Grupo 'Importes': los campos que pinta la pestana Hoja de costes, en este orden
+  @UI.fieldGroup: [ { qualifier: 'Importes', position: 10 } ]
+  Importe;
+  @UI.fieldGroup: [ { qualifier: 'Importes', position: 20 } ]
+  Costes;
+  @UI.fieldGroup: [ { qualifier: 'Importes', position: 30 } ]
+  Abonado;
+  @UI.fieldGroup: [ { qualifier: 'Importes', position: 40 } ]
+  Rendimiento;
+  @UI.fieldGroup: [ { qualifier: 'Importes', position: 50 } ]
+  SaldoPendiente;
+
+  // Valor destacado para la cabecera, con su color
+  @UI.dataPoint: { qualifier: 'Semaforo', title: 'Semaforo', criticality: 'SemaforoCriticality' }
+  @UI.fieldGroup: [ { qualifier: 'Importes', position: 60, criticality: 'SemaforoCriticality' } ]
+  Semaforo;
+
+  @UI.hidden: true                        // solo sirve para el color
+  SemaforoCriticality;
+}

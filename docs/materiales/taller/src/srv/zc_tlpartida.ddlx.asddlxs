@@ -1,0 +1,32 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Partida', typeNamePlural: 'Partidas',
+                  title: { value: 'Concepto' } }
+annotate entity ZC_TlPartida with
+{
+  // Secciones de la pagina de detalle
+  @UI.facet: [
+    { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Datos', position: 10 }
+  ]
+
+  @UI.hidden: true
+  PartidaUUID;
+
+  @UI.hidden: true
+  PresupuestoUUID;
+
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  Concepto;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  Cantidad;
+
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 30 } ]
+  PrecioUnitario;
+
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 40 } ]
+  ImportePartida;
+}

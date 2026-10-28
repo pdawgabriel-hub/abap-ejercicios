@@ -1,0 +1,15 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Semaforo', typeNamePlural: 'Ordenes por semaforo', title: { value: 'Semaforo' } }
+// Lista ordenada: primero los colores con mas dinero pendiente
+@UI.presentationVariant: [ { sortOrder: [ { by: 'Pendiente', direction: #DESC } ] } ]
+annotate entity ZI_TlKpiSemaforo with
+{
+  @UI.lineItem: [ { position: 10, criticality: 'SemaforoCriticality' } ]
+  Semaforo;
+  @UI.hidden: true
+  SemaforoCriticality;
+  @UI.lineItem: [ { position: 20, label: 'Ordenes' } ]
+  Ordenes;
+  @UI.lineItem: [ { position: 30, label: 'Pendiente de cobro' } ]
+  Pendiente;
+}

@@ -39,7 +39,7 @@ define root view entity ZC_TlOrden
       _HojaCostes : redirected to composition child ZC_TlHojaCostes,
       _Fotos      : redirected to composition child ZC_TlOrdenFoto,
       _Resumen,                               // solo lectura (2.4)
-      _Titular
+      _Titular : redirected to ZC_TlTitular   // a la proyeccion, que es la que expone el servicio
 }
 ```
 
@@ -100,6 +100,8 @@ define behavior for ZC_TlOrdenFoto alias Foto
 ## Orden de activación
 
 Una proyección depende de las de sus hijos y viceversa: actívalas **juntas** (selecciónalas en el *Project Explorer* y **Ctrl+Shift+F3**). Después, la BDEF de proyección. Si activas en otro orden verás errores de objeto inexistente que desaparecen al activar el resto.
+
+> **Código completo del taller:** [ZC_TlOrden](./materiales/taller/src/srv/zc_tlorden.ddls.asddls), [su BDEF de proyección](./materiales/taller/src/srv/zc_tlorden.bdef.asbdef) y las demás en [src/srv/](./materiales/taller/src/srv/). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 
 ## Preparación del entorno de trabajo
 

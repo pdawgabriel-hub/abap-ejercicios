@@ -1,0 +1,30 @@
+@Metadata.layer: #CORE
+// Las mas nuevas primero
+@UI.presentationVariant: [ { sortOrder: [ { by: 'CreatedAt', direction: #DESC } ] } ]
+@UI.headerInfo: { typeName: 'Aviso', typeNamePlural: 'Avisos',
+                  title: { value: 'Comentario' } }
+annotate entity ZC_TlPresuAviso with
+{
+  // Secciones de la pagina de detalle
+  @UI.facet: [
+    { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Datos', position: 10 }
+  ]
+
+  @UI.hidden: true
+  AvisoUUID;
+
+  @UI.hidden: true
+  PresupuestoUUID;
+
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  Comentario;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  CreatedBy;
+
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 30 } ]
+  CreatedAt;
+}

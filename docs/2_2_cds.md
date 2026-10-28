@@ -64,6 +64,8 @@ Con la vista abierta, **F8** abre el *Data Preview*: los datos de la vista tal c
 
 El Data Preview permite también filtrar, ordenar y, cuando haya associations (2.3), **navegar** de un registro a sus relacionados.
 
+> **Código completo del taller:** [ZI_TlTitular](./materiales/taller/src/cds/zi_tltitular.ddls.asddls) y las demás interface views en [src/cds/](./materiales/taller/src/cds/). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Todas las vistas van en `ZGOR_CDS`. Al terminar habrá una por tabla:

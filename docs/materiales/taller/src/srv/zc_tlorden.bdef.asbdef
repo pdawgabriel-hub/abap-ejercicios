@@ -1,0 +1,55 @@
+// Proyeccion: elige que partes del comportamiento de debajo usa la app
+projection;
+strict ( 2 );
+use draft;                       // la app trabaja con borradores
+use side effects;                // y publica los side effects de 3.3
+
+define behavior for ZC_TlOrden alias Orden
+{
+  use create;
+  use update;
+  use delete;
+
+  // Las acciones del borrador, una a una
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _HojaCostes { with draft; }
+  use association _Notas { create; with draft; }
+  use association _Avisos { create; with draft; }
+  use association _Fotos { create; with draft; }
+}
+
+define behavior for ZC_TlHojaCostes alias HojaCostes
+{
+  use update;
+
+  use association _Orden { with draft; }
+}
+
+define behavior for ZC_TlOrdenNota alias Nota
+{
+  use update;
+  use delete;
+
+  use association _Orden { with draft; }
+}
+
+define behavior for ZC_TlOrdenAviso alias Aviso
+{
+  use update;
+  use delete;
+
+  use association _Orden { with draft; }
+}
+
+define behavior for ZC_TlOrdenFoto alias Foto
+{
+  use update;
+  use delete;
+
+  use association _Orden { with draft; }
+}

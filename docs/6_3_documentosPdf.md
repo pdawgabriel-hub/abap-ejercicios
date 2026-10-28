@@ -64,6 +64,12 @@ Con la biblioteca **XCO** de ABAP Cloud se puede generar un fichero `.xlsx` y gu
 
 Los nombres de los métodos de XCO son largos y encadenados; si alguno no existe en tu versión, busca la clase `XCO_CP_XLSX` con **F2** y el ejemplo de la documentación de XCO.
 
+> **Código completo del taller:** el método `exportarPresupuesto` de [zbp_i_tlpresupuesto](./materiales/taller/src/bus/zbp_i_tlpresupuesto.clas.locals_imp.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
+## Preparación del entorno de trabajo
+
+Si usas la hoja de cálculo, la acción va en la BDEF y la clase del presupuesto (`ZGOR_BUS`) y el fichero se guarda en su lista de archivos de 3.6. Si usas el servicio de formularios, sigue su documentación.
+
 ## Ejercicios
 
 1. **Disponibilidad.** Averigua si tu trial tiene el servicio de formularios y anota lo que encuentres y dónde.

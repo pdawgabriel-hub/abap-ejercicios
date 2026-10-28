@@ -1,0 +1,36 @@
+# Comprueba el codigo del taller en cada push: sintaxis ABAP y CDS (abaplint) y coherencia de RAP
+name: Comprobar el taller
+
+on:
+  push:
+    paths:
+      - "docs/materiales/taller/**"
+      - "herramientas/**"
+  pull_request:
+  workflow_dispatch:
+
+jobs:
+  comprobar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Los XML de abapGit estan al dia
+        run: |
+          python3 herramientas/taller_abapgit.py
+          git diff --exit-code docs/materiales/taller/src
+
+      - name: abaplint (ABAP Cloud y CDS)
+        working-directory: docs/materiales/taller
+        run: npx --yes @abaplint/cli@2.120.91 abaplint.json
+
+      - name: Coherencia de RAP (BDEF, vistas, EML)
+        run: python3 herramientas/comprobar_rap.py

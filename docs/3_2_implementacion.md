@@ -126,6 +126,8 @@ La barra invertida de `\_Partidas` es parte de la sintaxis: indica que se navega
 | `IN LOCAL MODE` | Dentro de la clase de comportamiento: se saltan los permisos y los campos `readonly`. Es como el `sudo()` de Odoo para la lógica del propio BO |
 | `failed-titular`, `reported-titular` | Dentro de la lógica, las tablas donde se marca qué instancias fallan y con qué mensaje. El nombre es el alias en minúsculas |
 
+> **Código completo del taller:** [zbp_i_tltitular](./materiales/taller/src/bus/zbp_i_tltitular.clas.locals_imp.abap) y los ejemplos de EML en [ZCL_TL_EML_DEMO](./materiales/taller/src/test/zcl_tl_eml_demo.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Una clase `zbp_i_gor<raíz>` por BDEF, en `ZGOR_BUS`. La de pruebas de EML, en `ZGOR_TEST`:
@@ -174,7 +176,7 @@ ZGOR_TEST
 6. **Un presupuesto con línea.**
     - **Dónde:** `ZCL_GOR_EML_DEMO`, bloque `" 3.2 Presupuesto con linea`.
     - **Qué hace:** en **una sola** sentencia `MODIFY ENTITIES OF zi_gorpresupuesto`, crea un presupuesto para Elena con IVA 21 (`ENTITY Presupuesto CREATE ... %cid = 'P1'`) y, con `CREATE BY \_Lineas`, una línea de 10 uds a 100 € que apunta al presupuesto por su `%cid_ref = 'P1'`. Guarda con `COMMIT ENTITIES`.
-    - **Comprueba:** lee la línea con `SELECT FROM zi_gorpresulin FIELDS Uds, Precio, TotalLinea, \_Presupuesto-Total WHERE ...` (ruta de 2.3): 10 y 100, pero `TotalLinea` y `Total` siguen a **0**. Los calcularán tus *determinations* de 3.3.
+    - **Comprueba:** lee la línea con `SELECT FROM zi_gorpresulin FIELDS Uds, Precio, TotalLinea, \_Presupuesto-Total AS Total WHERE ...` (ruta de 2.3): 10 y 100, pero `TotalLinea` y `Total` siguen a **0**. Los calcularán tus *determinations* de 3.3.
 
 7. **Investiga.** Intenta cambiar con EML (sin `IN LOCAL MODE`, desde tu clase de consola) el campo `ClienteId` de Elena. ¿Qué devuelve `FAILED` o `REPORTED`? ¿Por qué la lógica del propio BO sí podrá escribirlo? Contéstalo en un comentario encima del bloque.
 

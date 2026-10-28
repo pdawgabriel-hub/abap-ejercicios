@@ -6,10 +6,10 @@ El código ABAP vive **en el sistema**, no en ficheros de tu disco. **abapGit** 
 
 | Repositorio | Paquete | Contiene |
 |---|---|---|
-| `abap-ejercicios` | `ZEJ` | Estos apuntes (`docs/`) y tus pruebas del taller |
+| `abap-ejercicios` | `ZTL` (opcional, solo *pull*) | Estos apuntes (`docs/`) y el código completo del taller (`docs/materiales/taller/src/`) |
 | `erp-obras-reformas-sap` | `ZGOR` | Tu ERP: el código en `src/`, el diseño en `docs/`, el README |
 
-Un paquete se enlaza con **un** repositorio. Los subpaquetes (`ZGOR_DDIC`, `ZGOR_CDS`…) van con su paquete padre, cada uno en su carpeta de `src/`.
+Un paquete se enlaza con **un** repositorio. `ZEJ`, tu paquete de pruebas, no se enlaza con ninguno: es para trastear. Los subpaquetes (`ZGOR_DDIC`, `ZGOR_CDS`…) van con su paquete padre, cada uno en su carpeta de `src/`.
 
 ## Preparación
 
@@ -72,7 +72,10 @@ En el trial no podrás practicarlo, pero si en la 0.1 Eclipse te pidió una orde
     - **Dónde:** en GitHub, crea el repositorio público `erp-obras-reformas-sap` (vacío, con un README). En Eclipse, la vista **abapGit Repositories**.
     - **Qué haces:** los cuatro pasos de «Enlazar un paquete con un repositorio»: enlaza `ZGOR` (*folder logic* **Prefix**) y haz *Stage and Push* de todo con el mensaje «Bloques 1 a 4».
     - **Comprueba:** en GitHub, `src/` tiene una carpeta por subpaquete (`zgor_ddic`, `zgor_cds`…) y dentro están tus tablas, vistas, BDEF y clases.
-2. **Los ejercicios del taller.** Enlaza `ZEJ` con `abap-ejercicios` y sube lo que hayas probado del taller.
+2. **Un pull: el taller completo (opcional).** El repositorio de estos apuntes, `abap-ejercicios`, es también un repositorio de abapGit: su `.abapgit.xml` apunta al código completo del taller ([materiales/taller](./materiales/taller/README.md)).
+    - **Dónde:** crea el paquete `ZTL` en `ZLOCAL` y, en la vista **abapGit Repositories**, enlázalo con la URL de `abap-ejercicios`.
+    - **Qué haces:** **Pull** (no *push*: ese repositorio no es tuyo para escribir). abapGit crea los subpaquetes y los objetos del taller. Sigue los pasos previos de la guía del taller (el objeto de autorización `ZTL_TALLER`).
+    - **Comprueba:** activa `ZTL`, ejecuta `ZCL_TL_DATOS_DEMO` y después `ZCL_TL_COMPROBAR_CDS`: debe escribir «0 errores». Si algo no activa, es un error de los apuntes: avisa con el mensaje.
 3. **Lee lo que se ha subido.** Abre en GitHub el fichero de una BDEF y el de una tabla. ¿En qué formato están? ¿Qué fichero acompaña a cada clase?
 4. **Un pull de prueba.** Cambia en el sistema el texto de un mensaje de una validation **sin** hacer *push*. Haz *Pull*: ¿qué te propone abapGit? Cancela, deshaz el cambio y haz *push* de lo que tengas.
 5. **Investiga.** ¿Qué es el fichero `.abapgit.xml`? Ábrelo en GitHub y anota qué guarda.

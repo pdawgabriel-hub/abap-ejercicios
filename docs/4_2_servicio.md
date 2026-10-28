@@ -43,6 +43,8 @@ Para ver el servicio en bruto, abre la URL del servicio (en el editor del bindin
 
 > **En el trial**, la vista previa abre el navegador del sistema y puede pedirte iniciar sesión otra vez. Si se abre en blanco, copia la URL a otro navegador.
 
+> **Código completo del taller:** [ZUI_TL_TALLER](./materiales/taller/src/srv/zui_tl_taller.srvd.srvdsrv). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Las Service Definitions y Bindings van en `ZGOR_SRV`. Los nombres siguen el [Anexo B](./B_nombres.md): `ZUI_GOR_<ÁREA>` y `ZUI_GOR_<ÁREA>_O4`.

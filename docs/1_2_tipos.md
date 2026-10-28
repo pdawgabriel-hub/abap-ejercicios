@@ -175,6 +175,8 @@ Cómo se lee la firma de un método:
 - Los prefijos son una convención: `iv_` para los parámetros de entrada, `rv_` para el valor devuelto, `lv_` para las variables locales y `ls_` para las estructuras locales (ver el [Anexo B](./B_nombres.md)).
 - `RETURN` sale del método. Como `rv_jornadas` empieza en 0, si falta una fecha se devuelve 0.
 
+> **Código completo del taller:** [zif_tl_tipos](./materiales/taller/src/bus/zif_tl_tipos.intf.abap), [zcl_tl_calculos](./materiales/taller/src/bus/zcl_tl_calculos.clas.abap) y los ejemplos en [zcl_tl_demo_lenguaje](./materiales/taller/src/test/zcl_tl_demo_lenguaje.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Seguimos en los paquetes de [1.1](./1_1_classrun.md). Al terminar, tu proyecto tendrá esta forma:

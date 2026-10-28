@@ -41,7 +41,7 @@ SELECT FROM zi_tlorden
   INTO TABLE @DATA(lt_ordenes).
 ```
 
-La ruta se convierte en un *left outer join*: una orden sin titular sale igualmente, con `Titular` vacío. Solo funciona con associations **expuestas**.
+La ruta se convierte en un *left outer join*: una orden sin titular sale igualmente, con `Titular` vacío. Dos reglas: solo funciona con associations **expuestas**, y cada ruta de la lista de campos necesita su **alias** con `AS`; sin él, la sentencia no compila.
 
 ## Composition: hijos que pertenecen al padre
 
@@ -155,6 +155,8 @@ El filtro entre corchetes elige la fila del idioma de la sesión; `1:` le dice a
 
 > Comprueba con **F2** sobre `I_Country` el nombre exacto de su association de textos y de sus campos en tu sistema. Si no tiene `_Text`, busca la vista `I_CountryText` y relaciónala tú.
 
+> **Código completo del taller:** [ZI_TlOrden](./materiales/taller/src/cds/zi_tlorden.ddls.asddls), [ZI_TlPresupuesto](./materiales/taller/src/cds/zi_tlpresupuesto.ddls.asddls), [ZI_TlPartida](./materiales/taller/src/cds/zi_tlpartida.ddls.asddls), [ZI_TlOrdenMecanico](./materiales/taller/src/cds/zi_tlordenmecanico.ddls.asddls) y [ZI_TlTitular](./materiales/taller/src/cds/zi_tltitular.ddls.asddls). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Se modifican tus vistas de 2.2 y se crean tres nuevas en `ZGOR_CDS`. Al terminar, tu modelo tiene esta forma:
@@ -236,7 +238,7 @@ Solo lectura: ZI_GorObraTrab, ZI_GorObraProv, ZI_GorObraEsp   ← nuevas
 7. **El país del cliente.** No está en el informe: es una ampliación, como lo sería en un proyecto real que usa datos estándar de SAP.
     - **Dónde:** la tabla `zgor_cli` y la vista `ZI_GorCliente`.
     - **Qué cambia:** en `zgor_cli`, la columna `pais : land1;` (antes de los campos de administración). En `ZI_GorCliente`, el campo `pais as Pais` y la association `_Pais` (`[0..1]` a `I_Country`, `on $projection.Pais = _Pais.Country`), expuesta.
-    - **Comprueba:** en `ZCL_GOR_SQL_DEMO`, pon `ES` a Juan con un `UPDATE zgor_cli SET pais = 'ES' WHERE cliente_id = 'CLI0001'.` y lee `Nombre, Pais, \_Pais\_Text[ Language = @sy-langu ]-CountryName` de `zi_gorcliente`. Juan debe salir con `España` (o `Spain`, según el idioma de tu sesión); los demás, sin país. Si el editor avisa de que `_Text` puede devolver varias filas, es un aviso, no un error: el filtro por idioma deja una.
+    - **Comprueba:** en `ZCL_GOR_SQL_DEMO`, pon `ES` a Juan con un `UPDATE zgor_cli SET pais = 'ES' WHERE cliente_id = 'CLI0001'.` y lee `Nombre, Pais, \_Pais\_Text[ Language = @sy-langu ]-CountryName AS PaisNombre` de `zi_gorcliente`. Juan debe salir con `España` (o `Spain`, según el idioma de tu sesión); los demás, sin país. Si el editor avisa de que `_Text` puede devolver varias filas, es un aviso, no un error: el filtro por idioma deja una.
 
 8. **Investiga.** Cambia temporalmente la cardinalidad de `_Gasto` a `[0..*]` y activa. ¿Da error? ¿Qué diferencia habría para el usuario? Vuelve a `[0..1]` y anota en `diseno.md` qué regla de §11.4 garantiza esa cardinalidad.
 

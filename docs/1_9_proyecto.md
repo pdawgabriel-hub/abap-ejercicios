@@ -138,6 +138,8 @@ La segunda entrega es un documento: el diseño de **todas** las tablas del ERP, 
 | Depende de **otros** registros | **No se guarda**: lo calcula una vista CDS al leer (Bloque 2) | Total de la obra, gastos, ingresos, beneficio, debe, estado de pago, salud; horas del trabajador; participantes |
 | Se **copia** una vez y no cambia | Se guarda; lo copia una *determination* al elegir el dato de origen | Datos del cliente en el presupuesto; tarifa en la línea del parte |
 
+> **Código completo del taller:** [zcl_tl_simulacion](./materiales/taller/src/test/zcl_tl_simulacion.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 La clase de la simulación va en `ZGOR_TEST`. El diseño es un fichero Markdown en el repositorio del proyecto, `erp-obras-reformas-sap`: si aún no lo tienes clonado en tu equipo, créalo ahora en GitHub (vacío y público) y clónalo con `git clone`. Al terminar, el proyecto queda así:

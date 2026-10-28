@@ -1,0 +1,47 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Titular', typeNamePlural: 'Titulares',
+                  title: { value: 'TitularRef' } }
+annotate entity ZC_TlTitular with
+{
+  // Secciones de la pagina de detalle
+  @UI.facet: [
+    { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Datos', position: 10 }
+  ]
+
+  @UI.hidden: true
+  TitularUUID;
+
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  TitularRef;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  RazonSocial;
+
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 30 } ]
+  DocumentoId;
+
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 40 } ]
+  Contacto;
+
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.identification: [ { position: 50 } ]
+  Poblacion;
+
+  @UI.lineItem: [ { position: 60 } ]
+  @UI.identification: [ { position: 60 } ]
+  Cp;
+
+  @UI.lineItem: [ { position: 70 } ]
+  @UI.identification: [ { position: 70 } ]
+  @UI.selectionField: [ { position: 70 } ]
+  @UI.textArrangement: #TEXT_ONLY
+  Pais;
+
+  @UI.hidden: true
+  PaisNombre;
+}

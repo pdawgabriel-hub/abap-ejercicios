@@ -95,6 +95,7 @@ define view entity ZI_TlOrdenSumas
   key Orden.orden_uuid                                        as OrdenUUID,
       // coalesce: el nulo de una orden sin presupuestos se convierte en 0
       cast( coalesce( Imp.Importe, 0 ) as abap.dec(15,2) )    as Importe,
+      cast( coalesce( Mo.ManoObra, 0 ) as abap.dec(15,2) )    as ManoObra,
       // Cada sumando con su coalesce: nulo + 100 da nulo, no 100
       cast( coalesce( Mo.ManoObra, 0 ) + coalesce( Rec.Neto, 0 )
             + coalesce( Sub.Neto, 0 ) as abap.dec(15,2) )     as Costes,
@@ -117,11 +118,13 @@ define view entity ZI_TlOrdenResumen
 {
   key OrdenUUID,
       Importe,
+      ManoObra,
       Costes,
       Abonado,
       // Restas simples
       cast( Abonado - Costes as abap.dec(15,2) ) as Rendimiento,
       cast( Importe - Abonado as abap.dec(15,2) ) as SaldoPendiente,
+      cast( Importe - Costes as abap.dec(15,2) )  as Previsto,
 
       // Porcentaje: sin division por cero y sin pasar de 100
       case
@@ -149,7 +152,13 @@ define view entity ZI_TlOrdenResumen
         when Abonado - Costes < 0                 then 1
         when Abonado > 0 and Abonado >= Importe   then 3
         else                                           2
-      end                                         as SemaforoCriticality
+      end                                         as SemaforoCriticality,
+
+      // Cerrada si no queda nada por cobrar y se ha cobrado algo (la usa 6.1)
+      case
+        when Importe - Abonado <= 0 and Abonado > 0 then cast( 'cerrada' as abap.char(15) )
+        else                                             cast( 'abierta' as abap.char(15) )
+      end                                         as EstadoHoja
 }
 ```
 
@@ -170,6 +179,8 @@ Compara cada `case` con su método de `ZCL_TL_CALCULOS` (1.3):
 | Puede quedar atrasado | Nunca | Si falta un disparador |
 | Se usa para | Lo que depende de **otros** registros | Lo que cambia mientras se edita el propio registro |
 | En Odoo | `compute` sin `store` | `compute` con `store=True` |
+
+> **Código completo del taller:** [ZI_TlOrdenImporte](./materiales/taller/src/cds/zi_tlordenimporte.ddls.asddls), [ZI_TlOrdenManoObra](./materiales/taller/src/cds/zi_tlordenmanoobra.ddls.asddls), [ZI_TlOrdenSumas](./materiales/taller/src/cds/zi_tlordensumas.ddls.asddls) y [ZI_TlOrdenResumen](./materiales/taller/src/cds/zi_tlordenresumen.ddls.asddls). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 
 ## Preparación del entorno de trabajo
 
@@ -234,7 +245,7 @@ En todos los ejercicios, **Comprueba** lee la vista desde `ZCL_GOR_SQL_DEMO`, en
 5. **Enlázala.**
     - **Dónde:** `ZI_GorObra`, `ZI_GorGasto` y `ZI_GorIngreso`.
     - **Qué cambia:** en la obra y en el gasto, una association `[1]` a `ZI_GorObraFinanzas` llamada `_Finanzas` (por `ObraUUID`); en el ingreso, otra igual llamada `_FinanzasObra`. Las tres, expuestas.
-    - **Comprueba:** el ingreso de Odoo muestra el total cobrado de su obra y lo que falta (§3.8). Escríbelo con una ruta: `SELECT FROM zi_gorobra FIELDS ObraId, \_Finanzas-Ingresos, \_Finanzas-Debe ...`. Deben salir las cuatro obras, a 0.
+    - **Comprueba:** el ingreso de Odoo muestra el total cobrado de su obra y lo que falta (§3.8). Escríbelo con una ruta: `SELECT FROM zi_gorobra FIELDS ObraId, \_Finanzas-Ingresos AS Ingresos, \_Finanzas-Debe AS Debe ...` (cada ruta necesita su alias con `AS`). Deben salir las cuatro obras, a 0.
 
 6. **Acumulados del trabajador.**
     - **Dónde:** `ZI_GorTrabAcum` (nueva, descripción `Acumulados del trabajador`) y `ZI_GorTrabajador`.

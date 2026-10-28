@@ -165,6 +165,8 @@ El resultado es el mismo que con un `LOOP` y una variable acumuladora, pero en u
 
 `CP` (*covers pattern*) compara con un patrón en el que `*` es «cualquier cosa». `EXIT` sale del bucle en el que está.
 
+> **Código completo del taller:** [zcl_tl_calculos](./materiales/taller/src/bus/zcl_tl_calculos.clas.abap) y los ejemplos en [zcl_tl_demo_lenguaje](./materiales/taller/src/test/zcl_tl_demo_lenguaje.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Seguimos con `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y `ZCL_GOR_TIPOS_DEMO` de [1.2](./1_2_tipos.md) y [1.3](./1_3_flujo.md).

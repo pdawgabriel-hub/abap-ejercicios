@@ -105,6 +105,12 @@ Las vistas que no lo necesitan siguen con `#NOT_REQUIRED`.
 
 En `gestion_bd` hay dos grupos con los **mismos** permisos (§5): *Administrativa* y *Jefe / Administrador*. La única regla especial, que la ficha de gastos no se crea ni se borra a mano, ya la garantiza tu BDEF (3.1), para todos los usuarios. Así que en el ERP la seguridad sirve sobre todo para que **solo** esos dos roles puedan entrar.
 
+> **Código completo del taller:** [los permisos de la orden](./materiales/taller/src/bus/zbp_i_tlorden.clas.locals_imp.abap) y [el control de acceso de las jornadas](./materiales/taller/src/cds/zi_tljornada.dcls.asdcls). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
+## Preparación del entorno de trabajo
+
+El objeto de autorización va en `ZGOR_BUS`; los cambios de permisos, en tus diez clases de comportamiento. El catálogo y los roles se crean en las apps de administración del trial, si tu usuario tiene acceso.
+
 ## Ejercicios
 
 1. **El objeto de autorización.**

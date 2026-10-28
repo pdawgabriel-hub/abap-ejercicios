@@ -85,6 +85,12 @@ La clave es **el tipo más el UUID**. Compáralo con la solución de Odoo (§3.1
 
 Expón las vistas de indicadores y el calendario en el servicio financiero (4.2), con sus metadata extensions: listas con `criticality` para los colores, ordenadas, y filtros por fecha. Si tienes *Business Application Studio*, puedes generar una *Overview Page* con tarjetas sobre esas mismas vistas.
 
+> **Código completo del taller:** [ZI_TlKpiSemaforo](./materiales/taller/src/cds/zi_tlkpisemaforo.ddls.asddls), [ZI_TlKpiMecanicos](./materiales/taller/src/cds/zi_tlkpimecanicos.ddls.asddls), [ZI_TlCalendario](./materiales/taller/src/cds/zi_tlcalendario.ddls.asddls) y sus [metadata extensions](./materiales/taller/src/srv/zi_tlkpisemaforo.ddlx.asddlxs). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
+## Preparación del entorno de trabajo
+
+Las vistas de indicadores van en `ZGOR_CDS` y sus metadata extensions en `ZGOR_SRV`. Se exponen en `ZUI_GOR_FINANCIERO`.
+
 ## Ejercicios
 
 Los bloques del dashboard de Odoo (§3.14) son la especificación. Todas las vistas van en `ZGOR_CDS`, se crean como en 2.4 (*New → Data Definition*, plantilla *Define View Entity*) y se comprueban leyéndolas desde `ZCL_GOR_SQL_DEMO`, en un bloque `" 6.4 Dashboard`, con los datos de demo de 2.5:

@@ -86,9 +86,12 @@ CLASS lhe_abono IMPLEMENTATION.
       SELECT SINGLE FROM zi_tlordenresumen FIELDS SituacionCobro
         WHERE OrdenUUID = @ls_abono-%param-OrdenUUID INTO @DATA(lv_situacion).
       IF lv_situacion = 'liquidado'.
+        DATA lv_ahora TYPE timestampl.
+        GET TIME STAMP FIELD lv_ahora.
         TRY.
             DATA(ls_log) = VALUE ztl_cobro_log( log_uuid   = cl_system_uuid=>create_uuid_x16_static( )
                                                 orden_uuid = ls_abono-%param-OrdenUUID
+                                                momento    = lv_ahora
                                                 mensaje    = 'Orden liquidada' ).
             INSERT ztl_cobro_log FROM @ls_log.
           CATCH cx_uuid_error.
@@ -103,6 +106,8 @@ ENDCLASS.
 El manejador se ejecuta **después** de que el abono se haya guardado, en su propia unidad de trabajo: si falla, el abono no se deshace. Es lo que se quiere: un fallo en la contabilidad no debe impedir registrar un cobro.
 
 Los mismos eventos pueden salir del sistema hacia otras aplicaciones (en BTP, con el servicio *Event Mesh*), sin cambiar la BDEF: el objeto sigue anunciando y no sabe quién escucha.
+
+> **Código completo del taller:** [la BDEF del abono](./materiales/taller/src/bus/zi_tlabono.bdef.asbdef), [su clase](./materiales/taller/src/bus/zbp_i_tlabono.clas.locals_imp.abap) y [ZCL_TL_ESCUCHA_ABONOS](./materiales/taller/src/bus/zcl_tl_escucha_abonos.clas.locals_imp.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 
 ## Preparación del entorno de trabajo
 

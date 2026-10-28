@@ -1,0 +1,29 @@
+// Proyeccion: elige que partes del comportamiento de debajo usa la app
+projection;
+strict ( 2 );
+use draft;                       // la app trabaja con borradores
+use side effects;                // y publica los side effects de 3.3
+
+define behavior for ZC_TlMecanico alias Mecanico
+{
+  use create;
+  use update;
+  use delete;
+
+  // Las acciones del borrador, una a una
+  use action Edit;
+  use action Activate;
+  use action Discard;
+  use action Resume;
+  use action Prepare;
+
+  use association _Ausencias { create; with draft; }
+}
+
+define behavior for ZC_TlAusencia alias Ausencia
+{
+  use update;
+  use delete;
+
+  use association _Mecanico { with draft; }
+}

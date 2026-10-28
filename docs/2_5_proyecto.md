@@ -147,6 +147,8 @@ ENDCLASS.
 
 En el Bloque 3 importa que `last_changed_at` tenga valor: RAP lo usa para detectar si otra persona ha cambiado el registro mientras lo editabas.
 
+> **Código completo del taller:** [ZCL_TL_DATOS_DEMO](./materiales/taller/src/test/zcl_tl_datos_demo.clas.abap) y [ZCL_TL_COMPROBAR_CDS](./materiales/taller/src/test/zcl_tl_comprobar_cds.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Las dos clases van en `ZGOR_TEST`. La comprobación la descargas de los materiales. Al terminar:
@@ -217,9 +219,9 @@ Puedes ejecutar `ZCL_GOR_DATOS_DEMO` tantas veces como quieras: lo primero que h
 7. **Navega por los datos.**
     - **Dónde:** `ZCL_GOR_SQL_DEMO`, un bloque nuevo con el comentario `" 2.5 Comprobar los datos de demo`.
     - **Qué hace:** tres lecturas con rutas:
-        - la ficha de `OBR0001`: `ObraId, \_Cliente-Nombre, \_Finanzas-Total, \_Finanzas-Gastos, \_Finanzas-Salud`;
-        - los trabajadores de `OBR0001`, desde `zi_gorobratrab` filtrando por la obra: `\_Trabajador-TrabajadorId`;
-        - el acumulado de `TRB0001`: `TrabajadorId, \_Acumulado-HorasTotales, \_Acumulado-TotalEuros`.
+        - la ficha de `OBR0001`: `ObraId, \_Cliente-Nombre AS Cliente, \_Finanzas-Total AS Total, \_Finanzas-Gastos AS Gastos, \_Finanzas-Salud AS Salud`;
+        - los trabajadores de `OBR0001`, desde `zi_gorobratrab` filtrando por la obra: `\_Trabajador-TrabajadorId AS Trabajador`;
+        - el acumulado de `TRB0001`: `TrabajadorId, \_Acumulado-HorasTotales AS Horas, \_Acumulado-TotalEuros AS Euros`.
     - **Comprueba:** `OBR0001` con Juan, 1210, 670 y `verde`; los trabajadores `TRB0001` y `TRB0002`; y `TRB0001` con **16 h y 320 €** (8 h en `OBR0001` y 8 h en `OBR0003`).
 
 8. **Comprueba la ficha.**

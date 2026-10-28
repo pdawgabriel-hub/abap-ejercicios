@@ -1,0 +1,284 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed implementation in class zbp_i_tlpresupuesto unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlPresupuesto alias Presupuesto
+persistent table ztl_prs
+draft table ztl_prs_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  // Los calcula la logica del BO; el usuario no los escribe
+  field ( readonly ) PresupuestoRef, Neto, Cuota, Importe, Moneda,
+                     TitularNombre, TitularDocumento, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) TitularUUID, Impuesto;
+  // La orden solo se pone con la accion vincularAOrden
+  field ( readonly : update ) OrdenUUID;
+
+  // Las partidas y las listas se crean A TRAVES del presupuesto, tambien en borrador
+  association _Partidas  { create; with draft; }
+  association _Previstos { create; with draft; }
+  association _Notas     { create; with draft; }
+  association _Avisos    { create; with draft; }
+  association _Fotos     { create; with draft; }
+
+  // 3.3: valores por defecto, copia del titular y recalculo de importes
+  determination valoresIniciales  on modify { create; }
+  determination copiarTitular     on modify { field TitularUUID; }
+  determination recalcularPorTipo on modify { field Impuesto; }
+  // Solo la puede llamar el propio BO (no sale como boton)
+  internal action recalcularImportes;
+  // Al guardar, recalcular siempre (cubre el borrado de partidas)
+  determination importesAlGuardar on save { create; update; }
+
+  // 3.4: validaciones
+  validation validarImpuesto       on save { create; field Impuesto; }
+  validation validarTitularDeOrden on save { create; field TitularUUID, OrdenUUID; }
+
+  // 3.5: botones; si estan activos lo decide get_instance_features
+  action ( features : instance ) aceptar         result [1] $self;
+  action ( features : instance ) volverABorrador result [1] $self;
+  action ( features : instance ) vincularAOrden parameter ZA_TlVincularOrden result [1] $self;
+  // 6.3: genera la hoja de calculo y la guarda como foto/adjunto
+  action exportarPresupuesto result [1] $self;
+
+  // 3.7: PRS0001...
+  determination numerar on save { create; }
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  // Prepare se ejecuta antes de activar un borrador: validaciones y recalculo final
+  draft determine action Prepare
+  {
+    validation validarImpuesto;
+    validation validarTitularDeOrden;
+    validation Partida~validarCantidad;
+    determination ( always ) importesAlGuardar;
+  }
+
+  // 3.3: que mas tiene que volver a leer Fiori despues de cada cambio
+  side effects
+  {
+    field Impuesto affects field Cuota, field Importe;
+    field TitularUUID affects field TitularNombre, field TitularDocumento;
+    action aceptar affects $self;
+    action volverABorrador affects $self;
+    action vincularAOrden affects $self;
+    action exportarPresupuesto affects entity _Fotos;
+  }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) PresupuestoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_prs corresponding
+  {
+    PresupuestoUUID    = presupuesto_uuid;
+    PresupuestoRef     = presupuesto_ref;
+    Fecha              = fecha;
+    TitularUUID        = titular_uuid;
+    OrdenUUID          = orden_uuid;
+    TitularNombre      = titular_nombre;
+    TitularDocumento   = titular_documento;
+    Impuesto           = impuesto;
+    Situacion          = situacion;
+    Neto               = neto;
+    Cuota              = cuota;
+    Importe            = importe;
+    Moneda             = moneda;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlPartida alias Partida
+persistent table ztl_prs_par
+draft table ztl_prs_par_d
+lock dependent by _Presupuesto
+authorization dependent by _Presupuesto
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) PresupuestoUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt, ImportePartida;
+  field ( mandatory ) Concepto, Cantidad, PrecioUnitario;
+
+  // 3.3: importe de la partida y recalculo de la cabecera
+  determination calcularPartida on modify { create; field Cantidad, PrecioUnitario; }
+  // 3.4: la cantidad tiene que ser positiva
+  validation validarCantidad on save { create; field Cantidad; }
+
+  side effects
+  {
+    // Cambiar una partida refresca su importe y los de su cabecera
+    field Cantidad, PrecioUnitario affects field ImportePartida,
+                                           field _Presupuesto.Neto,
+                                           field _Presupuesto.Cuota,
+                                           field _Presupuesto.Importe;
+  }
+
+  association _Presupuesto { with draft; }   // camino de vuelta al padre
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) PartidaUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_prs_par corresponding
+  {
+    PartidaUUID        = partida_uuid;
+    PresupuestoUUID    = presupuesto_uuid;
+    Concepto           = concepto;
+    Cantidad           = cantidad;
+    PrecioUnitario     = precio_unitario;
+    ImportePartida     = importe_partida;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlPresuDis alias Previsto
+persistent table ztl_prs_dis
+draft table ztl_prs_dis_d
+lock dependent by _Presupuesto
+authorization dependent by _Presupuesto
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) PresupuestoUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) DistribuidorUUID;
+
+  association _Presupuesto { with draft; }   // camino de vuelta al padre
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) PrevistoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_prs_dis corresponding
+  {
+    PrevistoUUID       = previsto_uuid;
+    PresupuestoUUID    = presupuesto_uuid;
+    DistribuidorUUID   = distribuidor_uuid;
+    Observacion        = observacion;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlPresuNota alias Nota
+persistent table ztl_prs_not
+draft table ztl_prs_not_d
+lock dependent by _Presupuesto
+authorization dependent by _Presupuesto
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) PresupuestoUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Comentario;
+
+  association _Presupuesto { with draft; }   // camino de vuelta al padre
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) NotaUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_prs_not corresponding
+  {
+    NotaUUID           = nota_uuid;
+    PresupuestoUUID    = presupuesto_uuid;
+    Comentario         = comentario;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlPresuAviso alias Aviso
+persistent table ztl_prs_avi
+draft table ztl_prs_avi_d
+lock dependent by _Presupuesto
+authorization dependent by _Presupuesto
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) PresupuestoUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Comentario;
+
+  association _Presupuesto { with draft; }   // camino de vuelta al padre
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) AvisoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_prs_avi corresponding
+  {
+    AvisoUUID          = aviso_uuid;
+    PresupuestoUUID    = presupuesto_uuid;
+    Comentario         = comentario;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlPresuFoto alias Foto
+persistent table ztl_prs_fot
+draft table ztl_prs_fot_d
+lock dependent by _Presupuesto
+authorization dependent by _Presupuesto
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) PresupuestoUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  association _Presupuesto { with draft; }   // camino de vuelta al padre
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) FotoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_prs_fot corresponding
+  {
+    FotoUUID           = foto_uuid;
+    PresupuestoUUID    = presupuesto_uuid;
+    Imagen             = imagen;
+    TipoMime           = tipo_mime;
+    NombreFichero      = nombre_fichero;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

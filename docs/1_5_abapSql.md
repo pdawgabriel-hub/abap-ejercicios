@@ -154,6 +154,8 @@ El método puede lanzar una excepción, y ABAP obliga a tratarla con `TRY ... CA
 
 > **ABAP Cloud solo deja usar objetos liberados.** Puedes leer y escribir tus propias tablas, pero no las tablas estándar de SAP. Para datos estándar se usan las vistas CDS liberadas. Si intentas usar algo no liberado, el editor lo marca como error.
 
+> **Código completo del taller:** las tablas [ztl_tit](./materiales/taller/tablas/ztl_tit.tabl.ddl) y [ztl_orden](./materiales/taller/tablas/ztl_orden.tabl.ddl) y [zcl_tl_sql_demo](./materiales/taller/src/test/zcl_tl_sql_demo.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Las tablas van en `ZGOR_DDIC` y la clase de pruebas, en `ZGOR_TEST`. Para crear una tabla: clic derecho en el paquete → **New → Other ABAP Repository Object** → *Database Table*. Al terminar:

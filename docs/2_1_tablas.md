@@ -83,6 +83,8 @@ En el taller, el impuesto vale 21 si no se indica otro y un presupuesto empieza 
 
 Las tablas no declaran claves foráneas: `titular_uuid` es una columna más. La relación se declara en las **vistas CDS**, con una *association* ([2.3](./2_3_associations.md)), y lo que en Odoo es `ondelete='restrict'` o `'cascade'` lo controlará el comportamiento RAP. Es la forma habitual en ABAP Cloud: el modelo vive en CDS, no en la base de datos.
 
+> **Código completo del taller:** [ztl_prs](./materiales/taller/tablas/ztl_prs.tabl.ddl), [ztl_prs_par](./materiales/taller/tablas/ztl_prs_par.tabl.ddl) y el resto de tablas en [tablas/](./materiales/taller/tablas/). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Todas las tablas del ERP van en `ZGOR_DDIC`. Para crear cada una: clic derecho en `ZGOR_DDIC` → **New → Other ABAP Repository Object** → *Database Table*, nombre en minúsculas y descripción. Si una tabla no activa, lee el error de la pestaña *Problems*: casi siempre es un punto y coma que falta o un tipo mal escrito.

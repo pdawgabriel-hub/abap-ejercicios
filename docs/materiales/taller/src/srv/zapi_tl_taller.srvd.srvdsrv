@@ -1,0 +1,9 @@
+@EndUserText.label: 'Taller - API para otros sistemas'
+// Otro servicio sobre las mismas proyecciones: solo las raices que usaria otro sistema (4.5)
+define service ZAPI_TL_TALLER {
+  expose ZC_TlOrden       as Orden;
+  expose ZC_TlPresupuesto as Presupuesto;
+  expose ZC_TlPartida     as Partida;
+  expose ZC_TlTitular     as Titular;
+  expose ZI_TlOrdenResumen as Resumen;
+}

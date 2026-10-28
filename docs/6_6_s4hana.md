@@ -98,6 +98,8 @@ Con `pretty_mode-camel_case`, el campo JSON `BusinessPartnerFullName` va al comp
 
 **La clave de API no va en el código ni en GitHub.** Para practicar, pásala como constante en una clase que no subas, o léela de una tabla propia que rellenas a mano. En una empresa iría en un destino configurado (6.5).
 
+> **Código completo del taller:** [ZCL_TL_CONSULTAR_BP](./materiales/taller/src/test/zcl_tl_consultar_bp.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Una cuenta en `api.sap.com` con la clave de la API de *Business Partner*. La clase de consulta va en `ZGOR_TEST`.

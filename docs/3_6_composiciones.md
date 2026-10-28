@@ -115,6 +115,8 @@ etag master LocalLastChangedAt
 
 Los **alias** de los hijos deben ser únicos **dentro de cada BDEF**: en el presupuesto del taller, `Partida`, `Nota`, `Aviso` y `Foto`. En otra BDEF se pueden repetir.
 
+> **Código completo del taller:** [ztl_s_comentario](./materiales/taller/tablas/ztl_s_comentario.tabl.ddl), [ztl_prs_not](./materiales/taller/tablas/ztl_prs_not.tabl.ddl), [ZI_TlPresuFoto](./materiales/taller/src/cds/zi_tlpresufoto.ddls.asddls) y la [BDEF del presupuesto](./materiales/taller/src/bus/zi_tlpresupuesto.bdef.asbdef). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Tus estructuras y tablas van en `ZGOR_DDIC`, las vistas en `ZGOR_CDS`, y el comportamiento se añade a tus BDEF. Para cada tabla satélite hacen falta cuatro piezas: tabla, vista hija, composición en la vista raíz y entidad en la BDEF (con su tabla de borradores).

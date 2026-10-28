@@ -81,6 +81,8 @@ La consola de esta unidad presenta las entidades que vamos a construir. Son las 
 | Especialista | `ESP0001` | Parte de Trabajo | sin código (fecha) |
 | Presupuesto | `PREP0001` | Partes de Especialista y de Proveedor | sin código |
 
+> **Código completo del taller:** [zcl_tl_bienvenida](./materiales/taller/src/test/zcl_tl_bienvenida.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Necesitas Eclipse con ADT conectado a tu trial, como se explica en [0.1. Preparación del entorno](./00_instalacionEntorno.md). En esta unidad creas los paquetes de `ZGOR`; a partir de aquí, todo el proyecto vive en ellos.

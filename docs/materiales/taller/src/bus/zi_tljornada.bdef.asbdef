@@ -1,0 +1,107 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed implementation in class zbp_i_tljornada unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlJornada alias Jornada
+persistent table ztl_jor
+draft table ztl_jor_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) TiempoTotal, CosteTotal, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) OrdenUUID, Dia;
+
+  association _Tramos { create; with draft; }
+
+  // 3.3: totales de la jornada a partir de sus tramos
+  internal action recalcularTotales;
+  determination totalesAlGuardar on save { create; update; }
+  // 6.5: aviso (no error) si el dia es festivo
+  validation avisarFestivo on save { create; field Dia; }
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation avisarFestivo;
+    validation Tramo~validarTiempo;
+    determination ( always ) totalesAlGuardar;
+  }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) JornadaUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_jor corresponding
+  {
+    JornadaUUID        = jornada_uuid;
+    OrdenUUID          = orden_uuid;
+    Dia                = dia;
+    Trabajo            = trabajo;
+    TiempoTotal        = tiempo_total;
+    CosteTotal         = coste_total;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlTramo alias Tramo
+persistent table ztl_jor_tra
+draft table ztl_jor_tra_d
+lock dependent by _Jornada
+authorization dependent by _Jornada
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) JornadaUUID, TarifaAplicada, CosteTramo, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) MecanicoUUID, Tiempo;
+
+  association _Jornada { with draft; }
+
+  // 3.3: copiar la tarifa del mecanico al elegirlo (queda congelada)
+  determination copiarTarifa on modify { field MecanicoUUID; }
+  // 3.3: coste del tramo y totales de la jornada
+  determination calcularTramo on modify { create; field Tiempo, TarifaAplicada; }
+  // 3.4: entre 0 y 10 horas
+  validation validarTiempo on save { create; field Tiempo; }
+
+  side effects
+  {
+    field MecanicoUUID affects field TarifaAplicada, field CosteTramo;
+    field Tiempo affects field CosteTramo, field _Jornada.TiempoTotal, field _Jornada.CosteTotal;
+  }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) TramoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_jor_tra corresponding
+  {
+    TramoUUID          = tramo_uuid;
+    JornadaUUID        = jornada_uuid;
+    MecanicoUUID       = mecanico_uuid;
+    Tiempo             = tiempo;
+    TarifaAplicada     = tarifa_aplicada;
+    CosteTramo         = coste_tramo;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

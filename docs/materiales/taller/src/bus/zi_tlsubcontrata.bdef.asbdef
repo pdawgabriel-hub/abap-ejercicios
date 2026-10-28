@@ -1,0 +1,47 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed implementation in class zbp_i_tlsubcontrata unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlSubcontrata alias Subcontrata
+persistent table ztl_sub
+draft table ztl_sub_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) SubcontrataRef, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Nombre;
+
+  determination numerar on save { create; }
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare;
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) SubcontrataUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_sub corresponding
+  {
+    SubcontrataUUID    = subcontrata_uuid;
+    SubcontrataRef     = subcontrata_ref;
+    Nombre             = nombre;
+    Oficio             = oficio;
+    TarifaReferencia   = tarifa_referencia;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

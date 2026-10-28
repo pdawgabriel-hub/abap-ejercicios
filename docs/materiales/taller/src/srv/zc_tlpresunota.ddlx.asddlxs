@@ -1,0 +1,22 @@
+@Metadata.layer: #CORE
+// Orden de la lista al abrirla: la nota mas nueva primero
+@UI.presentationVariant: [ { sortOrder: [ { by: 'CreatedAt', direction: #DESC } ] } ]
+@UI.headerInfo: { typeName: 'Nota', typeNamePlural: 'Notas', title: { value: 'Comentario' } }
+annotate entity ZC_TlPresuNota with
+{
+  @UI.facet: [ { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Nota', position: 10 } ]
+
+  @UI.hidden: true
+  NotaUUID;
+  @UI.hidden: true
+  PresupuestoUUID;
+
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  @UI.multiLineText: true
+  Comentario;
+  @UI.lineItem: [ { position: 20, label: 'Autor' } ]
+  CreatedBy;
+  @UI.lineItem: [ { position: 30, label: 'Fecha' } ]
+  CreatedAt;
+}

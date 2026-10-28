@@ -257,6 +257,8 @@ La orden del taller debe nacer con su hoja de costes. Lo hace una determination 
 
 `%is_draft` en el hijo: si la orden se está creando como borrador, su hoja también lo es, y se guardarán juntas. La asociación es `internal create` (3.1): desde Fiori no se puede crear una hoja suelta, pero la lógica de la orden sí puede.
 
+> **Código completo del taller:** [zbp_i_tlpresupuesto](./materiales/taller/src/bus/zbp_i_tlpresupuesto.clas.locals_imp.abap) y la hoja de costes en [zbp_i_tlorden](./materiales/taller/src/bus/zbp_i_tlorden.clas.locals_imp.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Se amplían tus BDEF de 3.1 y tus clases de 3.2. Tras añadir cada determination a la BDEF, crea su método con **Ctrl+1** → *Add missing method*. Activa la BDEF y la clase juntas.

@@ -1,0 +1,8 @@
+@EndUserText.label: 'Taller - Jornadas: solo con permiso de lectura'
+@MappingRole: true
+// Regla de lectura de la vista: que filas puede ver cada usuario (6.1)
+define role ZI_TlJornada {
+  grant select on ZI_TlJornada
+    // Solo quien tenga la actividad 03 (ver) del objeto del taller
+    where () = aspect pfcg_auth( ZTL_TALLER, ACTVT = '03' );
+}

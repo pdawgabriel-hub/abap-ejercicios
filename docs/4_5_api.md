@@ -118,6 +118,8 @@ El navegador puede leer porque ya tiene tu sesión del trial. Un programa extern
 
 En el trial compartido es posible que tu usuario no pueda crear las piezas 2 y 3. Si es así, prueba las lecturas desde el navegador y las escrituras desde el propio sistema con EML (3.2), y anota en el README cómo se haría.
 
+> **Código completo del taller:** [ZAPI_TL_TALLER](./materiales/taller/src/srv/zapi_tl_taller.srvd.srvdsrv). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 La Service Definition y el *binding* de la API van en `ZGOR_SRV`, con el prefijo `ZAPI_GOR`. Para las peticiones, cualquier cliente HTTP: `curl`, Postman, o una extensión de VS Code como *REST Client*.

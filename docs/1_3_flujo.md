@@ -140,10 +140,11 @@ Con ellas se construye el rótulo de un titular para los desplegables:
   METHOD rotulo_titular.
     " TIT0001 · Talleres Ebro SL [B50123456]; sin razon social, solo el codigo
     rv_rotulo = iv_codigo.                              " como minimo, el codigo
-    IF condense( iv_razon_social ) IS INITIAL.          " condense quita espacios: '   ' cuenta como vacio
+    DATA(lv_razon) = condense( iv_razon_social ).       " condense quita espacios: '   ' queda vacio
+    IF lv_razon IS INITIAL.                             " IS INITIAL necesita una variable, no una funcion
       RETURN.
     ENDIF.
-    rv_rotulo = |{ rv_rotulo } · { condense( iv_razon_social ) }|.   " plantilla: texto + valores
+    rv_rotulo = |{ rv_rotulo } · { lv_razon }|.         " plantilla: texto + valores
     IF iv_documento_id IS NOT INITIAL.                  " el documento, solo si existe
       rv_rotulo = |{ rv_rotulo } [{ iv_documento_id }]|.
     ENDIF.
@@ -151,6 +152,8 @@ Con ellas se construye el rótulo de un titular para los desplegables:
 ```
 
 El método construye el rótulo **por partes**: empieza con lo único seguro, el código, y va añadiendo lo demás solo si existe. El `RETURN` del primer `IF` termina el método en ese punto, así que un titular sin razón social se queda en `TIT0001`. Con razón social y documento, sale `TIT0001 · Talleres Ebro SL [B50123456]`; sin documento, `TIT0001 · Talleres Ebro SL`. En tu ERP harás lo mismo con la etiqueta del cliente (§3.1), que en Odoo era el `_compute_display_name`.
+
+> **Código completo del taller:** [zcl_tl_calculos](./materiales/taller/src/bus/zcl_tl_calculos.clas.abap) y los ejemplos en [zcl_tl_demo_lenguaje](./materiales/taller/src/test/zcl_tl_demo_lenguaje.clas.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 
 ## Preparación del entorno de trabajo
 

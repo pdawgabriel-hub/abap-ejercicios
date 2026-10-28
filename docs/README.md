@@ -4,9 +4,9 @@ Los contenidos que se presentan a continuación enseñan **ABAP Cloud** y el mod
 
 > **Estructura por bloques.** El material está organizado en **ocho bloques**. Cada bloque agrupa unidades con teoría, ejemplos y ejercicios, y termina con una unidad de **Proyecto** que integra lo visto. Las horas son orientativas. El plan de esta organización está en [PLAN_proyecto_guiado.md](./PLAN_proyecto_guiado.md).
 >
-> **Dos proyectos.** La teoría se explica con un proyecto de ejemplo, el **taller RuedaLibre**, con el código completo. Los ejercicios construyen **tu ERP** tomando el taller como modelo: indican qué crear, con qué campos y datos y qué resultado debe salir, pero no dan el código. Los tests de la carpeta [materiales/tests](https://github.com/pdawgabriel-hub/abap-ejercicios/tree/main/docs/materiales/tests) comprueban cada solución. Los dos proyectos se presentan en el Bloque 0.
+> **Dos proyectos.** La teoría se explica con un proyecto de ejemplo, el **taller RuedaLibre**, cuyo código completo está en [materiales/taller](./materiales/taller/README.md). Los ejercicios construyen **tu ERP** tomando el taller como modelo: indican qué crear, con qué campos y datos y qué resultado debe salir, pero no dan el código. Los tests de [materiales/tests](./materiales/README.md) comprueban cada solución. Los dos proyectos se presentan en el Bloque 0.
 >
-> **Aviso.** El código se ha escrito siguiendo la documentación de SAP, pero **no se ha compilado contra un sistema real**. Si algo da error al activar, copia el mensaje exacto: es parte del aprendizaje. Las unidades menos verificadas lo indican al principio.
+> **Aviso.** El código del taller pasa en cada *push* dos comprobaciones automáticas (abaplint, que revisa la sintaxis de ABAP Cloud y CDS, y un comprobador de la coherencia de RAP), pero **no se ha activado en un sistema real**. Si algo da error al activar, copia el mensaje exacto: es parte del aprendizaje. Las unidades menos verificadas lo indican al principio.
 
 **Antes de empezar:** todo el material comparte el mismo entorno (Eclipse con ADT y una cuenta trial de SAP BTP). Prepáralo siguiendo [0.1. Preparación del entorno](./00_instalacionEntorno.md). La cuenta trial dura **90 días** y hay que entrar al menos una vez cada 30: el repositorio es tu copia de seguridad ([5.3](./5_3_ciclo90dias.md)).
 

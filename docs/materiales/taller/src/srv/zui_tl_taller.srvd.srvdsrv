@@ -1,0 +1,35 @@
+@EndUserText.label: 'Taller - Servicio de gestion'
+define service ZUI_TL_TALLER {
+  // expose <vista> as <nombre en el servicio>: una linea por entidad que vera la app
+  // Fichas
+  expose ZC_TlTitular      as Titular;
+  expose ZC_TlMecanico     as Mecanico;
+  expose ZC_TlAusencia     as Ausencia;
+  expose ZC_TlDistribuidor as Distribuidor;
+  expose ZC_TlSubcontrata  as Subcontrata;
+  // Presupuesto con sus hijos
+  expose ZC_TlPresupuesto  as Presupuesto;
+  expose ZC_TlPartida      as Partida;
+  expose ZC_TlPresuDis     as PresupuestoDistribuidor;
+  expose ZC_TlPresuNota    as PresupuestoNota;
+  expose ZC_TlPresuAviso   as PresupuestoAviso;
+  expose ZC_TlPresuFoto    as PresupuestoFoto;
+  // Orden con sus hijos
+  expose ZC_TlOrden        as Orden;
+  expose ZC_TlHojaCostes   as HojaCostes;
+  expose ZC_TlOrdenNota    as OrdenNota;
+  expose ZC_TlOrdenAviso   as OrdenAviso;
+  expose ZC_TlOrdenFoto    as OrdenFoto;
+  // Lo que se anota sobre una orden
+  expose ZC_TlJornada      as Jornada;
+  expose ZC_TlTramo        as Tramo;
+  expose ZC_TlAlbaran      as Albaran;
+  expose ZC_TlFactura      as Factura;
+  expose ZC_TlAbono        as Abono;
+  // Solo lectura: calculos (2.4), indicadores y calendario (6.4)
+  expose ZI_TlOrdenResumen  as Resumen;
+  expose ZI_TlOrdenMecanico as OrdenMecanico;
+  expose ZI_TlKpiSemaforo   as KpiSemaforo;
+  expose ZI_TlKpiMecanicos  as KpiMecanicos;
+  expose ZI_TlCalendario    as Calendario;
+}

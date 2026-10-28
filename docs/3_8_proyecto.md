@@ -91,6 +91,8 @@ El escenario va en una clase global **vacía**, `ZCL_GOR_ESCENARIO`, que solo ex
 
 El paso 10 (buscar «Juan Pérez») se prueba en la app, en 4.3; el 11b ya lo prueba `3_5_ltcl_borrar_obra`; y el 12 (borrar la ficha de gastos suelta) no se puede ni escribir: tu BDEF no tiene `delete` para el gasto, y un `MODIFY ... DELETE` sobre él no compilaría. Esa es la mejor protección posible.
 
+> **Código completo del taller:** [los tests de ZCL_TL_ESCENARIO](./materiales/taller/src/test/zcl_tl_escenario.clas.testclasses.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 La clase va en `ZGOR_TEST`. Al terminar, el Bloque 3 está completo:

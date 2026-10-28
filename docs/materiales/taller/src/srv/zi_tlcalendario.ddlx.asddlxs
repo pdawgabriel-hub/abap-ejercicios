@@ -1,0 +1,16 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Movimiento', typeNamePlural: 'Calendario', title: { value: 'Titulo' } }
+@UI.presentationVariant: [ { sortOrder: [ { by: 'Fecha', direction: #DESC } ] } ]
+annotate entity ZI_TlCalendario with
+{
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  Tipo;
+  @UI.hidden: true
+  RegistroUUID;
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.selectionField: [ { position: 20 } ]
+  Fecha;
+  @UI.lineItem: [ { position: 30 } ]
+  Titulo;
+}

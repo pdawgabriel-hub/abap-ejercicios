@@ -111,6 +111,8 @@ Con `severity-warning` (y sin añadir nada a `failed`), Fiori muestra el aviso e
 
 `create_by_url` escribe la URL en el código. Vale para una API pública sin credenciales y para aprender. En un sistema real, la URL y las credenciales se configuran fuera del código, con un **Communication Arrangement** de salida (*outbound*) o un destino del servicio *Destination* de BTP, y el código los pide por nombre (`cl_http_destination_provider=>create_by_comm_arrangement( … )`). Así, cambiar de entorno (pruebas, producción) no exige tocar el código.
 
+> **Código completo del taller:** [ZCL_TL_FESTIVOS](./materiales/taller/src/bus/zcl_tl_festivos.clas.abap), [ZCL_TL_CARGAR_FESTIVOS](./materiales/taller/src/test/zcl_tl_cargar_festivos.clas.abap) y la validation `avisarFestivo` de [zbp_i_tljornada](./materiales/taller/src/bus/zbp_i_tljornada.clas.locals_imp.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 La clase de la API va en `ZGOR_BUS`; la tabla de festivos, en `ZGOR_DDIC`; la clase de carga, en `ZGOR_TEST`.

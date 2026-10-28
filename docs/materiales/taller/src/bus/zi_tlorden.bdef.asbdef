@@ -1,0 +1,196 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed with additional save implementation in class zbp_i_tlorden unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlOrden alias Orden
+persistent table ztl_orden
+draft table ztl_orden_d
+lock master
+total etag LastChangedAt
+authorization master ( global, instance )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  // 3.5: boton desactivable y comprobacion previa al borrado
+  delete ( features : instance, precheck );
+
+  field ( readonly ) OrdenRef, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Matricula, TitularUUID;
+
+  // La hoja de costes la crea la propia orden: desde fuera no se puede crear
+  association _HojaCostes { internal create; with draft; }
+  association _Notas      { create; with draft; }
+  association _Avisos     { create; with draft; }
+  association _Fotos      { create; with draft; }
+
+  // 3.3: al crear la orden, crear tambien su hoja de costes
+  determination crearHojaCostes on modify { create; }
+  // 3.4: matricula con formato espanol
+  validation validarMatricula on save { create; field Matricula; }
+  // 3.7: ORD0001...
+  determination numerar on save { create; }
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validarMatricula;
+  }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) OrdenUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_orden corresponding
+  {
+    OrdenUUID          = orden_uuid;
+    OrdenRef           = orden_ref;
+    Matricula          = matricula;
+    Averia             = averia;
+    TitularUUID        = titular_uuid;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlHojaCostes alias HojaCostes
+persistent table ztl_hco
+draft table ztl_hco_d
+lock dependent by _Orden
+authorization dependent by _Orden
+etag master LocalLastChangedAt
+{
+  // Se modifica, pero no se crea ni se borra suelta (se borra con su orden)
+  update;
+
+  field ( readonly ) OrdenUUID, HojaRef, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  association _Orden { with draft; }
+
+  // 3.7: HCO0001...
+  determination numerarHoja on save { create; }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) HojaUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_hco corresponding
+  {
+    HojaUUID           = hoja_uuid;
+    OrdenUUID          = orden_uuid;
+    HojaRef            = hoja_ref;
+    FechaEntrada       = fecha_entrada;
+    FechaEntrega       = fecha_entrega;
+    Garantia           = garantia;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlOrdenNota alias Nota
+persistent table ztl_ord_not
+draft table ztl_ord_not_d
+lock dependent by _Orden
+authorization dependent by _Orden
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) OrdenUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Comentario;
+
+  association _Orden { with draft; }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) NotaUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_ord_not corresponding
+  {
+    NotaUUID           = nota_uuid;
+    OrdenUUID          = orden_uuid;
+    Comentario         = comentario;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlOrdenAviso alias Aviso
+persistent table ztl_ord_avi
+draft table ztl_ord_avi_d
+lock dependent by _Orden
+authorization dependent by _Orden
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) OrdenUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Comentario;
+
+  association _Orden { with draft; }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) AvisoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_ord_avi corresponding
+  {
+    AvisoUUID          = aviso_uuid;
+    OrdenUUID          = orden_uuid;
+    Comentario         = comentario;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlOrdenFoto alias Foto
+persistent table ztl_ord_fot
+draft table ztl_ord_fot_d
+lock dependent by _Orden
+authorization dependent by _Orden
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) OrdenUUID, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+
+  association _Orden { with draft; }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) FotoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_ord_fot corresponding
+  {
+    FotoUUID           = foto_uuid;
+    OrdenUUID          = orden_uuid;
+    Imagen             = imagen;
+    TipoMime           = tipo_mime;
+    NombreFichero      = nombre_fichero;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

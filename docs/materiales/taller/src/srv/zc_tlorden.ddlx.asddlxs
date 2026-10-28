@@ -1,0 +1,54 @@
+@Metadata.layer: #CORE                   // capa de las anotaciones (la nuestra, la base)
+// Como se llama un registro y que sale de titulo en su pagina
+@UI.headerInfo: { typeName: 'Orden de reparacion', typeNamePlural: 'Ordenes de reparacion',
+                  title: { value: 'OrdenRef' }, description: { value: 'Matricula' } }
+annotate entity ZC_TlOrden with
+{
+  // Las secciones de la pagina de detalle: cabecera y pestanas
+  @UI.facet: [
+    // En la cabecera, el semaforo del resumen
+    { id: 'Semaforo', purpose: #HEADER, type: #DATAPOINT_REFERENCE,
+      targetElement: '_Resumen', targetQualifier: 'Semaforo', position: 10 },
+    // Pestana con los campos marcados con @UI.identification
+    { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE,
+      label: 'Datos de la orden', position: 10 },
+    // Pestana con el grupo de campos 'Importes' del resumen
+    { id: 'Resumen', purpose: #STANDARD, type: #FIELDGROUP_REFERENCE,
+      targetElement: '_Resumen', targetQualifier: 'Importes', label: 'Hoja de costes', position: 20 },
+    { id: 'HojaCostes', purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+      targetElement: '_HojaCostes', label: 'Entrada y entrega', position: 30 },
+    { id: 'Notas', purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+      targetElement: '_Notas', label: 'Notas', position: 40 },
+    { id: 'Avisos', purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+      targetElement: '_Avisos', label: 'Avisos', position: 50 },
+    // Pestana con la lista de fotos
+    { id: 'Fotos', purpose: #STANDARD, type: #LINEITEM_REFERENCE,
+      targetElement: '_Fotos', label: 'Fotos', position: 60 }
+  ]
+
+  @UI.hidden: true                        // el UUID no se ensena nunca
+  OrdenUUID;
+
+  @UI.lineItem: [ { position: 10, label: 'Orden' } ]        // columna 1 de la lista
+  @UI.identification: [ { position: 10, label: 'Orden' } ]  // campo 1 de la pestana Datos
+  @UI.selectionField: [ { position: 10 } ]                  // filtro 1 sobre la lista
+  OrdenRef;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  @UI.selectionField: [ { position: 20 } ]
+  Matricula;
+
+  @UI.lineItem: [ { position: 30, label: 'Titular' } ]
+  @UI.identification: [ { position: 30, label: 'Titular' } ]
+  @UI.selectionField: [ { position: 30 } ]
+  @UI.textArrangement: #TEXT_ONLY         // solo la razon social, sin el UUID
+  TitularUUID;
+
+  @UI.identification: [ { position: 40 } ]
+  @UI.multiLineText: true                 // caja de texto de varias lineas
+  Averia;
+
+  @UI.hidden: true
+  TitularNombre;
+}

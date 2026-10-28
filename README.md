@@ -29,7 +29,10 @@ La teoría usa como ejemplo un taller mecánico, con su propio modelo:
 
 - [Índice de los apuntes](./docs/README.md)
 - [Guía técnica del ERP](./docs/0_4_erp.md) y [guía técnica del taller](./docs/0_5_taller.md)
+- [Materiales](./docs/materiales/README.md): el [código completo del taller](./docs/materiales/taller/README.md), en formato abapGit, y los tests del ERP
 
-El resultado de los ejercicios vive en su propio repositorio, [erp-obras-reformas-sap](https://github.com/pdawgabriel-hub/erp-obras-reformas-sap). Este contiene los apuntes, los tests y las herramientas de apoyo. También sirve de copia de seguridad del paquete de pruebas `ZEJ`, porque la cuenta de pruebas de SAP caduca cada 90 días.
+El resultado de los ejercicios vive en su propio repositorio, [erp-obras-reformas-sap](https://github.com/pdawgabriel-hub/erp-obras-reformas-sap). Este contiene los apuntes, el código completo del taller, los tests y las herramientas de apoyo. Es además un repositorio de abapGit: con un *pull* sobre un paquete `ZTL` se importa el taller entero en un sistema.
 
-> El código de los apuntes se ha escrito siguiendo la documentación de SAP, pero todavía no se ha compilado contra un sistema real.
+En cada *push*, [GitHub Actions](./.github/workflows/comprobar-taller.yml) comprueba el código del taller con [abaplint](https://abaplint.org) y con [herramientas/comprobar_rap.py](./herramientas/comprobar_rap.py).
+
+> El código pasa las comprobaciones automáticas, pero todavía no se ha activado en un sistema real.

@@ -1,0 +1,39 @@
+@Metadata.layer: #CORE
+@UI.headerInfo: { typeName: 'Mecanico', typeNamePlural: 'Mecanicos',
+                  title: { value: 'MecanicoRef' } }
+annotate entity ZC_TlMecanico with
+{
+  // Secciones de la pagina de detalle
+  @UI.facet: [
+    { id: 'Datos', purpose: #STANDARD, type: #IDENTIFICATION_REFERENCE, label: 'Datos', position: 10 },
+    { id: 'Ausencias', purpose: #STANDARD, type: #LINEITEM_REFERENCE, targetElement: '_Ausencias', label: 'Ausencias', position: 20 }
+  ]
+
+  @UI.hidden: true
+  MecanicoUUID;
+
+  @UI.lineItem: [ { position: 10 } ]
+  @UI.identification: [ { position: 10 } ]
+  @UI.selectionField: [ { position: 10 } ]
+  MecanicoRef;
+
+  @UI.lineItem: [ { position: 20 } ]
+  @UI.identification: [ { position: 20 } ]
+  Nombre;
+
+  @UI.lineItem: [ { position: 30 } ]
+  @UI.identification: [ { position: 30 } ]
+  Apellidos;
+
+  @UI.lineItem: [ { position: 40 } ]
+  @UI.identification: [ { position: 40 } ]
+  Categoria;
+
+  @UI.lineItem: [ { position: 50 } ]
+  @UI.identification: [ { position: 50 } ]
+  TarifaBase;
+
+  @UI.lineItem: [ { position: 60 } ]
+  @UI.identification: [ { position: 60 } ]
+  NombreCompleto;
+}

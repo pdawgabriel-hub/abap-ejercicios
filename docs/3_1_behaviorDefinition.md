@@ -183,6 +183,8 @@ etag master LocalLastChangedAt
 3. Pon el cursor sobre el nombre de la tabla de borradores (`ztl_tit_d` en el taller) y pulsa **Ctrl+1** → *Create draft table*. Eclipse la crea con todos los campos de la vista más un bloque de administración del borrador (`"%admin"`). Activa la tabla.
 4. La BDEF seguirá marcando un error: falta su clase de implementación. Se crea en [3.2](./3_2_implementacion.md).
 
+> **Código completo del taller:** [BDEF del titular](./materiales/taller/src/bus/zi_tltitular.bdef.asbdef), [del presupuesto](./materiales/taller/src/bus/zi_tlpresupuesto.bdef.asbdef) y las tablas de borradores `_d` de [tablas/](./materiales/taller/tablas/). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al terminar habrá diez BDEF, una por BO, y una tabla `_d` por cada tabla con comportamiento.

@@ -144,6 +144,8 @@ annotate entity ZC_TlPresuNota with
 
 Clic derecho en la proyección → **New Metadata Extension**, con el mismo nombre que la vista. Escribe las anotaciones, activa y **recarga la vista previa** del binding (a veces hace falta vaciar la caché del navegador con **Ctrl+F5**).
 
+> **Código completo del taller:** [la de la orden](./materiales/taller/src/srv/zc_tlorden.ddlx.asddlxs), [la del resumen](./materiales/taller/src/srv/zi_tlordenresumen.ddlx.asddlxs) y [la del presupuesto](./materiales/taller/src/srv/zc_tlpresupuesto.ddlx.asddlxs). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Una metadata extension por proyección, en `ZGOR_SRV`, más las de las vistas de cálculo que se muestren en otra página (`ZI_GorObraFinanzas`, con `@Metadata.allowExtensions: true`).

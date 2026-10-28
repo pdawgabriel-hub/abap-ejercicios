@@ -120,6 +120,8 @@ Y después, el método que lo hace pasar, que solo **combina** los que ya existe
 
 `rs_` es el prefijo de una estructura devuelta (*returning structure*).
 
+> **Código completo del taller:** los tests de [zcl_tl_calculos](./materiales/taller/src/bus/zcl_tl_calculos.clas.testclasses.abap) y de [zcl_tl_jornada](./materiales/taller/src/bus/zcl_tl_jornada.clas.testclasses.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
+
 ## Preparación del entorno de trabajo
 
 Todo en esta unidad amplía objetos que ya existen: `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y su pestaña de tests.

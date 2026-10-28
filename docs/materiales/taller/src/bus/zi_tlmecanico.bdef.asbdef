@@ -1,0 +1,99 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed implementation in class zbp_i_tlmecanico unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlMecanico alias Mecanico
+persistent table ztl_mec
+draft table ztl_mec_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  field ( readonly ) MecanicoRef, NombreCompleto, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Nombre, Apellidos;
+
+  association _Ausencias { create; with draft; }
+
+  // 3.3: tarifa 30 si no se indica
+  determination valoresIniciales on modify { create; }
+  // 3.4: la tarifa no puede ser negativa
+  validation validarTarifa on save { create; field TarifaBase; }
+  // 3.7: MEC0001...
+  determination numerar on save { create; }
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validarTarifa;
+    validation Ausencia~validarPeriodo;
+  }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) MecanicoUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_mec corresponding
+  {
+    MecanicoUUID       = mecanico_uuid;
+    MecanicoRef        = mecanico_ref;
+    Nombre             = nombre;
+    Apellidos          = apellidos;
+    Categoria          = categoria;
+    TarifaBase         = tarifa_base;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}
+
+define behavior for ZI_TlAusencia alias Ausencia
+persistent table ztl_aus
+draft table ztl_aus_d
+lock dependent by _Mecanico
+authorization dependent by _Mecanico
+etag master LocalLastChangedAt
+{
+  update;
+  delete;
+
+  field ( readonly ) MecanicoUUID, Jornadas, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  field ( mandatory ) Desde, Hasta;
+
+  association _Mecanico { with draft; }
+
+  // 3.3: jornadas = hasta - desde + 1
+  determination calcularJornadas on modify { create; field Desde, Hasta; }
+  // 3.4: hasta no puede ser anterior a desde
+  validation validarPeriodo on save { create; field Desde, Hasta; }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) AusenciaUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_aus corresponding
+  {
+    AusenciaUUID       = ausencia_uuid;
+    MecanicoUUID       = mecanico_uuid;
+    Desde              = desde;
+    Hasta              = hasta;
+    Motivo             = motivo;
+    Jornadas           = jornadas;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

@@ -1,0 +1,58 @@
+// Comportamiento del objeto de negocio: que se puede hacer y que se ejecuta solo
+managed implementation in class zbp_i_tltitular unique;
+strict ( 2 );
+with draft;
+
+define behavior for ZI_TlTitular alias Titular
+persistent table ztl_tit
+draft table ztl_tit_d
+lock master
+total etag LastChangedAt
+authorization master ( global )
+etag master LocalLastChangedAt
+{
+  create;
+  update;
+  delete;
+
+  // Solo los escribe la logica del BO: codigo (3.7) y administracion
+  field ( readonly ) TitularRef, CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  // Fiori los marca con asterisco; la comprobacion de verdad es validarTitular
+  field ( mandatory ) RazonSocial, Contacto;
+
+  // 3.4: obligatorios y documento sin repetir
+  validation validarTitular on save { create; field RazonSocial, Contacto, DocumentoId; }
+  // 3.7: TIT0001, TIT0002... al guardar
+  determination numerar on save { create; }
+
+  // Las acciones del borrador: editar, guardar, descartar, retomar y preparar
+  draft action Edit;
+  draft action Activate optimized;
+  draft action Discard;
+  draft action Resume;
+  draft determine action Prepare
+  {
+    validation validarTitular;
+  }
+
+  // RAP genera el UUID al crear; nadie lo puede cambiar
+  field ( numbering : managed, readonly ) TitularUUID;
+
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
+  mapping for ztl_tit corresponding
+  {
+    TitularUUID        = titular_uuid;
+    TitularRef         = titular_ref;
+    RazonSocial        = razon_social;
+    DocumentoId        = documento_id;
+    Contacto           = contacto;
+    Poblacion          = poblacion;
+    Cp                 = cp;
+    Pais               = pais;
+    CreatedBy          = created_by;
+    CreatedAt          = created_at;
+    LastChangedBy      = last_changed_by;
+    LastChangedAt      = last_changed_at;
+    LocalLastChangedAt = local_last_changed_at;
+  }
+}

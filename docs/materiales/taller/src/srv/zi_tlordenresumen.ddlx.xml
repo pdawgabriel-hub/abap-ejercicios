@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<abapGit version="v1.0.0" serializer="LCL_OBJECT_DDLX" serializer_version="v1.0.0">
+ <asx:abap xmlns:asx="http://www.sap.com/abapxml" version="1.0">
+  <asx:values>
+   <DDLX>
+    <NAME>ZI_TLORDENRESUMEN</NAME>
+    <DESCRIPTION>Grupo 'Importes': los campos que pinta la pestana Hoja de co</DESCRIPTION>
+    <LANGUAGE>S</LANGUAGE>
+   </DDLX>
+  </asx:values>
+ </asx:abap>
+</abapGit>
