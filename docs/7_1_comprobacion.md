@@ -15,7 +15,7 @@ Antes de enseñar el proyecto a nadie, una última pasada con la misma lista que
 
 **El comportamiento**
 
-- [ ] El escenario de §12.7, a mano, en las apps, con sus capturas ([4.5](./4_5_proyecto.md)).
+- [ ] El escenario de §12.7, a mano, en las apps, con sus capturas ([4.6](./4_6_proyecto.md)).
 - [ ] `ZCL_GOR_COMPROBAR_CDS` dice «0 errores» con los datos de demo ([2.5](./2_5_proyecto.md)).
 - [ ] Las reglas de borrado: obra con cobros, obra sin cobros, cliente con presupuestos ([3.5](./3_5_actions.md)).
 

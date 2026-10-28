@@ -163,6 +163,47 @@ La partida calcula su importe y pide a su cabecera que se recalcule:
 
 `importesAlGuardar` solo hace `EXECUTE recalcularImportes` con sus `keys`. Mientras se edita, tras borrar una partida, el importe que se ve está desfasado hasta guardar. Si tu versión de RAP admite `delete` como disparador del hijo (`on modify { create; delete; field ... }`), se recalcula al momento: lo comprobarás en un ejercicio.
 
+## Avisar a la interfaz: *side effects*
+
+Las *determinations* recalculan en el servidor, pero Fiori **no se entera**. Cuando el usuario cambia la cantidad de una partida en un presupuesto en edición, la app envía ese cambio al borrador y vuelve a leer **solo la partida** (lo que ha tocado). `calcularPartida` ha recalculado también el neto, la cuota y el importe del presupuesto, pero la cabecera sigue mostrando los valores de antes hasta que se recarga la página. Para el usuario, la app parece rota.
+
+Los ***side effects*** le dicen a Fiori qué más tiene que volver a leer. Se declaran en la BDEF, en cada entidad:
+
+```sql
+define behavior for ZI_TlPresupuesto alias Presupuesto
+...
+{
+  ...
+  side effects
+  {
+    field Impuesto affects field Cuota, field Importe;
+    action aceptar affects $self;
+  }
+}
+
+define behavior for ZI_TlPartida alias Partida
+...
+{
+  ...
+  side effects
+  {
+    field Cantidad, PrecioUnitario affects field ImportePartida,
+                                           field _Presupuesto.Neto,
+                                           field _Presupuesto.Cuota,
+                                           field _Presupuesto.Importe;
+  }
+}
+```
+
+- `field X affects field Y`: si cambia `X`, vuelve a leer `Y`.
+- `field _Presupuesto.Neto`: un campo de **otra** entidad, a través de una association (aquí, la cabecera de la partida).
+- `action aceptar affects $self`: tras ejecutar la acción, vuelve a leer el registro entero.
+- La BDEF de **proyección** (4.1) tiene que declarar `use side effects;` para que los publique el servicio.
+
+Es la otra mitad de un `@api.onchange` de Odoo: allí, el formulario pinta solo todo lo que devuelve el método; en RAP la lógica (*determination*) y el aviso a la interfaz (*side effect*) son piezas separadas, y es muy fácil olvidar la segunda. Los *side effects* no cambian datos: solo dicen qué refrescar. Por eso no se notan en los tests con EML, sino en la app (4.6).
+
+> **Comprueba en tu versión** la sintaxis exacta para los campos de otra entidad y para el borrado de un hijo (por ejemplo, `entity _Partidas affects field Importe` en la cabecera). Si el editor no la acepta, pulsa **Ctrl+Espacio** dentro de `side effects` para ver las opciones.
+
 ## Crear un hijo: la hoja de costes
 
 La orden del taller debe nacer con su hoja de costes. Lo hace una determination de la orden que crea el hijo a través de la composición:
@@ -230,9 +271,10 @@ Se amplían tus BDEF de 3.1 y tus clases de 3.2. Tras añadir cada determination
     | Línea de parte | `calcularSubtotal` | `create; field Horas, CosteHora` | `CosteSubtotal` con tu `coste_subtotal`, y recalcula su parte |
     | Partes de especialista y de proveedor | `valoresPorDefecto` | `create` | `Fecha` de hoy y `EstadoPago` `pendiente` |
 
-5. **La tarifa congelada.** Con EML: crea un parte de trabajo para `OBR0001` con una línea de 8 h de `TRB0001` (20 €/h) y guarda. Cambia la tarifa de `TRB0001` a 25 y guarda. Vuelve a leer la línea: `CosteHora` sigue en 20 y `CosteSubtotal` en 160 (paso 5 de §12.7). Deja la tarifa otra vez en 20.
-6. **De nuevo la ficha.** Ejecuta `ZCL_GOR_COMPROBAR_CDS` (2.5): el parte del ejercicio 5 suma 160 € a `OBR0001`, así que fallarán sus gastos y su beneficio. ¿Coinciden los nuevos valores con lo que esperas? Vuelve a ejecutar `ZCL_GOR_DATOS_DEMO` para dejar los datos como estaban.
-7. **Investiga.** Prueba a añadir `delete` al disparador de `calcularLinea` y activa. Si tu sistema lo acepta, comprueba con EML que borrar una línea recalcula el total sin esperar a guardar. Si no, anota el mensaje. En los dos casos, explica en un comentario de la BDEF por qué existe `totalesAlGuardar`.
+5. **Los *side effects*.** Declara en tu BDEF del presupuesto los *side effects* necesarios para que, en la app, al cambiar las unidades o el precio de una línea se refresquen su total y la base, la cuota y el total del presupuesto; al cambiar el IVA, la cuota y el total; y al ejecutar `aprobar` o `desaprobar`, el propio presupuesto. Haz lo mismo en el parte de trabajo: al cambiar las horas, el coste/hora o el trabajador de una línea, sus totales. Lo comprobarás en la app en 4.6.
+6. **La tarifa congelada.** Con EML: crea un parte de trabajo para `OBR0001` con una línea de 8 h de `TRB0001` (20 €/h) y guarda. Cambia la tarifa de `TRB0001` a 25 y guarda. Vuelve a leer la línea: `CosteHora` sigue en 20 y `CosteSubtotal` en 160 (paso 5 de §12.7). Deja la tarifa otra vez en 20.
+7. **De nuevo la ficha.** Ejecuta `ZCL_GOR_COMPROBAR_CDS` (2.5): el parte del ejercicio 6 suma 160 € a `OBR0001`, así que fallarán sus gastos y su beneficio. ¿Coinciden los nuevos valores con lo que esperas? Vuelve a ejecutar `ZCL_GOR_DATOS_DEMO` para dejar los datos como estaban.
+8. **Investiga.** Prueba a añadir `delete` al disparador de `calcularLinea` y activa. Si tu sistema lo acepta, comprueba con EML que borrar una línea recalcula el total sin esperar a guardar. Si no, anota el mensaje. En los dos casos, explica en un comentario de la BDEF por qué existe `totalesAlGuardar`.
 
 ## Comprueba tu solución automáticamente (opcional)
 

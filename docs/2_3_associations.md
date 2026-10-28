@@ -99,6 +99,38 @@ define view entity ZI_TlOrdenMecanico
 
 `select distinct` quita las filas repetidas: un mecánico con diez jornadas en la misma orden sale una vez. Las dos columnas son la clave de la vista. No puede quedarse desactualizada porque no hay nada que actualizar.
 
+## Relaciones con lo estándar: vistas liberadas de SAP
+
+Tus vistas no solo se relacionan entre sí: también pueden apuntar a las **vistas liberadas** de SAP. En ABAP Cloud no se pueden leer las tablas de SAP, pero sí las vistas CDS que SAP ha marcado como liberadas para usarlas (*released*, contrato C1). Son las mismas en cualquier sistema SAP moderno, y es lo primero que harás en un proyecto de empresa: apoyarte en ellas en vez de crear tus propias tablas de países, monedas o unidades.
+
+En el trial hay pocas, porque es un sistema vacío, pero las básicas sí están: `I_Country` (países), `I_Currency` (monedas), `I_UnitOfMeasure` (unidades), `I_Language` (idiomas)… Para buscarlas: **Ctrl+Shift+A**, escribe `I_Country` y, con la vista abierta, mira la pestaña *Properties → API State*: debe decir *Released*.
+
+En el taller, el titular guarda su país como el código de dos letras de SAP (`ES`, `FR`…) en una columna `pais` de tipo `abap.char(3)`, y su vista se relaciona con `I_Country`:
+
+```sql
+define view entity ZI_TlTitular
+  as select from ztl_tit
+  association [0..1] to I_Country as _Pais
+    on $projection.Pais = _Pais.Country
+{
+  key titular_uuid as TitularUUID,
+      ...
+      pais         as Pais,
+      ...
+      _Pais
+}
+```
+
+Y el nombre del país, en el idioma del usuario, se lee a través de la association de textos que trae la propia vista de SAP:
+
+```sql
+      _Pais._Text[1: Language = $session.system_language].CountryName as PaisNombre
+```
+
+El filtro entre corchetes elige la fila del idioma de la sesión; `1:` le dice a CDS que, con ese filtro, sale una sola fila. Pon este campo en la **proyección** (Bloque 4), no en la vista interface, por el mismo motivo que el nombre del titular en la orden: es un dato de otro objeto.
+
+> Comprueba con **F2** sobre `I_Country` el nombre exacto de su association de textos y de sus campos en tu sistema. Si no tiene `_Text`, busca la vista `I_CountryText` y relaciónala tú.
+
 ## Preparación del entorno de trabajo
 
 Se modifican tus vistas de 2.2 y se crean tres nuevas en `ZGOR_CDS`. Al terminar, tu modelo tiene esta forma:
@@ -152,7 +184,8 @@ Solo lectura: ZI_GorObraTrab, ZI_GorObraProv, ZI_GorObraEsp   ← nuevas
     | `ZI_GorObraEsp` | `zgor_pe` | `ObraUUID`, `EspecialistaUUID` |
 5. **Navega.** Con los datos de 1.5, abre el Data Preview de `ZI_GorObra`, elige `OBR0001` y sigue `_Cliente`: debe salir Juan. Desde `ZI_GorCliente`, sigue `_Obras` de Juan: deben salir dos.
 6. **Una ruta.** En `ZI_GorObra`, añade un campo `ClienteNombre` que lea el nombre a través de `_Cliente` (antes de las associations) y actívala. Míralo en el Data Preview. Después **quítalo**: los datos de otra raíz se mostrarán en la proyección (Bloque 4), no en la interface, para que el objeto de negocio solo contenga sus propios campos.
-7. **Investiga.** Cambia temporalmente la cardinalidad de `_Gasto` a `[0..*]` y activa. ¿Da error? ¿Qué diferencia habría para el usuario? Vuelve a `[0..1]` y anota en `diseno.md` qué regla de §11.4 garantiza esa cardinalidad.
+7. **El país del cliente.** Añade a `zgor_cli` la columna `pais` (`abap.char(3)`), a `ZI_GorCliente` el campo `Pais` y una association `_Pais` a `I_Country`. En el Data Preview de `ZI_GorCliente`, pon `ES` a uno de tus clientes (con un `UPDATE` desde `ZCL_GOR_SQL_DEMO`) y sigue `_Pais`. No está en el informe: es una ampliación, como lo sería en un proyecto real que usa datos estándar.
+8. **Investiga.** Cambia temporalmente la cardinalidad de `_Gasto` a `[0..*]` y activa. ¿Da error? ¿Qué diferencia habría para el usuario? Vuelve a `[0..1]` y anota en `diseno.md` qué regla de §11.4 garantiza esa cardinalidad.
 
 ---
 

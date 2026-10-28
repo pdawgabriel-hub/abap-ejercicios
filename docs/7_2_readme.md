@@ -28,7 +28,7 @@ Quien mire tu repositorio dedicará al README menos de un minuto. Tiene que ente
 ## Ejercicios
 
 1. **Escríbelo.** Redacta el README de `erp-obras-reformas-sap` siguiendo los nueve puntos. Usa tus notas de `diseno.md` para las decisiones y las cifras de 7.1.
-2. **Las capturas.** Elige tres de las de 4.5: la lista de obras, la ficha de una obra y un error de validación. Comprueba que no se ve ningún dato real.
+2. **Las capturas.** Elige tres de las de 4.6: la lista de obras, la ficha de una obra y un error de validación. Comprueba que no se ve ningún dato real.
 3. **La prueba del minuto.** Pide a alguien que lea el README durante un minuto y te diga qué es el proyecto. Si no lo sabe decir, reescribe el principio.
 4. **Revisa los enlaces.** Que el enlace a la restauración, al diseño y al informe funcionen en GitHub.
 

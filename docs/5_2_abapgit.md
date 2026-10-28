@@ -44,6 +44,28 @@ Hazlo al terminar **cada sesión de trabajo**, aunque no hayas acabado la unidad
 
 Si cambias un objeto en el sistema **y** su fichero en GitHub, abapGit mostrará el conflicto al hacer *pull*. En ABAP Cloud lo normal es no editar nunca el código en GitHub: el sistema es la única fuente de los cambios, y GitHub, la copia.
 
+## En una empresa: órdenes de transporte
+
+En el trial, todo lo creas en `ZLOCAL`, un componente **local**: los objetos viven solo en ese sistema y abapGit es tu único medio de llevarlos a otro sitio. En una empresa no se trabaja así. Hay al menos **tres sistemas**:
+
+| Sistema | Para qué |
+|---|---|
+| Desarrollo (DEV) | Donde se programa |
+| Calidad o pruebas (QAS) | Donde los usuarios prueban con datos parecidos a los reales |
+| Producción (PRD) | Donde trabaja la empresa. Nadie programa aquí |
+
+Los cambios viajan de uno a otro en **órdenes de transporte**: al crear o modificar un objeto en desarrollo, Eclipse te pide una orden (o te propone la que tienes abierta), y el objeto queda **bloqueado** en ella hasta que se libera. Al **liberar** la orden, su contenido queda listo para importarse en calidad y, cuando se aprueba, en producción. En Eclipse las ves en la vista **Transport Organizer**.
+
+En SAP BTP ABAP Environment y en S/4HANA Cloud, el código además se agrupa en **componentes de software** (*software components*), que se mueven entre sistemas con Git por debajo (gCTS) y se gestionan con la app *Manage Software Components*. Es la misma idea que tu `ZLOCAL`, pero con un componente propio del proyecto en lugar del local.
+
+Lo que esto significa en el día a día:
+
+- **No se toca producción.** Un error se corrige en desarrollo y se transporta.
+- **Una orden por tarea**, con una descripción que diga qué cambia. Es el equivalente de un commit.
+- **Antes de liberar**: activar todo, tests y ATC. Es la rutina de commit de esta unidad, con otro nombre.
+
+En el trial no podrás practicarlo, pero si en la 0.1 Eclipse te pidió una orden al crear el paquete, ya has visto la primera.
+
 ## Ejercicios
 
 1. **Primer push del ERP.** Enlaza `ZGOR` con `erp-obras-reformas-sap` y sube todo. En GitHub, comprueba que en `src/` hay una carpeta por subpaquete y que tus tablas, vistas, BDEF y clases están.
@@ -51,6 +73,7 @@ Si cambias un objeto en el sistema **y** su fichero en GitHub, abapGit mostrará
 3. **Lee lo que se ha subido.** Abre en GitHub el fichero de una BDEF y el de una tabla. ¿En qué formato están? ¿Qué fichero acompaña a cada clase?
 4. **Un pull de prueba.** Cambia en el sistema el texto de un mensaje de una validation **sin** hacer *push*. Haz *Pull*: ¿qué te propone abapGit? Cancela, deshaz el cambio y haz *push* de lo que tengas.
 5. **Investiga.** ¿Qué es el fichero `.abapgit.xml`? Ábrelo en GitHub y anota qué guarda.
+6. **Investiga.** Abre la vista *Transport Organizer* en Eclipse. ¿Hay alguna orden a tu nombre? Si la hay, mira qué objetos contiene. Anota en `diseno.md` en qué se parecen y en qué se diferencian una orden de transporte y un commit de Git.
 
 ---
 

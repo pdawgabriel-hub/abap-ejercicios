@@ -8,7 +8,7 @@ Las semanas cuentan desde el día en que abras el primer trial. Con unas 8 a 10 
 
 | Semanas | Bloque | Hito |
 |---|---|---|
-| Antes del trial | 0 | Eclipse instalado; leer 0.2 y 0.3; leer el Bloque 1 |
+| Antes del trial | 0 | Eclipse configurado (0.1); leer 0.2 a 0.5; leer el Bloque 1 |
 | 1 | 0 y 1.1 a 1.3 | Trial abierto, fechas apuntadas, paquetes creados |
 | 2 y 3 | 1.4 a 1.9 | `ZCL_GOR_REGLAS` con 34 tests en verde; `diseno.md` en GitHub |
 | 4 y 5 | 2 | `ZCL_GOR_COMPROBAR_CDS`: 0 errores |

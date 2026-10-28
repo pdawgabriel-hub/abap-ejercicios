@@ -70,7 +70,9 @@ Resumen de las reglas de §11 del informe técnico de `gestion_bd` y de **dónde
 | `menuitem` | Fiori Launchpad | 6.2 |
 | Grupos e `ir.model.access.csv` | Objeto de autorización, catálogos y roles | 6.1 |
 | `TransactionCase` | ABAP Unit con dobles | 1.8, 3.8 |
+| `onchange` que devuelve valores al formulario | *Determination* + *side effects* | 3.3 |
 | `post_init_hook` (datos de demo) | Clase de consola `ZCL_GOR_DATOS_DEMO` | 2.5 |
+| API externa de Odoo (JSON-RPC) o la API REST de §12.5 | Servicio OData con *binding* Web API | 4.5 |
 
 ---
 

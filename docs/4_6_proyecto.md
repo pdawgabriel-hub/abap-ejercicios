@@ -1,4 +1,4 @@
-# 4.5. Proyecto: las tres apps
+# 4.6. Proyecto: las tres apps
 
 Cerramos el Bloque 4 usando el ERP **como lo usaría la oficina de una empresa de reformas**: sin EML ni Data Preview, solo con las tres apps. Repetirás a mano el escenario de §12.7 del informe, de la creación de la obra al último cobro, y guardarás capturas de cada paso para el README del portfolio.
 
@@ -17,7 +17,7 @@ El recorrido sigue la tabla de §12.7. Antes de empezar, ejecuta `ZCL_GOR_DATOS_
 | Paso | App | Qué haces | Qué debes ver |
 |---|---|---|---|
 | 1 | Comercial → Obras | Crear una obra para un cliente nuevo | Al guardar, tiene código `OBR…` y su ficha de gastos `GAS…` en la pestaña de seguimiento. Total 0, `pendiente` |
-| 2 | Comercial → Presupuestos | Presupuesto con una línea de 10 × 100 € para esa obra | Al elegir la obra se pone su cliente y se copian sus datos. Base 1000, cuota 210, total 1210. La obra sigue en 0 |
+| 2 | Comercial → Presupuestos | Presupuesto con una línea de 10 × 100 € para esa obra | Al elegir la obra se pone su cliente y se copian sus datos. Base 1000, cuota 210, total 1210, **sin recargar la página** al escribir la línea (*side effects*, 3.3). La obra sigue en 0 |
 | 3 | Presupuestos | Botón *Aprobar* | Estado `aprobado`; *Aprobar* se desactiva. La obra vale 1210 |
 | 4 | Recursos → Partes de trabajo | Parte con 8 h de dos trabajadores de 20 €/h | El coste/h se rellena solo al elegir el trabajador. Subtotales de 160; la obra suma 320 de mano de obra |
 | 5 | Recursos → Trabajadores | Subir la tarifa de uno a 25 €/h | El parte del paso 4 no cambia |

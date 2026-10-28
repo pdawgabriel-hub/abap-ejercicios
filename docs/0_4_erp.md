@@ -42,7 +42,7 @@ Todas las tablas siguen el mismo patrón ([1.5](./1_5_abapSql.md)): `client`, un
 
 | Entidad | Tabla | Código | Qué guarda (informe) | Relaciones |
 |---|---|---|---|---|
-| Cliente | `zgor_cli` | `CLI0001` | Nombre, apellidos, NIF, dirección, CP, teléfono (§3.1) | Tiene presupuestos, obras e ingresos |
+| Cliente | `zgor_cli` | `CLI0001` | Nombre, apellidos, NIF, dirección, CP, teléfono (§3.1) y país (`I_Country` de SAP, ampliación de 2.3) | Tiene presupuestos, obras e ingresos |
 | Trabajador | `zgor_trab` | `TRB0001` | Tipo, nombre, apellido, teléfono, coste/hora estándar (20 € por defecto) (§3.2) | Tiene faltas; aparece en líneas de parte |
 | Falta | `zgor_falta` | — | Inicio, fin, tipo (vacaciones, baja médica, personal, injustificada, otro), motivo, días (§3.12) | Hija del trabajador |
 | Proveedor | `zgor_prov` | `PROV0001` | Datos de contacto, referencias, base, IVA y total (§3.3) | Aparece en partes de proveedor y en presupuestos |
@@ -180,6 +180,8 @@ estado_gasto   = 'finalizado' si total − ingresos ≤ 0 y ingresos > 0; si no,
 | Financiero | Ingresos, fichas financieras, indicadores y calendario |
 | Recursos | Trabajadores con sus faltas, proveedores, especialistas y los tres tipos de parte |
 
+Además, el servicio `ZAPI_GOR_ERP` publica el ERP como **API OData** para otros sistemas, con la API mínima de §12.5 traducida a OData (4.5).
+
 Búsqueda por lo que la gente recuerda (§11.5, punto 10): «Juan Pérez» encuentra al cliente aunque nombre y apellidos estén en columnas distintas.
 
 ### Ampliaciones (Bloque 6)
@@ -190,6 +192,10 @@ Búsqueda por lo que la gente recuerda (§11.5, punto 10): «Juan Pérez» encue
 - **Migración**: carga de los datos de Odoo.
 - **Dashboard** (§3.14): salud global, top de obras por beneficio, distribución de costes, cobros pendientes, top de trabajadores por horas y evolución mensual.
 - **Calendario** (§3.13): presupuestos, ingresos y los tres tipos de parte en una vista.
+- **APIs externas**: los festivos de una API pública, en caché, para avisar al anotar un parte en festivo (6.6).
+- **S/4HANA**: importar clientes desde la API de *Business Partner* del *sandbox* de SAP (6.7).
+- **Eventos**: `IngresoRegistrado` y un registro de obras cobradas del todo (6.8).
+- **Autorización por instancia**: una obra pagada del todo solo la modifica el jefe (6.1; regla nueva, no está en el informe).
 
 ## 5. Pruebas
 
@@ -199,7 +205,7 @@ Búsqueda por lo que la gente recuerda (§11.5, punto 10): «Juan Pérez» encue
 | `ZCL_GOR_COMPROBAR_CDS` | Las vistas de cálculo, con cuatro obras de demo | 2.5 |
 | Tests de comportamiento | *Determinations*, *validations* y acciones, con EML sobre dobles de las tablas | 3.3 a 3.5 |
 | `ZCL_GOR_ESCENARIO` | El escenario completo de §12.7 contra los objetos de negocio | 3.8 |
-| Recorrido en las apps | El mismo escenario, a mano | 4.5 |
+| Recorrido en las apps | El mismo escenario, a mano | 4.6 |
 
 **El escenario de §12.7**, que guía todo el proyecto:
 

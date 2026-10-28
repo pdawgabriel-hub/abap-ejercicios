@@ -57,6 +57,7 @@ Los campos de administración no hace falta exponerlos todos, pero sí el *etag*
 projection;
 strict ( 2 );
 use draft;
+use side effects;
 
 define behavior for ZC_TlOrden alias Orden
 {
@@ -88,7 +89,7 @@ define behavior for ZC_TlOrdenFoto alias Foto
 }
 ```
 
-- `use draft` y las acciones de borrador: la app usa los borradores del BO.
+- `use draft` y las acciones de borrador: la app usa los borradores del BO. `use side effects` publica los *side effects* de la BDEF (3.3) para que Fiori refresque lo que cambian las *determinations*.
 - **Solo se usa lo que la app necesita.** La hoja de costes no tiene `use create` (la crea la determination de 3.3) ni `use delete`. Las acciones de negocio también se eligen una a una: en la proyección del presupuesto irían `use action aceptar;`, `use action vincularAOrden;`…
 - Lo que la proyección no usa, desde la app no existe, aunque el BO lo permita.
 

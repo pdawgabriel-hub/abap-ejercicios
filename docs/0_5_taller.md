@@ -33,7 +33,7 @@ Todas las tablas siguen el mismo patrón ([1.5](./1_5_abapSql.md)): `client`, un
 
 | Entidad | Tabla | Código | Qué guarda | Relaciones |
 |---|---|---|---|---|
-| Titular | `ztl_tit` | `TIT0001` | Razón social, documento, contacto, población, CP | Tiene presupuestos, órdenes y abonos |
+| Titular | `ztl_tit` | `TIT0001` | Razón social, documento, contacto, población, CP y país (`I_Country` de SAP) | Tiene presupuestos, órdenes y abonos |
 | Mecánico | `ztl_mec` | `MEC0001` | Nombre, apellidos, categoría, tarifa base (30 € si no se indica) | Tiene ausencias; aparece en tramos |
 | Ausencia | `ztl_aus` | — | Desde, hasta, motivo, jornadas | Hija del mecánico |
 | Distribuidor | `ztl_dis` | `DIS0001` | Nombre, neto de referencia, impuesto, bruto | Aparece en albaranes |

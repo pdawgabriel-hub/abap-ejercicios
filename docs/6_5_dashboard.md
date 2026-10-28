@@ -94,4 +94,4 @@ Los bloques del dashboard de Odoo (§3.14) son la especificación:
 
 ---
 
-**Siguiente:** [7.1. Comprobación final](./7_1_comprobacion.md)
+**Siguiente:** [6.6. Consumir APIs externas](./6_6_apiExterna.md)

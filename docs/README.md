@@ -8,7 +8,7 @@ Los contenidos que se presentan a continuación enseñan **ABAP Cloud** y el mod
 >
 > **Aviso.** El código se ha escrito siguiendo la documentación de SAP, pero **no se ha compilado contra un sistema real**. Si algo da error al activar, copia el mensaje exacto: es parte del aprendizaje. Las unidades menos verificadas lo indican al principio.
 
-**Antes de empezar:** todo el material comparte el mismo entorno (Eclipse con ADT y una cuenta trial de SAP BTP). Prepáralo siguiendo [0.1. Instalación y preparación del entorno](./00_instalacionEntorno.md). La cuenta trial dura **90 días** y hay que entrar al menos una vez cada 30: el repositorio es tu copia de seguridad ([5.3](./5_3_ciclo90dias.md)).
+**Antes de empezar:** todo el material comparte el mismo entorno (Eclipse con ADT y una cuenta trial de SAP BTP). Prepáralo siguiendo [0.1. Preparación del entorno](./00_instalacionEntorno.md). La cuenta trial dura **90 días** y hay que entrar al menos una vez cada 30: el repositorio es tu copia de seguridad ([5.3](./5_3_ciclo90dias.md)).
 
 | Bloque | Contenido | Horas |
 |-------:|-----------|------:|
@@ -16,9 +16,9 @@ Los contenidos que se presentan a continuación enseñan **ABAP Cloud** y el mod
 | 1 | Fundamentos del lenguaje: las reglas de negocio en ABAP | 24 |
 | 2 | Modelo de datos con CDS | 16 |
 | 3 | Comportamiento con RAP | 30 |
-| 4 | Servicios y apps Fiori | 16 |
+| 4 | Servicios, apps Fiori y API | 20 |
 | 5 | Calidad, Git y ciclo de 90 días | 8 |
-| 6 | Ampliaciones del proyecto | 20 |
+| 6 | Ampliaciones del proyecto | 32 |
 | 7 | Cierre del proyecto | 6 |
 
 ---
@@ -27,7 +27,7 @@ Los contenidos que se presentan a continuación enseñan **ABAP Cloud** y el mod
 
 Antes de escribir una línea de ABAP: el entorno de trabajo, qué es ABAP Cloud y los dos proyectos de estos apuntes, cada uno con su guía técnica y su modelo de datos.
 
-1. [Instalación y preparación del entorno](./00_instalacionEntorno.md)
+1. [Preparación del entorno](./00_instalacionEntorno.md)
 2. [Introducción: ABAP Cloud y SAP BTP](./01_introduccion.md)
 3. [Los dos proyectos](./0_3_dosProyectos.md)
 4. [Guía técnica del ERP de Obras y Reformas](./0_4_erp.md)
@@ -72,13 +72,14 @@ Crear, modificar, borrar, calcular y validar: el comportamiento de los diez obje
 
 ## Bloque 4. Servicios y apps Fiori
 
-La interfaz: proyecciones, servicios OData y anotaciones, hasta tener tres apps con las que repetir a mano el escenario.
+La interfaz y la API: proyecciones, servicios OData, anotaciones de Fiori y el mismo servicio publicado como API para otros sistemas, hasta tener tres apps con las que repetir a mano el escenario.
 
 1. [Proyecciones](./4_1_proyecciones.md)
 2. [Service Definition y Service Binding](./4_2_servicio.md)
 3. [Metadata Extensions y la interfaz](./4_3_metadataExtensions.md)
 4. [Comprobar y depurar](./4_4_depurar.md)
-5. *Proyecto:* [las tres apps](./4_5_proyecto.md)
+5. [El servicio como API](./4_5_api.md)
+6. *Proyecto:* [las tres apps](./4_6_proyecto.md)
 
 ## Bloque 5. Calidad, Git y ciclo de 90 días
 
@@ -91,13 +92,16 @@ Que el proyecto dure: control de calidad, GitHub y la restauración en un trial 
 
 ## Bloque 6. Ampliaciones del proyecto
 
-Lo que completaba la aplicación en Odoo: permisos, moneda y menú, documentos, migración de datos, dashboard y calendario. Son unidades independientes; algunas dependen de lo que permita el trial.
+Lo que completaba la aplicación en Odoo: permisos, moneda y menú, documentos, migración de datos, dashboard y calendario; el uso de APIs externas, cómo se extiende un S/4HANA y los eventos de negocio. Son unidades independientes; algunas dependen de lo que permita el trial.
 
 1. [Seguridad: autorizaciones y roles](./6_1_seguridad.md)
 2. [Moneda y Fiori Launchpad](./6_2_monedaLaunchpad.md)
 3. [Documentos imprimibles](./6_3_documentosPdf.md)
 4. [Migración de datos desde Odoo](./6_4_migracion.md)
 5. [Dashboard y calendario](./6_5_dashboard.md)
+6. [Consumir APIs externas](./6_6_apiExterna.md)
+7. [S/4HANA: extender lo estándar](./6_7_s4hana.md)
+8. [Business events](./6_8_eventos.md)
 
 ## Bloque 7. Cierre del proyecto
 

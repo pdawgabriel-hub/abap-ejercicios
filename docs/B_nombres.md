@@ -19,13 +19,14 @@ Los nombres de los objetos siguen unas reglas fijas. En el trial, además, todos
 | Estructura | `zgor_s_<nombre>` | `zgor_s_bitacora` | 30 |
 | Vista interface | `ZI_Gor<Entidad>` | `ZI_GorPresupuesto` | 30 |
 | Vista de cálculo | `ZI_Gor<Entidad><Qué>` | `ZI_GorObraFinanzas`, `ZI_GorTrabAcum` | 30 |
-| Entidad abstracta (parámetro) | `ZA_Gor<Acción>` | `ZA_GorVincularObra` | 30 |
+| Entidad abstracta (parámetro de una acción o de un evento) | `ZA_Gor<Nombre>` | `ZA_GorVincularObra` | 30 |
 | Proyección | `ZC_Gor<Entidad>` | `ZC_GorObra` | 30 |
 | Metadata extension | Igual que la proyección | `ZC_GorObra` | 30 |
 | BDEF | Igual que la vista raíz | `ZI_GorObra` | 30 |
 | Clase de comportamiento | `zbp_i_gor<raíz>` | `zbp_i_gorobra` | 30 |
 | Service Definition | `ZUI_GOR_<ÁREA>` | `ZUI_GOR_COMERCIAL` | 30 |
 | Service Binding | La definición con `_O4` | `ZUI_GOR_COMERCIAL_O4` | 30 |
+| Servicio para otros sistemas (Web API) | `ZAPI_GOR_<NOMBRE>`, *binding* con `_O4` | `ZAPI_GOR_ERP_O4` | 30 |
 | Interfaz de tipos | `ZIF_GOR_<NOMBRE>` | `ZIF_GOR_TIPOS` | 30 |
 | Clase | `ZCL_GOR_<NOMBRE>` | `ZCL_GOR_REGLAS` | 30 |
 | Excepción | `ZCX_GOR_<NOMBRE>` | `ZCX_GOR_REGLA` | 30 |

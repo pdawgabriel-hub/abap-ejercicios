@@ -76,7 +76,7 @@ La consola de esta unidad presenta las entidades que vamos a construir. Son las 
 
 ## Preparación del entorno de trabajo
 
-Necesitas Eclipse con ADT conectado a tu trial, como se explica en [0.1. Instalación y preparación del entorno](./00_instalacionEntorno.md). En esta unidad creas los paquetes de `ZGOR`; a partir de aquí, todo el proyecto vive en ellos.
+Necesitas Eclipse con ADT conectado a tu trial, como se explica en [0.1. Preparación del entorno](./00_instalacionEntorno.md). En esta unidad creas los paquetes de `ZGOR`; a partir de aquí, todo el proyecto vive en ellos.
 
 Al terminar, el proyecto tendrá esta forma:
 

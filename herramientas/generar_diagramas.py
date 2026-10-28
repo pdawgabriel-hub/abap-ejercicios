@@ -184,7 +184,7 @@ def erp():
         T("zgor_cli", "Clientes", 1, [
             ("cliente_uuid", U, "PK"), ("cliente_id", "char 8", ""), ("nombre", "char 60", ""),
             ("apellidos", "char 80", ""), ("nif", "char 12", ""), ("direccion", "char 120", ""),
-            ("cod_postal", "char 5", ""), ("telf", "char 20", "")]),
+            ("cod_postal", "char 5", ""), ("telf", "char 20", ""), ("pais", "char 3", "FK")]),
         T("zgor_obra", "Obras", 2, [
             ("obra_uuid", U, "PK"), ("obra_id", "char 8", ""), ("descripcion", "char 255", ""),
             ("cliente_uuid", U, "FK")]),
@@ -256,7 +256,7 @@ def erp():
         ("zgor_presu_es", "especialista_uuid", "zgor_esp", "N", "1"),
     ]
     nota = ("Todas las tablas llevan ademas client y los 5 campos de administracion. "
-            "No se dibujan las 21 tablas satelite (_obs, _inc, _arc).")
+            "No se dibujan las 21 tablas satelite (_obs, _inc, _arc). pais apunta a I_Country de SAP.")
     return dibujar("ERP de Obras y Reformas - modelo relacional (ZGOR)", tablas, rel, nota)
 
 
@@ -278,7 +278,7 @@ def taller():
         T("ztl_tit", "Titulares", 1, [
             ("titular_uuid", U, "PK"), ("titular_ref", "char 8", ""), ("razon_social", "char 100", ""),
             ("documento_id", "char 12", ""), ("contacto", "char 20", ""), ("poblacion", "char 60", ""),
-            ("cp", "char 5", "")]),
+            ("cp", "char 5", ""), ("pais", "char 3", "FK")]),
         T("ztl_orden", "Ordenes de reparacion", 2, [
             ("orden_uuid", U, "PK"), ("orden_ref", "char 8", ""), ("matricula", "char 10", ""),
             ("averia", "char 255", ""), ("titular_uuid", U, "FK")]),
@@ -336,7 +336,7 @@ def taller():
         ("ztl_prs_dis", "distribuidor_uuid", "ztl_dis", "N", "1"),
     ]
     nota = ("Todas las tablas llevan ademas client y los 5 campos de administracion. "
-            "No se dibujan las tablas de notas, avisos y fotos (_not, _avi, _fot).")
+            "No se dibujan las tablas de notas, avisos y fotos (_not, _avi, _fot). pais apunta a I_Country de SAP.")
     return dibujar("Taller RuedaLibre - modelo relacional (ZTL)", tablas, rel, nota)
 
 
