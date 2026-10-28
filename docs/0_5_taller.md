@@ -130,8 +130,8 @@ estado_hoja       = 'cerrada' si saldo_pendiente ≤ 0 y abonado > 0; si no, 'ab
 
 - **Códigos** correlativos por serie (`TIT`, `MEC`, `DIS`, `SUB`, `PRS`, `ORD`, `HCO`, `ABO`), asignados al guardar.
 - **Búsqueda**: «García Ruiz» encuentra al mecánico aunque «García» esté en el nombre y «Ruiz» en los apellidos; en el taller, cada palabra tiene que ser el **principio** de algún campo.
-- **Indicadores**: órdenes por semáforo y saldo pendiente; ranking de mecánicos por euros (6.5).
-- **Calendario**: presupuestos, jornadas y abonos en una sola vista, con clave tipo + UUID (6.5).
+- **Indicadores**: órdenes por semáforo y saldo pendiente; ranking de mecánicos por euros (6.4).
+- **Calendario**: presupuestos, jornadas y abonos en una sola vista, con clave tipo + UUID (6.4).
 - **Exportación**: el presupuesto como hoja de cálculo adjunta (6.3).
 - **Permisos**: solo el jefe de taller puede borrar órdenes (6.1).
 

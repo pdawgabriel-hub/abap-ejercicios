@@ -1,4 +1,4 @@
-# 6.5. Dashboard y calendario
+# 6.4. Dashboard y calendario
 
 > **Zona menos verificada.** Las vistas CDS de esta unidad son estables. Lo que cambia según el sistema es **cómo mostrarlas**: los tipos de app con gráficos (*Analytical List Page*, *Overview Page*) se generan con *Business Application Studio*, que puede no estar disponible en el trial. Con la vista previa del *binding* siempre tendrás listas ordenadas y con colores.
 
@@ -94,4 +94,4 @@ Los bloques del dashboard de Odoo (§3.14) son la especificación:
 
 ---
 
-**Siguiente:** [6.6. Consumir APIs externas](./6_6_apiExterna.md)
+**Siguiente:** [6.5. Consumir APIs externas](./6_5_apiExterna.md)

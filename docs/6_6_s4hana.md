@@ -1,8 +1,8 @@
-# 6.7. S/4HANA: extender lo estándar
+# 6.6. S/4HANA: extender lo estándar
 
 > **Zona menos verificada.** La parte teórica describe cómo se trabaja en S/4HANA; el trial de BTP **no es un S/4HANA** y no la permite practicar. La parte práctica usa el *sandbox* público de SAP, cuya URL, formato y condiciones de uso pueden cambiar: compruébalos en la web del *SAP Business Accelerator Hub* antes de empezar.
 
-Tu ERP se ha construido **desde cero**: sus propias tablas de clientes, presupuestos y obras. En una empresa que usa **S/4HANA**, el ERP de SAP, casi nunca se hace así: S/4HANA ya trae clientes, proveedores, pedidos, facturas, materiales y contabilidad, y el trabajo consiste en **usar y extender** lo que hay. Esta unidad explica cómo, y termina con una práctica real: leer clientes de un S/4HANA desde tu ERP a través de su API.
+Tu ERP se ha construido **desde cero**: sus propias tablas de clientes, presupuestos y obras. En una empresa que usa **S/4HANA**, el ERP de SAP, casi nunca se hace así: S/4HANA ya trae clientes, proveedores, pedidos, facturas, materiales y contabilidad, y el trabajo consiste en **usar y extender** lo que hay. Esta unidad explica cómo, y termina con una práctica real: consultar los clientes de un S/4HANA de demostración a través de su API y compararlos con los de tu ERP, sin guardar nada.
 
 ## Qué trae S/4HANA
 
@@ -64,7 +64,7 @@ Accept: application/json
 
 `BusinessPartnerCategory` es `1` para una persona y `2` para una organización. En OData V2 la lista viene dentro de `d.results`.
 
-En el taller, una clase lee los *Business Partner* con el cliente HTTP de 6.6 y los convierte en titulares. Lo nuevo respecto a 6.6 es la cabecera con la clave y la forma del JSON:
+En el taller, una clase de consola lee los *Business Partner* con el cliente HTTP de 6.5 y los muestra. No se guarda nada: los datos del *sandbox* son inventados, y el objetivo es ver cómo es un objeto estándar de SAP por dentro. Lo nuevo respecto a 6.5 es la cabecera con la clave y la forma del JSON:
 
 ```abap
     DATA(lo_destino) = cl_http_destination_provider=>create_by_url(
@@ -91,22 +91,22 @@ En el taller, una clase lee los *Business Partner* con el cliente HTTP de 6.6 y 
     lo_cliente->close( ).
 ```
 
-Con `pretty_mode-camel_case`, el campo JSON `BusinessPartnerFullName` va al componente `business_partner_full_name`. Después, cada *Business Partner* se crea como titular con EML (3.2), guardando su número en un campo de referencia para no importarlo dos veces.
+Con `pretty_mode-camel_case`, el campo JSON `BusinessPartnerFullName` va al componente `business_partner_full_name`. Después, la clase del taller escribe en la consola cada *Business Partner* junto al campo del titular en el que encajaría: es una forma de comparar el modelo estándar con el propio, sin guardar nada.
 
-**La clave de API no va en el código ni en GitHub.** Para practicar, pásala como constante en una clase que no subas, o léela de una tabla propia que rellenas a mano. En una empresa iría en un destino configurado (6.6).
+**La clave de API no va en el código ni en GitHub.** Para practicar, pásala como constante en una clase que no subas, o léela de una tabla propia que rellenas a mano. En una empresa iría en un destino configurado (6.5).
 
 ## Preparación del entorno de trabajo
 
-Una cuenta en `api.sap.com` con la clave de la API de *Business Partner*. La clase de importación va en `ZGOR_TEST`.
+Una cuenta en `api.sap.com` con la clave de la API de *Business Partner*. La clase de consulta va en `ZGOR_TEST`.
 
 ## Ejercicios
 
 1. **El mapa estándar.** Haz en `diseno.md` una tabla con cada entidad de tu ERP y el objeto estándar de S/4HANA que la cubriría (o «ninguno»). Para tres de ellas, busca en el *Business Accelerator Hub* la vista CDS o la API liberada que usarías y apunta su nombre.
 2. **Si fuera una extensión.** Explica en media página cómo cambiaría tu modelo de datos si el ERP se construyera **dentro** de un S/4HANA: qué tablas desaparecerían, a qué apuntarían las obras y los partes, y qué se ganaría y se perdería.
 3. **Leer el *sandbox*.** Prueba en el navegador o con `curl` la petición de los 5 primeros *Business Partner* con su dirección. Anota qué campos traen el nombre, la calle, el código postal y la ciudad, y dónde estaría el NIF (pista: `to_BusinessPartnerTax`).
-4. **Importar clientes.** Añade a `zgor_cli` (y a su vista y su BDEF) una columna `bp_externo` (`abap.char(10)`). Crea `ZCL_GOR_IMPORTAR_BP`, que lea 5 *Business Partner* de tipo organización (`$filter=BusinessPartnerCategory eq '2'`) con su dirección y los cree como clientes con EML: el nombre completo como nombre, la calle como dirección, el CP y un teléfono provisional. No debe crear dos veces el mismo `bp_externo`. Comprueba que tus *determinations* y *validations* se aplican: tienen código `CLI…`.
+4. **Consultar desde ABAP.** Crea la clase de consola `ZCL_GOR_CONSULTAR_BP`, que lea 5 *Business Partner* de tipo organización (`$filter=BusinessPartnerCategory eq '2'`) con su dirección y su NIF, y escriba en la consola cada uno junto al campo de tu cliente en el que encajaría cada dato: nombre, dirección, código postal, NIF. Anota en `diseno.md` qué datos de tu cliente no tienen equivalente en el *Business Partner* y cuáles del *Business Partner* no tienes tú.
 5. **Investiga.** En la documentación de la API de *Business Partner*, ¿qué roles (`to_BusinessPartnerRole`) tendría un cliente y cuáles un proveedor? ¿Cómo encajarían tus especialistas?
 
 ---
 
-**Siguiente:** [6.8. Business events](./6_8_eventos.md)
+**Siguiente:** [6.7. Business events](./6_7_eventos.md)

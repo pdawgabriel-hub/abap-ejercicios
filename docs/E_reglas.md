@@ -46,7 +46,7 @@ Resumen de las reglas de §11 del informe técnico de `gestion_bd` y de **dónde
 | 8. Códigos legibles | `asignarCodigo` (3.7) |
 | 9. Bitácoras con autor y fecha | Campos de administración y `@Semantics` (2.2, 3.6) |
 | 10. Buscar por lo que la gente recuerda | `coincide_busqueda` (1.4) y búsqueda de Fiori (4.1, 4.3) |
-| 11. Dashboard por fecha real | Vistas de 6.5 |
+| 11. Dashboard por fecha real | Vistas de 6.4 |
 | 12. Borrar una obra borra lo suyo | Guardado adicional de la obra (3.5, 3.6) |
 | 13. Presupuestos e ingresos del cliente de su obra | *Validations* (3.4) y `vincularAObra` (3.5) |
 | 14. Borrar no deja restos | Adjuntos en la propia fila; composiciones (3.6) |
@@ -65,7 +65,7 @@ Resumen de las reglas de §11 del informe técnico de `gestion_bd` y de **dónde
 | `ondelete='cascade'` | Composición | 2.3 |
 | Botón (`action_*`) | *Action* | 3.5 |
 | `TransientModel` (asistente) | *Action* con parámetro | 3.5 |
-| Modelo con `_auto = False` | Vista CDS con `union all` | 6.5 |
+| Modelo con `_auto = False` | Vista CDS con `union all` | 6.4 |
 | Vistas XML | Proyección + metadata extension | 4.1, 4.3 |
 | `menuitem` | Fiori Launchpad | 6.2 |
 | Grupos e `ir.model.access.csv` | Objeto de autorización, catálogos y roles | 6.1 |

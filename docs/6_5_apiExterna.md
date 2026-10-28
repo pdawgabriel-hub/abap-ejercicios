@@ -1,4 +1,4 @@
-# 6.6. Consumir APIs externas
+# 6.5. Consumir APIs externas
 
 > **Zona menos verificada.** Las clases del cliente HTTP y de JSON que se usan aquí están liberadas para ABAP Cloud, pero no se han probado contra el trial. Comprueba también que tu trial permite llamadas a Internet: si no, la llamada fallará con un error de destino.
 
@@ -114,9 +114,9 @@ La clase de la API va en `ZGOR_BUS`; la tabla de festivos, en `ZGOR_DDIC`; la cl
 2. **Los de tu comunidad.** Añade un parámetro con el código de la comunidad (por ejemplo `ES-MD`) y devuelve solo los festivos nacionales (`global`) y los de esa comunidad. Compara cuántos salen para dos comunidades distintas.
 3. **La caché.** Crea la tabla `zgor_festivo` (`fecha` dats como clave junto a `client`, y `nombre` char(80)) y una clase de consola `ZCL_GOR_CARGA_FESTIVOS` que la vacíe y la rellene con los festivos del año y la comunidad que indiques. Ejecútala.
 4. **El aviso.** Añade a tu parte de trabajo una validation `avisarFestivo` (`create; field Fecha`) que, si la fecha es festivo según `zgor_festivo`, añada un **aviso** (no un error) con el nombre del festivo. Pruébalo con EML: el parte se guarda y `REPORTED` trae el aviso.
-5. **En el calendario.** Añade a `ZI_GorCalendario` (6.5) una sexta rama con los festivos de `zgor_festivo`.
+5. **En el calendario.** Añade a `ZI_GorCalendario` (6.4) una sexta rama con los festivos de `zgor_festivo`.
 6. **Investiga.** ¿Qué pasa en tu validation si un año no has cargado los festivos? ¿Y si la API cambia el formato de su JSON? Anota en `diseno.md` cómo lo detectarías y qué harías.
 
 ---
 
-**Siguiente:** [6.7. S/4HANA: extender lo estándar](./6_7_s4hana.md)
+**Siguiente:** [6.6. S/4HANA: extender lo estándar](./6_6_s4hana.md)

@@ -18,7 +18,7 @@ Los contenidos que se presentan a continuación enseñan **ABAP Cloud** y el mod
 | 3 | Comportamiento con RAP | 30 |
 | 4 | Servicios, apps Fiori y API | 20 |
 | 5 | Calidad, Git y ciclo de 90 días | 8 |
-| 6 | Ampliaciones del proyecto | 32 |
+| 6 | Ampliaciones del proyecto | 28 |
 | 7 | Cierre del proyecto | 6 |
 
 ---
@@ -92,16 +92,15 @@ Que el proyecto dure: control de calidad, GitHub y la restauración en un trial 
 
 ## Bloque 6. Ampliaciones del proyecto
 
-Lo que completaba la aplicación en Odoo: permisos, moneda y menú, documentos, migración de datos, dashboard y calendario; el uso de APIs externas, cómo se extiende un S/4HANA y los eventos de negocio. Son unidades independientes; algunas dependen de lo que permita el trial.
+Lo que completaba la aplicación en Odoo: permisos, moneda y menú, documentos, dashboard y calendario; el uso de APIs externas, cómo se extiende un S/4HANA y los eventos de negocio. Son unidades independientes; algunas dependen de lo que permita el trial.
 
 1. [Seguridad: autorizaciones y roles](./6_1_seguridad.md)
 2. [Moneda y Fiori Launchpad](./6_2_monedaLaunchpad.md)
 3. [Documentos imprimibles](./6_3_documentosPdf.md)
-4. [Migración de datos desde Odoo](./6_4_migracion.md)
-5. [Dashboard y calendario](./6_5_dashboard.md)
-6. [Consumir APIs externas](./6_6_apiExterna.md)
-7. [S/4HANA: extender lo estándar](./6_7_s4hana.md)
-8. [Business events](./6_8_eventos.md)
+4. [Dashboard y calendario](./6_4_dashboard.md)
+5. [Consumir APIs externas](./6_5_apiExterna.md)
+6. [S/4HANA: extender lo estándar](./6_6_s4hana.md)
+7. [Business events](./6_7_eventos.md)
 
 ## Bloque 7. Cierre del proyecto
 

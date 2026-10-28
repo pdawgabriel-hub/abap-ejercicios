@@ -20,9 +20,9 @@ Las condiciones se comprueban en orden y se ejecuta solo la primera rama que se 
     DATA(lv_importe) = CONV decfloat34( '605' ).
     DATA(lv_abonado) = CONV decfloat34( '300' ).
 
-    IF lv_abonado <= 0.
+    IF lv_abonado <= 0.                       " primera condicion que se comprueba
       out->write( 'sin_abonar' ).
-    ELSEIF lv_abonado < lv_importe.
+    ELSEIF lv_abonado < lv_importe.           " solo se mira si la anterior no se cumplio
       out->write( 'abonado_parcial' ).
     ELSE.
       out->write( 'liquidado' ).
@@ -53,11 +53,13 @@ El orden importa. Si una orden tiene importe 0 y el titular ya ha pagado algo, n
 Cuando lo que se decide es **un valor** (no qué sentencias ejecutar), es más corto usar una expresión. `COND` es un `IF` que devuelve un valor; `SWITCH`, un `CASE`:
 
 ```abap
+    " COND devuelve el valor de la primera rama que se cumple
     DATA(lv_situacion) = COND zif_tl_tipos=>ty_situacion(
                            WHEN lv_abonado <= 0         THEN 'sin_abonar'
                            WHEN lv_abonado < lv_importe THEN 'abonado_parcial'
                            ELSE                              'liquidado' ).
 
+    " SWITCH compara un valor con varios posibles, como CASE
     DATA(lv_texto) = SWITCH string( lv_situacion
                        WHEN 'sin_abonar' THEN 'Pendiente de pago'
                        WHEN 'liquidado'  THEN 'Pagada'
@@ -72,6 +74,7 @@ Así quedan en `ZCL_TL_CALCULOS` las decisiones del resumen de la orden. Las con
 
 ```abap
   METHOD situacion_cobro.
+    " El # toma el tipo del resultado (rv_situacion); se usan las constantes, no textos sueltos
     rv_situacion = COND #( WHEN iv_abonado <= 0         THEN zif_tl_tipos=>situacion_cobro-sin_abonar
                            WHEN iv_abonado < iv_importe THEN zif_tl_tipos=>situacion_cobro-abonado_parcial
                            ELSE                              zif_tl_tipos=>situacion_cobro-liquidado ).
@@ -87,10 +90,13 @@ Así quedan en `ZCL_TL_CALCULOS` las decisiones del resumen de la orden. Las con
   ENDMETHOD.
 
   METHOD porcentaje_liquidado.
+    " Sin importe no hay porcentaje: se sale antes de dividir entre cero
     IF iv_importe = 0.
-      RETURN.                                   " 0 %
+      RETURN.                                   " rv_tanto se queda en 0
     ENDIF.
+    " Porcentaje con 1 decimal
     DATA(lv_tanto) = round( val = iv_abonado * 100 / iv_importe dec = 1 ).
+    " Acotarlo entre 0 y 100 (si se cobra de mas, 100)
     rv_tanto = COND #( WHEN lv_tanto > 100 THEN 100
                        WHEN lv_tanto < 0   THEN 0
                        ELSE lv_tanto ).
@@ -129,12 +135,12 @@ Con ellas se construye el rótulo de un titular para los desplegables:
 ```abap
   METHOD rotulo_titular.
     " TIT0001 · Talleres Ebro SL [B50123456]; sin razon social, solo el codigo
-    rv_rotulo = iv_codigo.
-    IF condense( iv_razon_social ) IS INITIAL.
+    rv_rotulo = iv_codigo.                              " como minimo, el codigo
+    IF condense( iv_razon_social ) IS INITIAL.          " condense quita espacios: '   ' cuenta como vacio
       RETURN.
     ENDIF.
-    rv_rotulo = |{ rv_rotulo } · { condense( iv_razon_social ) }|.
-    IF iv_documento_id IS NOT INITIAL.
+    rv_rotulo = |{ rv_rotulo } · { condense( iv_razon_social ) }|.   " plantilla: texto + valores
+    IF iv_documento_id IS NOT INITIAL.                  " el documento, solo si existe
       rv_rotulo = |{ rv_rotulo } [{ iv_documento_id }]|.
     ENDIF.
   ENDMETHOD.
@@ -146,7 +152,9 @@ Seguimos con `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y `ZCL_GOR_TIPOS_DEMO` de [1.2](.
 
 ## Ejercicios
 
-1. **Las constantes de estado.** Añade a `ZIF_GOR_TIPOS` tres grupos de constantes de tipo `ty_estado`, con el valor igual al nombre:
+1. **Las constantes de estado.**
+    - **Dónde:** `ZIF_GOR_TIPOS`, debajo de `estado_presu`.
+    - **Qué contiene:** tres grupos de constantes de tipo `ty_estado`, con el valor igual al nombre (como `situacion_cobro` en el taller):
 
     | Grupo | Constantes |
     |---|---|
@@ -154,7 +162,11 @@ Seguimos con `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y `ZCL_GOR_TIPOS_DEMO` de [1.2](.
     | `salud` | `verde`, `ambar`, `rojo` |
     | `estado_gasto` | `proceso`, `finalizado` |
 
-2. **Los estados de la obra.** Añade a `ZCL_GOR_REGLAS`:
+    - **Comprueba:** la interfaz activa sin errores.
+
+2. **Los estados de la obra.**
+    - **Dónde:** `ZCL_GOR_REGLAS`: la declaración en la `PUBLIC SECTION` y el código en la implementación.
+    - **Qué contiene** (métodos estáticos, cada uno con su regla en un comentario):
 
     | Método | Parámetros de entrada | Devuelve | Regla (§11.2) |
     |---|---|---|---|
@@ -163,17 +175,31 @@ Seguimos con `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y `ZCL_GOR_TIPOS_DEMO` de [1.2](.
     | `estado_gasto` | `iv_total_obra`, `iv_ingresos` (`ty_importe`) | `rv_estado` (`ty_estado`) | `finalizado` si `total − ingresos ≤ 0` **y** `ingresos > 0`; si no, `proceso` |
 
     Usa las constantes del ejercicio 1, nunca los textos sueltos.
+    - **Comprueba:** con el test de la unidad (las clases de test 1.2 y 1.3 juntas).
 
-3. **El porcentaje cobrado.** Añade `porcentaje_cobrado`, con `iv_total` e `iv_pendiente` (`ty_importe`), que devuelve `rv_porcentaje` (`ty_porcentaje`). Regla (§11.2): 0 si el total es 0; si no, `(total − pendiente) × 100 / total`, redondeado a **1 decimal** y acotado entre 0 y 100. Fíjate en que no recibe lo cobrado, como el del taller, sino **lo pendiente**.
-4. **Códigos.** Añade `formatear_codigo`, con `iv_prefijo` (`string`) e `iv_numero` (`i`), que devuelve `rv_codigo` (`ty_codigo`): el prefijo seguido del número con 4 cifras y ceros a la izquierda (`OBR0007`, `PROV0123`; §10). Hazlo con una sola plantilla. En `ZCL_GOR_TIPOS_DEMO`, escribe con un `DO 3 TIMES` los tres primeros códigos de cada uno de los 8 prefijos de [1.1](./1_1_classrun.md).
-5. **Nombres y etiquetas.** Añade dos métodos con parámetros y resultado de tipo `string`:
+3. **El porcentaje cobrado.**
+    - **Dónde:** `ZCL_GOR_REGLAS`.
+    - **Firma:** `porcentaje_cobrado`, con `iv_total` e `iv_pendiente` (`ty_importe`), devuelve `rv_porcentaje` (`ty_porcentaje`).
+    - **Qué hace** (§11.2): 0 si el total es 0; si no, `(total − pendiente) × 100 / total`, redondeado a **1 decimal** y acotado entre 0 y 100. Fíjate en que no recibe lo cobrado, como el del taller, sino **lo pendiente**.
+    - **Comprueba:** en `ZCL_GOR_TIPOS_DEMO`, escribe `porcentaje_cobrado( iv_total = 1210 iv_pendiente = 710 )`: debe salir **41.3**.
+
+4. **Códigos.**
+    - **Dónde:** `ZCL_GOR_REGLAS`.
+    - **Firma:** `formatear_codigo`, con `iv_prefijo` (`string`) e `iv_numero` (`i`), devuelve `rv_codigo` (`ty_codigo`).
+    - **Qué hace** (§10): el prefijo seguido del número con 4 cifras y ceros a la izquierda (`OBR0007`, `PROV0123`), con una sola plantilla de texto.
+    - **Comprueba:** en `ZCL_GOR_TIPOS_DEMO`, escribe con un `DO 3 TIMES` los tres primeros códigos de cada uno de los 8 prefijos de [1.1](./1_1_classrun.md): **24 líneas**, de `CLI0001` a `ING0003`.
+
+5. **Nombres y etiquetas.**
+    - **Dónde:** `ZCL_GOR_REGLAS`.
+    - **Qué contiene:** dos métodos con parámetros y resultado de tipo `string`:
 
     | Método | Parámetros | Resultado (§3.1) |
     |---|---|---|
     | `nombre_completo` | `iv_nombre`, `iv_apellidos` | Los dos separados por un espacio, sin espacios sobrantes si falta alguno: `Juan Pérez López`, o `Juan` |
     | `etiqueta_cliente` | `iv_codigo`, `iv_nombre`, `iv_apellidos`, `iv_nif` | `CLI0001 - Juan Pérez (12345678Z)`. Sin nombre: **solo el código**. El NIF, solo si existe: `CLI0002 - Ana Ruiz` |
 
-    Reutiliza `nombre_completo` en `etiqueta_cliente`. Escribe en la consola la etiqueta de un cliente con todos los datos, otra sin NIF y otra sin nombre.
+    Reutiliza `nombre_completo` en `etiqueta_cliente`.
+    - **Comprueba:** en `ZCL_GOR_TIPOS_DEMO`, escribe tres etiquetas. Deben salir: `CLI0001 - Juan Pérez López (12345678Z)`, `CLI0002 - Ana Ruiz Gil` (sin NIF) y `CLI0003` (sin nombre).
 
 6. **Investiga.** ¿Qué devuelve `formatear_codigo( iv_prefijo = 'PROV' iv_numero = 12345 )`? `ty_codigo` mide 8 caracteres: mira qué pasa con lo que sobra. Anota en un comentario qué habría que cambiar si la empresa llegara a 10000 proveedores, y en qué otros sitios del proyecto.
 

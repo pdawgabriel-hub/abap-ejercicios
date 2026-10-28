@@ -68,4 +68,4 @@ Los nombres de los métodos de XCO son largos y encadenados; si alguno no existe
 
 ---
 
-**Siguiente:** [6.4. Migración de datos desde Odoo](./6_4_migracion.md)
+**Siguiente:** [6.4. Dashboard y calendario](./6_4_dashboard.md)

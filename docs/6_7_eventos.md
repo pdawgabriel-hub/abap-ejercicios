@@ -1,4 +1,4 @@
-# 6.8. Business events
+# 6.7. Business events
 
 > **Zona menos verificada.** Los eventos de RAP y su consumo dentro del mismo sistema existen en las versiones recientes de ABAP Cloud, pero la sintaxis exacta no se ha probado contra el trial. Si el editor no acepta algo, pulsa **F1** sobre la palabra clave y consulta la documentación de *RAP Business Events*.
 

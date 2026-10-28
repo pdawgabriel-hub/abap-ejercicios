@@ -189,12 +189,11 @@ Búsqueda por lo que la gente recuerda (§11.5, punto 10): «Juan Pérez» encue
 - **Seguridad**: roles *Administrativa* y *Jefe* (§5), con un objeto de autorización propio.
 - **Moneda y menú**: importes en euros; mosaicos en el Launchpad.
 - **Documentos**: presupuesto, parte de trabajo y seguimiento de gastos (§8).
-- **Migración**: carga de los datos de Odoo.
 - **Dashboard** (§3.14): salud global, top de obras por beneficio, distribución de costes, cobros pendientes, top de trabajadores por horas y evolución mensual.
 - **Calendario** (§3.13): presupuestos, ingresos y los tres tipos de parte en una vista.
-- **APIs externas**: los festivos de una API pública, en caché, para avisar al anotar un parte en festivo (6.6).
-- **S/4HANA**: importar clientes desde la API de *Business Partner* del *sandbox* de SAP (6.7).
-- **Eventos**: `IngresoRegistrado` y un registro de obras cobradas del todo (6.8).
+- **APIs externas**: los festivos de una API pública, en caché, para avisar al anotar un parte en festivo (6.5).
+- **S/4HANA**: consultar la API de *Business Partner* del *sandbox* de SAP y compararla con el cliente del ERP (6.6).
+- **Eventos**: `IngresoRegistrado` y un registro de obras cobradas del todo (6.7).
 - **Autorización por instancia**: una obra pagada del todo solo la modifica el jefe (6.1; regla nueva, no está en el informe).
 
 ## 5. Pruebas

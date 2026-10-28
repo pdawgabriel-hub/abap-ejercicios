@@ -9,6 +9,7 @@ En 1.5 creaste `zgor_cli` y `zgor_obra`. En esta unidad crearás **las demás ta
 Todas siguen las cuatro decisiones de 1.5: `client`, clave UUID, código visible aparte (si la entidad lo tiene) y los cinco campos de administración al final. Así es la del presupuesto del taller:
 
 ```sql
+// Anotaciones de cabecera: las genera el asistente; solo cambia la descripcion
 @EndUserText.label : 'Taller - Presupuestos'
 @AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
 @AbapCatalog.tableCategory : #TRANSPARENT
@@ -17,14 +18,17 @@ Todas siguen las cuatro decisiones de 1.5: `client`, clave UUID, código visible
 define table ztl_prs {
   key client            : abap.clnt not null;
   key presupuesto_uuid  : sysuuid_x16 not null;
-  presupuesto_ref       : abap.char(8);
+  presupuesto_ref       : abap.char(8);          // codigo visible PRS0001
   fecha                 : abap.dats;
+  // Relaciones: UUID del titular y de la orden (esta puede estar vacia)
   titular_uuid          : sysuuid_x16;
   orden_uuid            : sysuuid_x16;
+  // Copia congelada de los datos del titular al hacer el presupuesto
   titular_nombre        : abap.char(100);
   titular_documento     : abap.char(12);
-  impuesto              : abap.dec(5,2);
-  situacion             : abap.char(15);
+  impuesto              : abap.dec(5,2);         // porcentaje: 21,00
+  situacion             : abap.char(15);         // borrador / aceptado
+  // Importes calculados que se GUARDAN (los recalcula una determination)
   neto                  : abap.dec(15,2);
   cuota                 : abap.dec(15,2);
   importe               : abap.dec(15,2);
@@ -45,6 +49,7 @@ Fíjate en tres grupos de campos:
 Y la tabla de sus partidas, que es **hija**: además de su propia clave, guarda el UUID del padre, y como no puede existir sin él, lo declara `not null`.
 
 ```sql
+// Tabla hija: cada fila pertenece a un presupuesto
 @EndUserText.label : 'Taller - Partidas de presupuesto'
 @AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
 @AbapCatalog.tableCategory : #TRANSPARENT
@@ -53,7 +58,7 @@ Y la tabla de sus partidas, que es **hija**: además de su propia clave, guarda 
 define table ztl_prs_par {
   key client            : abap.clnt not null;
   key partida_uuid      : sysuuid_x16 not null;
-  presupuesto_uuid      : sysuuid_x16 not null;
+  presupuesto_uuid      : sysuuid_x16 not null;   // el padre: obligatorio (not null)
   concepto              : abap.char(120);
   cantidad              : abap.int4;
   precio_unitario       : abap.dec(15,2);
@@ -95,16 +100,20 @@ ZGOR_DDIC
 
 Todas las tablas llevan las anotaciones del principio, `key client`, su clave UUID (primera columna de cada fila de las tablas de abajo) y los cinco campos de administración al final. En las tablas de los ejercicios, `char(8)` significa `abap.char(8)`, `dec(15,2)` es `abap.dec(15,2)`, `dats` es `abap.dats` e `int4` es `abap.int4`; `abap_boolean` y `sysuuid_x16` se escriben tal cual. Los UUID de los padres en las tablas hijas, **not null**.
 
-1. **Presupuestos.** Crea las dos tablas del presupuesto (§3.6 del informe):
+1. **Presupuestos.**
+    - **Dónde:** clic derecho en `ZGOR_DDIC` → **New → Other ABAP Repository Object** → *Database Table*, una vez por tabla, con el nombre y la descripción de la tabla de abajo.
+    - **Qué contienen** (§3.6 del informe), con comentarios `//` como en `ztl_prs`:
 
     | Tabla (descripción) | Columnas, en este orden |
     |---|---|
     | `zgor_presu` (Presupuestos) | `presupuesto_uuid`; `presupuesto_id` char(8); `fecha` dats; `cliente_uuid` y `obra_uuid` sysuuid_x16; `nombre_cliente` char(140), `nif` char(12), `direccion` char(120), `telf` char(20) (la copia del cliente); `iva` dec(5,2); `estado` char(15); `base_imponible`, `cuota_iva` y `total` dec(15,2) |
     | `zgor_presu_lin` (Lineas de presupuesto) | `linea_uuid`; `presupuesto_uuid` sysuuid_x16 **not null**; `descripcion` char(255); `uds` int4; `precio` dec(15,2); `total_linea` dec(15,2) |
 
-    Compáralas con tu `diseno.md` de 1.9 y anota las diferencias.
+    - **Comprueba:** las dos activan sin errores. Compáralas con tu `diseno.md` de 1.9 y anota las diferencias.
 
-2. **El resto de tablas.** Crea las doce restantes:
+2. **El resto de tablas.**
+    - **Dónde:** igual, en `ZGOR_DDIC`, una por fila.
+    - **Qué contienen:**
 
     | Tabla (descripción) | Columnas, en este orden |
     |---|---|
@@ -122,9 +131,10 @@ Todas las tablas llevan las anotaciones del principio, `key client`, su clave UU
     | `zgor_pp` (Partes de proveedor, §3.11) | Igual que `zgor_pe`, con `proveedor_uuid` en lugar de `especialista_uuid` |
 
     Los UUID sin tipo indicado son `sysuuid_x16`.
+    - **Comprueba:** activa todas a la vez (clic derecho en `ZGOR_DDIC` → *Activate*) sin errores.
 
 3. **Lo que no está.** Repasa la tabla de «qué se guarda» de 1.9 y explica en `diseno.md`, con una frase cada uno, por qué **no** hay columna para el total de la obra, el `debe` de un ingreso, las horas acumuladas de un trabajador ni la lista de trabajadores de una obra. Y por qué **sí** la hay para `dias` (falta), `total` (proveedor), `horas_totales` y `coste_total` (parte) y `coste_subtotal` (línea).
-4. **Comprueba los nombres.** Pulsa **Ctrl+Shift+A** y escribe `zgor_`: deben salir las 16. En el Bloque 3, cada tabla tendrá una gemela para los borradores (*draft*) con `_d` al final, y el nombre completo sigue sin poder pasar de 16 caracteres. ¿Por qué crees que la tabla de faltas se llama `zgor_falta` y no `zgor_trab_falta`?
+4. **Comprueba los nombres.** En `ZCL_GOR_SQL_DEMO`, añade al final un `SELECT COUNT( * )` de cada una de las 16 tablas y escribe el resultado: si alguna no existe, la clase no activa. (También puedes pulsar **Ctrl+Shift+A** y escribir `zgor_`: deben salir las 16.) En el Bloque 3, cada tabla tendrá una gemela para los borradores (*draft*) con `_d` al final, y el nombre completo sigue sin poder pasar de 16 caracteres. ¿Por qué crees que la tabla de faltas se llama `zgor_falta` y no `zgor_trab_falta`?
 5. **Investiga.** En el Data Preview de `zgor_presu` (todavía vacía) pulsa **Add filter** y mira qué operadores ofrece para `fecha` y para `estado`. Anota cuál usarías para ver los presupuestos de 2026.
 
 En esta unidad no hay test: el sistema comprueba la sintaxis al activar. Los datos llegan en [2.5](./2_5_proyecto.md).

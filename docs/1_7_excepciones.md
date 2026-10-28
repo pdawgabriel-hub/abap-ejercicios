@@ -9,10 +9,10 @@ Algunas operaciones fallan con una excepción: leer de una tabla una fila que no
 ```abap
     DATA(lt_refs) = VALUE zif_tl_tipos=>tt_refs( ( 'ORD0001' ) ( 'ORD0002' ) ).
 
-    TRY.
-        DATA(lv_ref) = lt_refs[ 5 ].
-        out->write( lv_ref ).
-      CATCH cx_sy_itab_line_not_found.
+    TRY.                                       " codigo que puede fallar
+        DATA(lv_ref) = lt_refs[ 5 ].           " solo hay 2 filas: lanza una excepcion
+        out->write( lv_ref ).                  " esta linea ya no se ejecuta
+      CATCH cx_sy_itab_line_not_found.         " aqui se trata ESA excepcion
         out->write( 'No hay quinta orden' ).
     ENDTRY.
 
@@ -44,20 +44,24 @@ Una regla de negocio incumplida es un error previsto: las excepciones de reglas 
 Una clase de excepción es una clase normal que hereda de una de las tres anteriores. La del taller guarda el **mensaje** y el **elemento** (el campo) al que se refiere. En el Bloque 3, el elemento servirá para que Fiori marque en rojo la casilla concreta.
 
 ```abap
+" Una excepcion es una clase que hereda de una de las tres superclases
 CLASS zcx_tl_aviso DEFINITION PUBLIC INHERITING FROM cx_static_check CREATE PUBLIC.
   PUBLIC SECTION.
-    DATA mv_mensaje  TYPE string READ-ONLY.
-    DATA mv_elemento TYPE string READ-ONLY.
+    " READ-ONLY: se puede leer desde fuera, pero no cambiar
+    DATA mv_mensaje  TYPE string READ-ONLY.    " texto para el usuario
+    DATA mv_elemento TYPE string READ-ONLY.    " campo al que se refiere
+    " Todos los parametros opcionales; previous es la excepcion que la causo (si la hay)
     METHODS constructor
       IMPORTING iv_mensaje  TYPE string OPTIONAL
                 iv_elemento TYPE string OPTIONAL
                 previous    LIKE previous OPTIONAL.
+    " Sustituir el get_text heredado para que devuelva nuestro mensaje
     METHODS if_message~get_text REDEFINITION.
 ENDCLASS.
 
 CLASS zcx_tl_aviso IMPLEMENTATION.
   METHOD constructor ##ADT_SUPPRESS_GENERATION.
-    super->constructor( previous = previous ).
+    super->constructor( previous = previous ).       " obligatorio: el constructor de la superclase
     mv_mensaje  = iv_mensaje.
     mv_elemento = iv_elemento.
   ENDMETHOD.
@@ -92,6 +96,7 @@ Un método declara con `RAISING` las excepciones que puede lanzar, y las lanza c
 ```abap
   METHOD comprobar_tiempo.
     IF iv_tiempo < 0 OR iv_tiempo > 10.
+      " Crear la excepcion y lanzarla: el metodo termina aqui
       RAISE EXCEPTION NEW zcx_tl_aviso( iv_mensaje  = |Un tramo debe durar entre 0 y 10 horas (dura { iv_tiempo })|
                                         iv_elemento = `Tiempo` ).
     ENDIF.
@@ -120,7 +125,9 @@ ZGOR_BUS
 
 ## Ejercicios
 
-1. **La excepción del ERP.** Crea `ZCX_GOR_REGLA` (descripción `Regla de negocio incumplida`, superclase `CX_STATIC_CHECK`):
+1. **La excepción del ERP.**
+    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → ABAP Class**. Nombre `ZCX_GOR_REGLA`, descripción `Regla de negocio incumplida`, superclase `CX_STATIC_CHECK`. Eclipse genera una plantilla de excepción: sustitúyela por tu código.
+    - **Qué contiene** (como `ZCX_TL_AVISO`, con otros nombres):
 
     | Elemento | Definición |
     |---|---|
@@ -129,7 +136,11 @@ ZGOR_BUS
     | `constructor` | Recibe `iv_texto`, `iv_campo` y `previous`, los tres opcionales |
     | `get_text` | Devuelve `mv_texto` |
 
-2. **Las validaciones.** Añade a `ZCL_GOR_REGLAS` estos métodos estáticos, todos con `RAISING zcx_gor_regla`. Son las filas de §11.4 que no dependen de otra entidad:
+    - **Comprueba:** activa sin errores.
+
+2. **Las validaciones.**
+    - **Dónde:** `ZCL_GOR_REGLAS`.
+    - **Qué contiene:** estos métodos estáticos, todos con `RAISING zcx_gor_regla`. Son las filas de §11.4 que no dependen de otra entidad:
 
     | Método | Parámetros | Falla si… | Campo (`mv_campo`) |
     |---|---|---|---|
@@ -141,10 +152,22 @@ ZGOR_BUS
     | `validar_obligatorio` | `iv_valor` (`string`), `iv_campo` (`string`) | El valor, sin espacios, está vacío | El que se recibe |
 
     Los textos deben servir tal cual al usuario: «El IVA debe estar entre 0 y 100 (es 150)», «Las horas de una línea deben estar entre 0 y 24», «El importe debe ser mayor que 0», «La fecha de fin no puede ser anterior a la de inicio», «El campo Nombre es obligatorio»…
+    - **Comprueba:** con el test de la unidad.
 
-3. **Las horas en el parte.** Cambia `add_linea` de `ZCL_GOR_PARTE_TRABAJO` para que declare `RAISING zcx_gor_regla` y no añada la línea si las horas no son válidas.
-4. **El escenario, paso 9.** Crea la clase ejecutable `ZCL_GOR_EXC_DEMO`. Cada caso del paso 9 de §12.7 en su propio `TRY`, escribiendo en el `CATCH` el texto y el campo de la excepción: una línea de parte con 25 h, otra con −1 h, un parte externo de 0 €, un IVA de 150 y una falta que termina antes de empezar. Antes de los casos que fallan, comprueba uno que no falla (IVA 21) y escribe «IVA correcto».
-5. **Excepciones del sistema.** En la misma clase, lee la quinta fila de una tabla con dos códigos **sin** `TRY` y ejecuta. Mira el *dump*: Eclipse muestra la excepción, el programa y la línea. Después rodea la lectura con el `TRY ... CATCH` adecuado.
+3. **Las horas en el parte.**
+    - **Dónde:** el método `add_linea` de `ZCL_GOR_PARTE_TRABAJO` (definición e implementación).
+    - **Qué hace:** declara `RAISING zcx_gor_regla` y llama a `validar_horas` **antes** del `APPEND`, como `add_tramo` en el taller. Si las horas no son válidas, la línea no se añade.
+    - **Comprueba:** con el segundo test de la unidad.
+
+4. **El escenario, paso 9.**
+    - **Dónde:** `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_EXC_DEMO`, descripción `Pruebas de excepciones`. Ejecutable.
+    - **Qué hace:** primero un caso que no falla (`validar_iva( 21 )`), que escribe «IVA correcto». Después, cada caso del paso 9 de §12.7 en su propio `TRY`, escribiendo en el `CATCH` el texto y el campo de la excepción: una línea de parte con 25 h, otra con −1 h, un parte externo de 0 €, un IVA de 150 y una falta que termina antes de empezar.
+    - **Comprueba:** salen **6 líneas**: «IVA correcto» y cinco mensajes, cada uno con su campo (`Horas`, `Horas`, `Importe`, `Iva`, `FechaFin`).
+
+5. **Excepciones del sistema.**
+    - **Dónde:** el mismo `main`, al final.
+    - **Qué hace:** lee la quinta fila de una tabla de dos códigos **sin** `TRY` y ejecuta. Mira el *dump*: Eclipse muestra la excepción, el programa y la línea. Después rodea la lectura con el `TRY ... CATCH` adecuado.
+    - **Comprueba:** ya no hay *dump*, y la consola muestra tu mensaje del `CATCH`.
 6. **Investiga.** ¿Qué pasa si llamas a `validar_iva( 150 )` desde `main` sin `TRY` ni `RAISING`? Activa y mira la pestaña *Problems*: ¿es un error o un aviso? Ejecuta: ¿qué ocurre? Anota la diferencia con una excepción de `CX_DYNAMIC_CHECK` como `cx_sy_zerodivide`.
 
 ## Comprueba tu solución automáticamente (opcional)

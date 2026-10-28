@@ -161,8 +161,7 @@ Todo el bloque construye **`ZCL_GOR_REGLAS`**: las fórmulas de §11.2 y las val
 | 6.1 Seguridad | Roles *Administrativa* y *Jefe* (§5); Gasto sin crear ni borrar sueltos, también para el administrador técnico |
 | 6.2 Moneda y Launchpad | EUR en todos los importes; mosaicos por área en el Launchpad |
 | 6.3 PDF | Presupuesto, Parte de Trabajo y Seguimiento de Gastos (§8). **Comprobar antes si el trial tiene el servicio de formularios** (apartado 6) |
-| 6.4 Migración | Exportar los CSV de Odoo, prepararlos con `generar_carga.py` y cargarlos con una clase que reutiliza `ZCL_GOR_DATOS_DEMO` |
-| 6.5 Dashboard y calendario | `ZI_GorCalendario` (`UNION ALL` de 5 orígenes, §3.13) y las vistas de KPI de `get_dashboard_data` (§3.14): bloques 1 a 3, cobros pendientes, top de trabajadores y evolución mensual |
+| 6.4 Dashboard y calendario | `ZI_GorCalendario` (`UNION ALL` de 5 orígenes, §3.13) y las vistas de KPI de `get_dashboard_data` (§3.14): bloques 1 a 3, cobros pendientes, top de trabajadores y evolución mensual |
 
 ### Bloque 7. Cierre del proyecto
 

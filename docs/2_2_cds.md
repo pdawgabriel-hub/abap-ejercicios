@@ -18,12 +18,13 @@ Es la misma idea que separar el modelo (`models/`) de las vistas (`views/`) en O
 Así es la de los titulares del taller:
 
 ```sql
-@AccessControl.authorizationCheck: #NOT_REQUIRED
+@AccessControl.authorizationCheck: #NOT_REQUIRED      // sin control de acceso (hasta 6.1)
 @EndUserText.label: 'Taller - Titulares'
-@Metadata.ignorePropagatedAnnotations: true
+@Metadata.ignorePropagatedAnnotations: true            // no heredar anotaciones de la tabla
 define view entity ZI_TlTitular
-  as select from ztl_tit
+  as select from ztl_tit                               // la tabla de debajo
 {
+  // columna de la tabla  as  nombre en la vista (CamelCase)
   key titular_uuid          as TitularUUID,
       titular_ref           as TitularRef,
       razon_social          as RazonSocial,
@@ -31,6 +32,7 @@ define view entity ZI_TlTitular
       contacto              as Contacto,
       poblacion             as Poblacion,
       cp                    as Cp,
+      // Campos de administracion: @Semantics le dice a RAP que es cada uno
       @Semantics.user.createdBy: true
       created_by            as CreatedBy,
       @Semantics.systemDateTime.createdAt: true
@@ -78,9 +80,19 @@ ZGOR_CDS
 
 ## Ejercicios
 
-1. **Clientes.** Crea `ZI_GorCliente` (descripción `Clientes`) sobre `zgor_cli`, con estos alias: `ClienteUUID` (clave), `ClienteId`, `Nombre`, `Apellidos`, `Nif`, `Direccion`, `CodPostal`, `Telf` y los cinco campos de administración con sus `@Semantics`, igual que en el taller. Con los datos de 1.5, el Data Preview debe mostrar tus tres clientes con los nombres nuevos.
-2. **Líneas de presupuesto.** Crea `ZI_GorPresuLin` sobre `zgor_presu_lin`: `LineaUUID`, `PresupuestoUUID`, `Descripcion`, `Uds`, `Precio`, `TotalLinea` y los cinco de administración. Fíjate en que la columna `presupuesto_uuid` se llama `PresupuestoUUID`, igual que la clave de la cabecera: así, en 2.3, la relación se lee sola.
-3. **Todas las demás.** Crea una vista por tabla con este reparto de nombres:
+1. **Clientes.**
+    - **Dónde:** clic derecho en `ZGOR_CDS` → **New → Other ABAP Repository Object** → *Data Definition*. Nombre `ZI_GorCliente`, descripción `Clientes`, plantilla *Define View Entity*.
+    - **Qué contiene:** una vista sobre `zgor_cli` con estos alias: `ClienteUUID` (clave), `ClienteId`, `Nombre`, `Apellidos`, `Nif`, `Direccion`, `CodPostal`, `Telf` y los cinco campos de administración con sus `@Semantics`, igual que en el taller.
+    - **Comprueba:** en `ZCL_GOR_SQL_DEMO`, lee de la **vista** (`SELECT FROM zi_gorcliente FIELDS ClienteId, Nombre ...`) y escribe el resultado: salen tus tres clientes de 1.5, con los nombres de la vista. ABAP SQL lee igual una tabla que una vista CDS.
+
+2. **Líneas de presupuesto.**
+    - **Dónde:** igual, en `ZGOR_CDS`. Nombre `ZI_GorPresuLin`, descripción `Lineas de presupuesto`.
+    - **Qué contiene:** una vista sobre `zgor_presu_lin` con `LineaUUID`, `PresupuestoUUID`, `Descripcion`, `Uds`, `Precio`, `TotalLinea` y los cinco de administración. Fíjate en que `presupuesto_uuid` se llama `PresupuestoUUID`, igual que la clave de la cabecera: así, en 2.3, la relación se lee sola.
+    - **Comprueba:** activa sin errores.
+
+3. **Todas las demás.**
+    - **Dónde:** igual, en `ZGOR_CDS`, una por fila, con la descripción de su tabla.
+    - **Qué contienen:** una vista por tabla con este reparto de nombres:
 
     | Vista | Tabla | Alias que no son evidentes |
     |---|---|---|
@@ -100,8 +112,9 @@ ZGOR_CDS
     | `ZI_GorParteProv` | `zgor_pp` | `ParteUUID`, `ObraUUID`, `ProveedorUUID`, `EstadoPago` |
 
     El resto de columnas se traduce sin sorpresas: `fecha` → `Fecha`, `descripcion` → `Descripcion`, `importe` → `Importe`… Todas llevan los cinco campos de administración con sus `@Semantics`.
+    - **Comprueba:** activa todas a la vez (clic derecho en `ZGOR_CDS` → *Activate*) sin errores.
 
-4. **Una vista con condición.** Crea una vista auxiliar de prueba, `ZI_GorClienteMadrid`, sobre `zgor_cli`, con `where cod_postal like '28%'` (se escribe después de la lista de campos, tras la llave de cierre). Ábrela con **F8**: deben salir los clientes de Madrid de 1.5. Después **bórrala** (clic derecho → *Delete*): era solo para practicar y no forma parte del ERP.
+4. **Una vista con condición.** Crea una vista auxiliar de prueba, `ZI_GorClienteMadrid`, sobre `zgor_cli`, con `where cod_postal like '28%'` (se escribe después de la lista de campos, tras la llave de cierre). Léela desde `ZCL_GOR_SQL_DEMO`: deben salir los clientes de Madrid de 1.5. Después **bórrala** (clic derecho → *Delete*): era solo para practicar y no forma parte del ERP.
 5. **Investiga.** Abre `ZI_GorCliente`, pon el cursor sobre `zgor_cli` y pulsa **F2**. Después pulsa **F3**. ¿Qué hace cada tecla? Anótalo: las usarás constantemente para navegar entre vistas, tablas y clases.
 
 ---

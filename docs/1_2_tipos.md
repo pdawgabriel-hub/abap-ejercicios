@@ -20,12 +20,12 @@ Los literales decimales van **entre comillas**: `'45.50'`. Sin comillas, ABAP no
 ## Variables, constantes y declaraciones inline
 
 ```abap
-    DATA lv_cantidad TYPE i VALUE 4.
-    CONSTANTS lc_impuesto TYPE decfloat34 VALUE 21.
+    DATA lv_cantidad TYPE i VALUE 4.                 " variable entera con valor inicial 4
+    CONSTANTS lc_impuesto TYPE decfloat34 VALUE 21.  " constante: no se puede cambiar
 
     " Declaracion inline: el tipo sale de la expresion de la derecha
-    DATA(lv_precio) = CONV decfloat34( '45' ).
-    DATA(lv_neto)   = lv_cantidad * lv_precio.
+    DATA(lv_precio) = CONV decfloat34( '45' ).       " CONV convierte el texto '45' a decimal
+    DATA(lv_neto)   = lv_cantidad * lv_precio.       " i * decfloat34 da decfloat34: 180
 ```
 
 - `DATA` declara una variable; `CONSTANTS`, un valor que no cambia.
@@ -37,35 +37,41 @@ Los literales decimales van **entre comillas**: `'45.50'`. Sin comillas, ABAP no
 `TYPES` define un tipo nuevo. Una **estructura** agrupa varios campos, como un diccionario de Python con los campos fijados de antemano. Se rellena con `VALUE #( campo = valor ... )` y cada campo se lee con un guion: `ls_partida-precio_unitario`.
 
 ```abap
+    " Un tipo nuevo: una estructura con tres campos
     TYPES: BEGIN OF ty_partida,
              concepto        TYPE string,
              cantidad        TYPE i,
              precio_unitario TYPE decfloat34,
            END OF ty_partida.
 
+    " VALUE construye la estructura dando valor a cada campo
     DATA(ls_partida) = VALUE ty_partida( concepto        = 'Horas de diagnosis'
                                          cantidad        = 4
                                          precio_unitario = '45' ).
-    out->write( ls_partida ).
-    out->write( |{ ls_partida-cantidad } x { ls_partida-precio_unitario }| ).
+    out->write( ls_partida ).                                     " la estructura entera, en columnas
+    out->write( |{ ls_partida-cantidad } x { ls_partida-precio_unitario }| ).   " campo a campo, con el guion
 ```
 
 Los tipos que se usan en varias clases no se repiten en cada una: se declaran una vez en una **interfaz de tipos** y se usan con su nombre completo. La del taller es así:
 
 ```abap
+" Interfaz que solo contiene tipos y constantes: no tiene metodos
 INTERFACE zif_tl_tipos PUBLIC.
+  " Tipos basicos con nombre propio: si un dia cambia el tipo, se cambia aqui
   TYPES ty_euros    TYPE decfloat34.
   TYPES ty_tanto    TYPE decfloat34.          " porcentajes
   TYPES ty_tiempo   TYPE decfloat34.          " horas
   TYPES ty_ref      TYPE c LENGTH 8.          " codigos TIT0001, ORD0001...
   TYPES ty_situacion TYPE c LENGTH 15.
 
+  " Una partida de presupuesto
   TYPES: BEGIN OF ty_partida,
            concepto        TYPE string,
            cantidad        TYPE i,
            precio_unitario TYPE ty_euros,
          END OF ty_partida.
 
+  " Grupo de constantes: se usan como zif_tl_tipos=>situacion_presupuesto-aceptado
   CONSTANTS: BEGIN OF situacion_presupuesto,
                borrador TYPE ty_situacion VALUE 'borrador',
                aceptado TYPE ty_situacion VALUE 'aceptado',
@@ -97,10 +103,10 @@ Hay dos clases de literales de texto: `'...'` (comillas simples) es de tipo `c` 
 Una fecha (`d`) es un texto de 8 cifras, pero ABAP sabe operar con ella: **restar dos fechas da los días** entre ellas, y sumar un número a una fecha avanza ese número de días.
 
 ```abap
-    DATA(lv_desde) = CONV d( '20261228' ).
+    DATA(lv_desde) = CONV d( '20261228' ).   " fechas: siempre AAAAMMDD
     DATA(lv_hasta) = CONV d( '20270103' ).
-    out->write( lv_hasta - lv_desde ).       " 6
-    out->write( lv_desde + 7 ).              " 20270104
+    out->write( lv_hasta - lv_desde ).       " fecha - fecha = dias entre ellas: 6
+    out->write( lv_desde + 7 ).              " fecha + numero = otra fecha: 20270104
 ```
 
 ## Redondeo
@@ -183,7 +189,9 @@ ZGOR
 
 ## Ejercicios
 
-1. **La interfaz de tipos.** Crea en `ZGOR_BUS` la interfaz `ZIF_GOR_TIPOS` (descripción `Tipos comunes del ERP`) con:
+1. **La interfaz de tipos.**
+    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → ABAP Interface**. Nombre `ZIF_GOR_TIPOS`, descripción `Tipos comunes del ERP`.
+    - **Qué contiene** (con el mismo estilo que `ZIF_TL_TIPOS`, y un comentario por grupo):
 
     | Elemento | Definición |
     |---|---|
@@ -193,7 +201,11 @@ ZGOR
     | `ty_presu_linea` | Estructura con `descripcion` (`string`), `uds` (`i`) y `precio` (`ty_importe`): la línea de un presupuesto (§3.6) |
     | `estado_presu` | Constantes `aprobado` y `no_aprobado`, de tipo `ty_estado`, con esos mismos valores |
 
-2. **Las fórmulas del presupuesto.** Crea en `ZGOR_BUS` la clase `ZCL_GOR_REGLAS` (descripción `Reglas de negocio del ERP`) con estos cuatro métodos estáticos. El IVA llega como porcentaje: 21, no 0.21.
+    - **Comprueba:** la interfaz activa sin errores (**Ctrl+F3**).
+
+2. **Las fórmulas del presupuesto.**
+    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → ABAP Class**. Nombre `ZCL_GOR_REGLAS`, descripción `Reglas de negocio del ERP`. Es una clase normal, **no** ejecutable.
+    - **Qué contiene:** estos cuatro métodos estáticos (`CLASS-METHODS`), declarados en la `PUBLIC SECTION` con un comentario encima de cada uno que diga su regla, como en `ZCL_TL_CALCULOS`. El IVA llega como porcentaje: 21, no 0.21.
 
     | Método | Parámetros de entrada | Devuelve | Regla (§11.2) |
     |---|---|---|---|
@@ -202,7 +214,11 @@ ZGOR
     | `cuota_iva` | `iv_base` (`ty_importe`), `iv_iva` (`ty_porcentaje`) | `rv_cuota` (`ty_importe`) | `redondear(base × iva / 100)` |
     | `total_presupuesto` | `iv_base`, `iv_iva` | `rv_total` (`ty_importe`) | `base + cuota_iva`. Reutiliza `cuota_iva` |
 
-3. **Más fórmulas.** Añade estos tres:
+    - **Comprueba:** activa la clase. Lo comprobarás de verdad en el ejercicio 4 y con el test.
+
+3. **Más fórmulas.**
+    - **Dónde:** la misma clase `ZCL_GOR_REGLAS`.
+    - **Qué contiene:** tres métodos estáticos más:
 
     | Método | Parámetros de entrada | Devuelve | Regla |
     |---|---|---|---|
@@ -210,8 +226,22 @@ ZGOR
     | `coste_subtotal` | `iv_horas` (`ty_horas`), `iv_coste_hora` (`ty_importe`) | `rv_coste` (`ty_importe`) | `horas × coste_hora` (§11.2 *Obra*), sin redondear |
     | `dias_falta` | `iv_inicio`, `iv_fin` (tipo `d`) | `rv_dias` (`i`) | `fin − inicio + 1`; **0** si falta alguna de las dos fechas (§3.12) |
 
-4. **El presupuesto del escenario.** Crea en `ZGOR_TEST` la clase ejecutable `ZCL_GOR_TIPOS_DEMO`. Declara una línea de presupuesto de 10 uds a 100 € y escribe, con `ZCL_GOR_REGLAS`, su total, la cuota con IVA 21 y el total del presupuesto, con 2 decimales. Es el paso 2 de §12.7: debe salir **base 1000.00, cuota 210.00 y total 1210.00**.
-5. **Una estructura por entidad.** En la misma clase, declara con `TYPES` una estructura con los campos propios de cada entidad del ERP (sin relaciones ni campos calculados): cliente (§3.1), trabajador (§3.2), proveedor (§3.3), especialista (§3.4), obra (§3.5), ingreso (§3.8) y falta (§3.12). Para elegir los tipos:
+    - **Comprueba:** con el test de esta unidad (abajo): 7 en verde.
+
+4. **El presupuesto del escenario.**
+    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_TIPOS_DEMO`, descripción `Pruebas de tipos y formulas`. Es ejecutable, como `ZCL_GOR_INICIO`.
+    - **Qué hace:** en `main`, declara una estructura `zif_gor_tipos=>ty_presu_linea` con 10 uds a 100 € y, con `ZCL_GOR_REGLAS`, calcula su total, la cuota con IVA 21 y el total del presupuesto. Escribe cada valor con una plantilla y `DECIMALS = 2`.
+    - **Comprueba:** ejecuta con **F9**. Es el paso 2 de §12.7; deben salir estas tres líneas:
+
+    ```
+    Base: 1000.00
+    Cuota IVA: 210.00
+    Total: 1210.00
+    ```
+
+5. **Una estructura por entidad.**
+    - **Dónde:** el `main` de `ZCL_GOR_TIPOS_DEMO`, después del ejercicio 4.
+    - **Qué hace:** declara con `TYPES` una estructura con los campos propios de cada entidad del ERP (sin relaciones ni campos calculados): `ty_cliente` (§3.1), `ty_trabajador` (§3.2), `ty_proveedor` (§3.3), `ty_especialista` (§3.4), `ty_obra` (§3.5), `ty_ingreso` (§3.8) y `ty_falta` (§3.12). Para elegir los tipos:
 
     | En Odoo | En ABAP |
     |---|---|
@@ -222,7 +252,7 @@ ZGOR
     | `Date` | `d` |
     | `Boolean` o `Selection` de sí/no | `abap_bool` |
 
-    Crea un cliente y un trabajador de ejemplo con `VALUE` y escríbelos con `out->write( )`.
+    - **Comprueba:** crea un cliente (Juan Pérez López, `CLI0001`) y un trabajador (`TRB0001`, 20 €/h) con `VALUE` y escríbelos con `out->write( )`: en la consola salen en columnas, con el nombre de cada campo.
 6. **Investiga.** En Python, `round(31.665, 2)` no da `31.67`. Pruébalo y busca por qué (pista: cómo guarda `float` los decimales y qué regla de empate usa `round`). Calcula después `zcl_gor_reglas=>redondear( CONV #( '31.665' ) )`. Escribe en un comentario qué diferencia hay y por qué, al portar, conviene que el ERP en SAP use siempre `redondear`.
 
 ## Comprueba tu solución automáticamente (opcional)

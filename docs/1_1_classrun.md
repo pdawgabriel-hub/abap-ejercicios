@@ -16,17 +16,24 @@ Una clase tiene dos partes:
 - La **implementación** (`IMPLEMENTATION`), que contiene el código de cada método.
 
 ```abap
+" DEFINICION: que tiene la clase.
+" PUBLIC: se puede usar desde otros objetos; FINAL: no se puede heredar de ella;
+" CREATE PUBLIC: cualquiera puede crear objetos de esta clase.
 CLASS zcl_tl_bienvenida DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PUBLIC SECTION.
+    " Implementar esta interfaz convierte la clase en ejecutable con F9
     INTERFACES if_oo_adt_classrun.
 ENDCLASS.
 
+" IMPLEMENTACION: el codigo de cada metodo.
 CLASS zcl_tl_bienvenida IMPLEMENTATION.
+  " El metodo main de la interfaz: es lo que se ejecuta al pulsar F9.
+  " out es el objeto que escribe en la pestana Console.
   METHOD if_oo_adt_classrun~main.
     " Cabecera del taller
     out->write( 'Taller RuedaLibre' ).
     out->write( 'Reparacion y mantenimiento de vehiculos' ).
-    out->write( ' ' ).
+    out->write( ' ' ).                      " una linea en blanco
     out->write( 'Series de codigos:' ).
     out->write( 'Titulares      TIT0001' ).
     out->write( 'Ordenes        ORD0001' ).
@@ -101,14 +108,20 @@ ZLOCAL
 
     En `ZLOCAL` no hace falta orden de transporte. Si el asistente te pide una, créala con *Create New Request*.
 3. **Los subpaquetes.** Clic derecho en `ZGOR` → **New → ABAP Package**, cinco veces: `ZGOR_DDIC`, `ZGOR_CDS`, `ZGOR_BUS`, `ZGOR_SRV` y `ZGOR_TEST`, con *Superpackage* `ZGOR` y la descripción de la tabla de [Los paquetes del proyecto](#los-paquetes-del-proyecto). Comprueba en el *Project Explorer* que cuelgan de `ZGOR`.
-4. **La clase de inicio.** Clic derecho en `ZGOR_TEST` → **New → ABAP Class**, con nombre `ZCL_GOR_INICIO` y descripción `Presentacion del proyecto`. Es una clase ejecutable, como la del taller. Al ejecutarla (**F9**) debe escribir estas dos líneas:
+4. **La clase de inicio.**
+    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_INICIO`, descripción `Presentacion del proyecto`.
+    - **Qué hace:** es una clase ejecutable, como la del taller (implementa `if_oo_adt_classrun`). Su `main` escribe dos líneas.
+    - **Comprueba:** guarda (**Ctrl+S**), activa (**Ctrl+F3**) y ejecuta (**F9**). En la pestaña *Console* debe salir exactamente:
 
     ```
     ERP de Obras y Reformas
     Port a SAP del modulo gestion_bd de Odoo
     ```
 
-5. **Las entidades.** Amplía `main` para que, después de las dos líneas, escriba: una línea en blanco; el título `Entidades con codigo propio:`; una línea por cada una de las ocho entidades con código de la tabla de [Las entidades del ERP](#las-entidades-del-erp), con su nombre y su primer código (`Cliente        CLI0001`); el título `Entidades sin codigo:`, y los tres tipos de parte, uno por línea. Activa y ejecuta: la consola debe mostrar 2 + 1 + 1 + 8 + 1 + 3 = **16 líneas**.
+5. **Las entidades.**
+    - **Dónde:** el mismo `main` de `ZCL_GOR_INICIO`, a continuación de las dos líneas.
+    - **Qué hace:** escribe, en este orden: una línea en blanco; el título `Entidades con codigo propio:`; una línea por cada una de las ocho entidades con código de la tabla de [Las entidades del ERP](#las-entidades-del-erp), con su nombre y su primer código (`Cliente        CLI0001`); el título `Entidades sin codigo:`; y los tres tipos de parte, uno por línea. Añade un comentario encima de cada grupo de líneas, como en el taller.
+    - **Comprueba:** activa y ejecuta. La consola debe mostrar 2 + 1 + 1 + 8 + 1 + 3 = **16 líneas**.
 6. **Lee los errores.** Quita el punto final de una de las líneas de `out->write` y activa. Fíjate en el mensaje de la pestaña *Problems* y en la línea que señala: a veces no es la línea del error, sino la siguiente. Vuelve a poner el punto. Haz lo mismo cambiando `out->write` por `out->writ`. Escribe en un comentario, encima de `main`, cómo es cada uno de los dos mensajes.
 7. **Investiga.** Con el cursor sobre `write`, pulsa **F2**. ¿Qué parámetros acepta el método? ¿Hay alguno opcional? Anótalo en un comentario: en 1.2 escribiremos con él estructuras completas, no solo textos.
 

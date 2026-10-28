@@ -7,11 +7,13 @@ Desde 1.2 has pegado tests sin escribirlos. En esta unidad aprendemos a **escrib
 Los tests de ABAP Unit son **clases locales** de la clase que prueban: se escriben en su pestaña **Test Classes** y no existen fuera de ella.
 
 ```abap
+" Clase de test local: FOR TESTING la marca como test.
+" DURATION SHORT: debe tardar poco; RISK LEVEL HARMLESS: no cambia datos persistentes.
 CLASS ltcl_presupuesto DEFINITION FINAL FOR TESTING
   DURATION SHORT RISK LEVEL HARMLESS.
   PRIVATE SECTION.
-    METHODS setup.
-    METHODS neto_de_dos_partidas FOR TESTING.
+    METHODS setup.                                 " auxiliar: prepara cada test
+    METHODS neto_de_dos_partidas FOR TESTING.      " un test: un comportamiento
 ENDCLASS.
 
 CLASS ltcl_presupuesto IMPLEMENTATION.
@@ -26,7 +28,7 @@ CLASS ltcl_presupuesto IMPLEMENTATION.
       ( concepto = `Embrague`  cantidad = 1 precio_unitario = 320 ) ).
     " Ejecutar
     DATA(lv_neto) = zcl_tl_calculos=>neto_presupuesto( lt_partidas ).
-    " Comprobar
+    " Comprobar: act = lo obtenido, exp = lo esperado (del mismo tipo)
     cl_abap_unit_assert=>assert_equals( act = lv_neto exp = CONV decfloat34( '500' ) ).
   ENDMETHOD.
 ENDCLASS.
@@ -81,11 +83,13 @@ Con una tabla de pasos, el test casi se escribe solo: cada fila es un método y 
 
 ```abap
   METHOD paso_5_primer_abono.
+    " Ejecutar con los datos del paso 5 del caso ORD0001
     DATA(ls_resumen) = zcl_tl_calculos=>resumen_orden( iv_importe      = 605
                                                        iv_mano_obra    = 160
                                                        iv_recambios    = 180
                                                        iv_subcontratas = 60
                                                        iv_abonado      = 300 ).
+    " Un assert por cada columna de la fila 5 de la tabla del caso
     cl_abap_unit_assert=>assert_equals( act = ls_resumen-costes      exp = CONV decfloat34( '400' ) ).
     cl_abap_unit_assert=>assert_equals( act = ls_resumen-rendimiento exp = CONV decfloat34( '-100' ) ).
     cl_abap_unit_assert=>assert_equals( act = ls_resumen-saldo       exp = CONV decfloat34( '305' ) ).
@@ -100,8 +104,9 @@ Y después, el método que lo hace pasar, que solo **combina** los que ya existe
 
 ```abap
   METHOD resumen_orden.
+    " Solo combina metodos que ya existen y tienen sus propios tests
     rs_resumen-importe     = iv_importe.
-    rs_resumen-costes      = ajustar_centimos( iv_mano_obra + iv_recambios + iv_subcontratas ).
+    rs_resumen-costes      = ajustar_centimos( iv_mano_obra + iv_recambios + iv_subcontratas ).  " redondeo una vez, al final
     rs_resumen-abonado     = ajustar_centimos( iv_abonado ).
     rs_resumen-rendimiento = ajustar_centimos( rs_resumen-abonado - rs_resumen-costes ).
     rs_resumen-saldo       = ajustar_centimos( iv_importe - rs_resumen-abonado ).
@@ -121,19 +126,35 @@ Todo en esta unidad amplía objetos que ya existen: `ZIF_GOR_TIPOS`, `ZCL_GOR_RE
 
 ## Ejercicios
 
-1. **El tipo de los indicadores.** Añade a `ZIF_GOR_TIPOS` la estructura `ty_kpi_obra`, con estos campos en este orden: `total`, `gastos`, `ingresos`, `beneficio`, `debe` y `margen` (`ty_importe`); `porcentaje` (`ty_porcentaje`); y `estado_pago`, `salud` y `estado_gasto` (`ty_estado`).
+1. **El tipo de los indicadores.**
+    - **Dónde:** `ZIF_GOR_TIPOS`.
+    - **Qué contiene:** la estructura `ty_kpi_obra`, con estos campos en este orden: `total`, `gastos`, `ingresos`, `beneficio`, `debe` y `margen` (`ty_importe`); `porcentaje` (`ty_porcentaje`); y `estado_pago`, `salud` y `estado_gasto` (`ty_estado`).
 
-2. **El método, vacío.** Añade a `ZCL_GOR_REGLAS` el método estático `kpi_obra`, todavía **sin código** dentro, con esta firma:
+2. **El método, vacío.**
+    - **Dónde:** `ZCL_GOR_REGLAS`.
+    - **Qué contiene:** el método estático `kpi_obra`, todavía **sin código** dentro (`METHOD kpi_obra. ENDMETHOD.`), con esta firma:
 
     | Parámetro | Tipo |
     |---|---|
     | `iv_total` (precio de la obra), `iv_coste_moo`, `iv_coste_prov`, `iv_coste_esp`, `iv_ingresos` | Entrada, `ty_importe` |
     | `rs_kpi` | Devuelto, `ty_kpi_obra` |
 
-3. **El test del paso 7.** Escribe en la pestaña **Test Classes** de `ZCL_GOR_REGLAS`, debajo de las demás, la clase `ltcl_escenario` con un método `paso_7_primer_ingreso`. Datos del escenario hasta ese paso: total 1210, coste de mano de obra 320, proveedores 200, especialistas 150 e ingresos 500. Comprueba los ocho valores de la fila 7 de §12.7: gastos 670, beneficio −170, debe 710, margen 540, porcentaje 41.3, estado de pago `parcial`, salud `rojo` y estado de gasto `proceso`. Ejecútalo: **debe fallar**, porque `kpi_obra` está vacío.
-4. **Hazlo pasar.** Implementa `kpi_obra` con las fórmulas de §11.2 (*Gastos* y *Obra: indicadores de cabecera*), **reutilizando** `redondear`, `porcentaje_cobrado`, `estado_pago`, `salud_obra` y `estado_gasto`. Fíjate en que `gastos` se redondea una vez, al final de la suma, y en que el porcentaje se calcula a partir del `debe`. Ejecuta: el test debe pasar.
-5. **El paso 8.** Añade el método `paso_8_obra_cobrada` con un segundo ingreso de 710 (ingresos 1210): beneficio 540, debe 0, porcentaje 100, `pagado`, `verde` y `finalizado`. Si falla, el test te dirá qué valor no cuadra.
-6. **Pasos 1 a 6 encadenados.** Añade `pasos_2_a_6_hasta_los_gastos`, que construye los datos **con los métodos de las unidades anteriores** en lugar de escribir los totales a mano: el total con `base_imponible` + `total_presupuesto` + `total_obra` (con el presupuesto primero no aprobado, total 0, y después aprobado, 1210); el coste de mano de obra con `coste_parte` sobre dos líneas de 8 h a 20 €/h; y los gastos con `kpi_obra` sin ingresos. Comprueba los valores de los pasos 2, 3, 4 y 6.
+3. **El test del paso 7.**
+    - **Dónde:** pestaña **Test Classes** de `ZCL_GOR_REGLAS`, debajo de las demás clases de test.
+    - **Qué contiene:** la clase `ltcl_escenario` (con la misma cabecera que `ltcl_presupuesto`) y un método de test `paso_7_primer_ingreso`. Datos del escenario hasta ese paso: total 1210, coste de mano de obra 320, proveedores 200, especialistas 150 e ingresos 500. Un `assert_equals` por cada uno de los ocho valores de la fila 7 de §12.7: gastos 670, beneficio −170, debe 710, margen 540, porcentaje 41.3, estado de pago `parcial`, salud `rojo` y estado de gasto `proceso`.
+    - **Comprueba:** ejecuta (**Ctrl+Shift+F10**): el test **debe fallar**, porque `kpi_obra` está vacío. Lee el mensaje: dice qué esperabas y qué ha salido.
+
+4. **Hazlo pasar.**
+    - **Dónde:** el método `kpi_obra`.
+    - **Qué hace:** las fórmulas de §11.2 (*Gastos* y *Obra: indicadores de cabecera*), **reutilizando** `redondear`, `porcentaje_cobrado`, `estado_pago`, `salud_obra` y `estado_gasto`, como `resumen_orden` en el taller. `gastos` se redondea una vez, al final de la suma, y el porcentaje se calcula a partir del `debe`.
+    - **Comprueba:** el test del paso 7 pasa a verde.
+
+5. **El paso 8.**
+    - **Dónde:** `ltcl_escenario`.
+    - **Qué contiene:** el método de test `paso_8_obra_cobrada`, con un segundo ingreso de 710 (ingresos 1210): beneficio 540, debe 0, porcentaje 100, `pagado`, `verde` y `finalizado`.
+    - **Comprueba:** en verde. Si falla, el mensaje te dice qué valor no cuadra.
+
+6. **Pasos 1 a 6 encadenados.** En `ltcl_escenario`, añade `pasos_2_a_6_hasta_los_gastos`, que construye los datos **con los métodos de las unidades anteriores** en lugar de escribir los totales a mano: el total con `base_imponible` + `total_presupuesto` + `total_obra` (con el presupuesto primero no aprobado, total 0, y después aprobado, 1210); el coste de mano de obra con `coste_parte` sobre dos líneas de 8 h a 20 €/h; y los gastos con `kpi_obra` sin ingresos. Comprueba los valores de los pasos 2, 3, 4 y 6.
 7. **La cobertura.** Ejecuta los tests de `ZCL_GOR_REGLAS` con cobertura (clic derecho → **Run As → ABAP Unit Test With… → Coverage**). ¿Queda alguna línea en rojo? Si queda, escribe el test que falta.
 8. **Investiga.** Rompe a propósito una regla: cambia en `salud_obra` el orden de las dos primeras condiciones. ¿Qué tests fallan? Lee el mensaje de cada uno y deshaz el cambio. Anota en un comentario de `ltcl_escenario` qué error del informe (§11.5, punto 2) protege el test del paso 7.
 
