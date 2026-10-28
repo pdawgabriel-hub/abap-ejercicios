@@ -7,101 +7,204 @@ nav_order: 5
 # 1.5. Tablas de base de datos y ABAP SQL
 
 {% raw %}
-> **Cómo ejecutar los ejemplos.** Los ejemplos muestran solo el **contenido del método `main`** de una clase ejecutable. Pégalos dentro de la plantilla de [1.1](1_1_classrun.html) (cambiando el nombre de la clase), activa con **Ctrl+F3** y ejecuta con **F9**.
+Hasta ahora todo vivía en memoria y desaparecía al terminar la ejecución. En esta unidad creamos tablas de base de datos y aprendemos a leer y escribir en ellas con **ABAP SQL**. El ejemplo son las dos primeras tablas del taller, titulares y órdenes; tú crearás las dos primeras del ERP, clientes y obras. Serán definitivas: en el Bloque 2 crearás el resto con el mismo patrón y, encima de todas, el modelo CDS.
 
-Las tablas persistentes se crean en Eclipse como **Database Table** (código en el editor de ADT; no hay SE11). Para leer y escribir usas **ABAP SQL**: un SQL con sintaxis ABAP donde las variables de ABAP llevan `@`. Recuerda que en ABAP Cloud solo puedes acceder a **tus propias tablas** y a objetos liberados.
+## Tablas en ABAP Cloud
 
-## Las dos tablas del ejemplo
-
-Crea dos objetos **Database Table** (clic derecho en el paquete → *New → Other ABAP Repository Object → Database Table*), pega el contenido y actívalos.
+En ABAP Cloud no hay transacción SE11: una tabla se escribe como **código** en Eclipse, con el objeto **Database Table**. Así es la de titulares del taller:
 
 ```sql
-@EndUserText.label : 'Taller - Propietarios'
+@EndUserText.label : 'Taller - Titulares'
 @AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
 @AbapCatalog.tableCategory : #TRANSPARENT
 @AbapCatalog.deliveryClass : #A
 @AbapCatalog.dataMaintenance : #RESTRICTED
-define table ztl_propietario {
-  key client  : abap.clnt not null;
-  key id_prop : abap.numc(6) not null;
-  nombre      : abap.char(60);
-  telefono    : abap.char(15);
+define table ztl_tit {
+  key client            : abap.clnt not null;
+  key titular_uuid      : sysuuid_x16 not null;
+  titular_ref           : abap.char(8);
+  razon_social          : abap.char(100);
+  documento_id          : abap.char(12);
+  contacto              : abap.char(20);
+  poblacion             : abap.char(60);
+  cp                    : abap.char(5);
+  created_by            : abp_creation_user;
+  created_at            : abp_creation_tstmpl;
+  last_changed_by       : abp_locinst_lastchange_user;
+  last_changed_at       : abp_lastchange_tstmpl;
+  local_last_changed_at : abp_locinst_lastchange_tstmpl;
 }
 ```
 
+Cuatro decisiones que se repetirán en **todas** las tablas, del taller y de tu ERP:
+
+- **`client`** es el mandante: la primera columna de clave de toda tabla de datos de negocio. ABAP SQL lo rellena y lo filtra solo; nunca lo escribimos.
+- **La clave técnica es un UUID** (`sysuuid_x16`, 16 bytes), no el código. El código visible (`titular_ref`, `TIT0001`) es un campo normal. En Odoo pasa lo mismo: `id` es la clave y el código sale de una secuencia. Así, el código se puede generar al guardar (3.7) y nunca hay que cambiar una clave.
+- **Los cinco campos de administración** del final (quién creó, cuándo, quién cambió por última vez…) los rellenará RAP automáticamente en el Bloque 3. Usan tipos estándar (`abp_*`) que el framework reconoce. Equivalen a los `create_uid`, `create_date`, `write_uid` y `write_date` de Odoo.
+- **Las columnas van en minúsculas y sin tildes**, y el nombre de la tabla no pasa de 16 caracteres.
+
+Las anotaciones del principio son las que genera el asistente al crear la tabla. La única que cambia de una tabla a otra es `@EndUserText.label`.
+
+## Una relación
+
+Una orden pertenece a un titular. En Odoo sería un `Many2one`: una columna con el id del otro registro. Aquí es exactamente igual, una columna con el UUID del titular:
+
 ```sql
-@EndUserText.label : 'Taller - Vehiculos'
+@EndUserText.label : 'Taller - Ordenes de reparacion'
 @AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
 @AbapCatalog.tableCategory : #TRANSPARENT
 @AbapCatalog.deliveryClass : #A
 @AbapCatalog.dataMaintenance : #RESTRICTED
-define table ztl_vehiculo {
-  key client    : abap.clnt not null;
-  key matricula : abap.char(10) not null;
-  id_prop       : abap.numc(6);
-  marca         : abap.char(30);
-  modelo        : abap.char(30);
-  anio          : abap.numc(4);
+define table ztl_orden {
+  key client            : abap.clnt not null;
+  key orden_uuid        : sysuuid_x16 not null;
+  orden_ref             : abap.char(8);
+  matricula             : abap.char(10);
+  averia                : abap.char(255);
+  titular_uuid          : sysuuid_x16;
+  created_by            : abp_creation_user;
+  created_at            : abp_creation_tstmpl;
+  last_changed_by       : abp_locinst_lastchange_user;
+  last_changed_at       : abp_lastchange_tstmpl;
+  local_last_changed_at : abp_locinst_lastchange_tstmpl;
 }
 ```
 
-## Insertar, leer, agrupar, unir, actualizar y borrar
+¿Y el importe de la orden, el rendimiento, el saldo pendiente…? **No se guardan**: se calcularán al leer, a partir de los presupuestos, las jornadas y los abonos, en las vistas CDS del Bloque 2. Por eso la tabla de órdenes es tan corta.
+
+## ABAP SQL
+
+ABAP SQL es SQL con sintaxis ABAP. Las variables de ABAP llevan **`@`** delante, para distinguirlas de las columnas:
 
 ```abap
-    DELETE FROM ztl_vehiculo.
-    DELETE FROM ztl_propietario.
+    " Leer: columnas, condicion, orden y destino
+    SELECT FROM ztl_tit
+      FIELDS titular_ref, razon_social, contacto
+      WHERE cp = '50001'
+      ORDER BY razon_social
+      INTO TABLE @DATA(lt_titulares).
 
-    DATA lt_prop TYPE STANDARD TABLE OF ztl_propietario WITH EMPTY KEY.
-    lt_prop = VALUE #( ( id_prop = '000001' nombre = 'Ana Ruiz'  telefono = '600111222' )
-                       ( id_prop = '000002' nombre = 'Luis Mena' telefono = '600333444' ) ).
-    INSERT ztl_propietario FROM TABLE @lt_prop.
-
-    DATA lt_veh TYPE STANDARD TABLE OF ztl_vehiculo WITH EMPTY KEY.
-    lt_veh = VALUE #(
-      ( matricula = '1234ABC' id_prop = '000001'
-        marca = 'Seat' modelo = 'Ibiza' anio = '2015' )
-      ( matricula = '5678DEF' id_prop = '000001'
-        marca = 'Ford' modelo = 'Focus' anio = '2019' )
-      ( matricula = '9012GHI' id_prop = '000002'
-        marca = 'Seat' modelo = 'Leon' anio = '2021' ) ).
-    INSERT ztl_vehiculo FROM TABLE @lt_veh.
-
-    SELECT FROM ztl_vehiculo
-      FIELDS matricula, marca, anio
-      WHERE anio >= '2018'
-      ORDER BY anio
-      INTO TABLE @DATA(lt_recientes).
-    out->write( lt_recientes ).
-
-    SELECT FROM ztl_vehiculo
-      FIELDS marca, COUNT( * ) AS total
-      GROUP BY marca
-      INTO TABLE @DATA(lt_marcas).
-    out->write( lt_marcas ).
-
-    SELECT FROM ztl_vehiculo AS v
-      INNER JOIN ztl_propietario AS p ON v~id_prop = p~id_prop
-      FIELDS v~matricula, v~marca, p~nombre
-      INTO TABLE @DATA(lt_con_dueno).
-    out->write( lt_con_dueno ).
-
-    UPDATE ztl_vehiculo SET marca = 'SEAT' WHERE matricula = '1234ABC'.
-    out->write( |Filas modificadas: { sy-dbcnt }| ).
-
-    DELETE FROM ztl_vehiculo WHERE matricula = '9012GHI'.
-    out->write( |Filas borradas: { sy-dbcnt }| ).
+    " Una sola fila
+    SELECT SINGLE FROM ztl_tit
+      FIELDS *
+      WHERE titular_ref = 'TIT0001'
+      INTO @DATA(ls_titular).
+    IF sy-subrc <> 0.
+      out->write( 'No existe' ).
+    ENDIF.
 ```
 
-> **Cuidado con el `DELETE` sin `WHERE`.** Vacía la tabla entera. Úsalo solo en tablas de pruebas como estas y no lo dejes en ningún programa que toque datos reales.
+- `INTO TABLE @DATA(...)` declara la tabla interna de resultado con las columnas pedidas.
+- `SELECT SINGLE` lee como mucho una fila. Si no encuentra ninguna, `sy-subrc` es distinto de 0.
+- Cada `SELECT` es una sola sentencia y termina con un único punto, al final.
 
-> **Espacios en los paréntesis.** En ABAP SQL, `COUNT( * )` lleva espacios tras abrir y antes de cerrar el paréntesis. Lo mismo vale para `VALUE #( ... )` y las llamadas a métodos.
+**Escribir:**
+
+```abap
+    DATA lt_nuevos TYPE STANDARD TABLE OF ztl_tit WITH EMPTY KEY.   " mismas columnas que la tabla
+    lt_nuevos = VALUE #( ( titular_uuid = lv_uuid titular_ref = 'TIT0001'
+                           razon_social = 'Transportes Moncayo SL' contacto = '976111222' cp = '50001' ) ).
+
+    INSERT ztl_tit FROM TABLE @lt_nuevos.        " varias filas (tabla interna)
+    INSERT ztl_tit FROM @ls_titular.             " una (estructura)
+
+    UPDATE ztl_tit SET contacto = '976999888' WHERE titular_ref = 'TIT0001'.
+    out->write( |Filas modificadas: { sy-dbcnt }| ).
+
+    DELETE FROM ztl_orden WHERE orden_ref = 'ORD0003'.
+```
+
+`sy-dbcnt` cuenta las filas afectadas por la última sentencia.
+
+**Agrupar y unir:**
+
+```abap
+    " Cuantas ordenes tiene cada titular
+    SELECT FROM ztl_orden
+      FIELDS titular_uuid, COUNT( * ) AS ordenes
+      GROUP BY titular_uuid
+      INTO TABLE @DATA(lt_por_titular).
+
+    " Ordenes con la razon social de su titular
+    SELECT FROM ztl_orden AS o
+      INNER JOIN ztl_tit AS t ON t~titular_uuid = o~titular_uuid
+      FIELDS o~orden_ref, o~matricula, t~razon_social
+      ORDER BY o~orden_ref
+      INTO TABLE @DATA(lt_ordenes).
+```
+
+En las uniones, `alias~columna` indica de qué tabla es cada columna. Con `LEFT OUTER JOIN` salen también las filas de la izquierda que no tienen pareja.
+
+> **Cuidado con el `DELETE` sin `WHERE`.** Vacía la tabla entera. Úsalo solo en clases de pruebas, para empezar desde cero, y nunca en código que toque datos reales.
+
+> **Espacios en los paréntesis.** `COUNT( * )`, como `VALUE #( ... )` y las llamadas a métodos, lleva un espacio después de abrir y antes de cerrar el paréntesis.
+
+## UUID nuevos
+
+Cada fila necesita un UUID. Lo genera una clase liberada:
+
+```abap
+    TRY.
+        DATA(lv_uuid) = cl_system_uuid=>create_uuid_x16_static( ).
+      CATCH cx_uuid_error.
+        out->write( 'No se pudo generar el UUID' ).
+    ENDTRY.
+```
+
+El método puede lanzar una excepción, y ABAP obliga a tratarla con `TRY ... CATCH`. Lo explicamos en [1.7](1_7_excepciones.html); de momento, usa este patrón.
+
+> **ABAP Cloud solo deja usar objetos liberados.** Puedes leer y escribir tus propias tablas, pero no las tablas estándar de SAP. Para datos estándar se usan las vistas CDS liberadas. Si intentas usar algo no liberado, el editor lo marca como error.
+
+## Preparación del entorno de trabajo
+
+Las tablas van en `ZGOR_DDIC` y la clase de pruebas, en `ZGOR_TEST`. Para crear una tabla: clic derecho en el paquete → **New → Other ABAP Repository Object** → *Database Table*. Al terminar:
+
+```
+ZGOR
+├── ZGOR_DDIC
+│   ├── ZGOR_CLI           ← Clientes (nueva)
+│   └── ZGOR_OBRA          ← Obras (nueva)
+├── ZGOR_BUS               (1.2 a 1.4)
+└── ZGOR_TEST
+    ├── ZCL_GOR_INICIO, ZCL_GOR_TIPOS_DEMO
+    └── ZCL_GOR_SQL_DEMO   ← pruebas de ABAP SQL (nueva)
+```
 
 ## Ejercicios
 
-1. **Clientes.** Crea la tabla de Clientes de tu proyecto (diseño de [1.9](1_9_proyecto.html)), cárgala con 5 clientes de prueba y recupéralos ordenados por nombre.
-2. **Join.** Haz una consulta con `JOIN` entre Obras y Clientes (créalas primero) que muestre el nombre del cliente de cada obra.
-3. **Agrupar.** Escribe una consulta con `GROUP BY` que cuente cuántas obras tiene cada cliente.
+1. **La tabla de clientes.** Crea `zgor_cli` (descripción `Clientes`) con las cuatro decisiones del taller y estas columnas propias, en este orden (§3.1 del informe):
 
+    | Columna | Tipo | Notas |
+    |---|---|---|
+    | `cliente_uuid` | `sysuuid_x16`, clave | |
+    | `cliente_id` | `abap.char(8)` | Código `CLI0001` |
+    | `nombre` | `abap.char(60)` | |
+    | `apellidos` | `abap.char(80)` | |
+    | `nif` | `abap.char(12)` | |
+    | `direccion` | `abap.char(120)` | |
+    | `cod_postal` | `abap.char(5)` | |
+    | `telf` | `abap.char(20)` | |
+
+2. **La tabla de obras.** Crea `zgor_obra` (descripción `Obras`) con `obra_uuid` (clave), `obra_id` (`abap.char(8)`), `descripcion` (`abap.char(255)`) y `cliente_uuid` (`sysuuid_x16`). Ningún campo calculado de la obra de Odoo (§3.5) va en la tabla: escribe en un comentario, encima de la definición, por qué.
+3. **Clientes de prueba.** Crea en `ZGOR_TEST` la clase ejecutable `ZCL_GOR_SQL_DEMO`. Debe vaciar las dos tablas y después insertar, con un solo `INSERT ... FROM TABLE`, estos tres clientes (cada uno con su UUID nuevo):
+
+    | Código | Nombre | Apellidos | NIF | Dirección | CP | Teléfono |
+    |---|---|---|---|---|---|---|
+    | `CLI0001` | Juan | Pérez López | 12345678Z | C/ Mayor 1, Madrid | 28001 | 600111222 |
+    | `CLI0002` | Ana | Ruiz Gil | 23456789X | C/ Sol 2, Madrid | 28001 | 600333444 |
+    | `CLI0003` | Luis | Mena | 34567890Y | Av. Norte 8, Madrid | 28045 | 600555666 |
+
+    Escribe `sy-dbcnt` después del `INSERT`: debe salir **3**.
+4. **Obras de prueba.** Inserta cuatro obras: `OBR0001` (Reforma de baño) y `OBR0002` (Cocina) de Juan, `OBR0003` (Pintura) de Ana y `OBR0004` (Tejado) sin cliente. Para poner el cliente, guarda los UUID al crearlos o léelos con `SELECT SINGLE`.
+5. **Consultas.** Escribe en la consola el resultado de:
+    - Los clientes del CP 28001, ordenados por apellidos: deben salir 2.
+    - El número de obras por cliente: Juan 2, Ana 1 y una fila con UUID vacío para la obra sin cliente.
+    - Las obras con el nombre de su cliente, primero con `INNER JOIN` (3 filas) y después con `LEFT OUTER JOIN` (4). Explica en un comentario por qué cambia el número.
+6. **Modificar y borrar.** Cambia el teléfono de `CLI0002` a 600999888 y borra `OBR0004`. Escribe `sy-dbcnt` después de cada sentencia (1 y 1) y vuelve a leer las obras.
+7. **Mira los datos.** Clic derecho en `zgor_cli` → **Open With → Data Preview**. Ahí ves las filas sin escribir código. Las columnas de administración están vacías, porque has insertado con SQL directo: en el Bloque 3 las rellenará RAP.
+8. **Investiga.** En Odoo, `nif` es único (§3.1). Busca si en ABAP Cloud se puede declarar un índice único sobre una tabla propia y anota lo que encuentres y en qué fuente. En el Bloque 3 la unicidad se comprobará con una *validation*, que además da un mensaje claro al usuario.
+
+En esta unidad no hay test automático: los datos de base de datos se comprueban mirándolos. En el Bloque 3 llegarán los tests que trabajan con tablas.
 
 ---
 

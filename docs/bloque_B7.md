@@ -1,15 +1,16 @@
 ---
-title: "7. Proyecto ERP de Obras y Reformas"
+title: "7. Cierre del proyecto"
 nav_order: 8
 has_children: true
 permalink: /bloque_B7.html
 ---
 
-# 7. Proyecto ERP de Obras y Reformas
+# 7. Cierre del proyecto
 
-El módulo de Odoo migrado a SAP: mapa de entidades, fases, lógica y presentación.
+Del ERP terminado al portfolio: la comprobación final, el README y la explicación en cinco minutos.
 
-- [7.1. Mapa de entidades Odoo a SAP](7_1_mapaEntidades.html)
-- [7.2. Fases y checklist](7_2_fases.html)
-- [7.3. Lógica de negocio por entidad](7_3_logica.html)
-- [7.4. README y explicación en 5 minutos](7_4_readme.html)
+| Unidad | Qué aporta al proyecto |
+|---|---|
+| [7.1. Comprobación final](7_1_comprobacion.html) | La lista de todo lo que debe funcionar antes de enseñarlo |
+| [7.2. El README del portfolio](7_2_readme.html) | Qué es, qué demuestra y que funciona, en un minuto de lectura |
+| [7.3. Explicarlo en 5 minutos](7_3_explicacion.html) | El guion de la presentación y las preguntas típicas |

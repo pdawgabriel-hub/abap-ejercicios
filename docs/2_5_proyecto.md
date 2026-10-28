@@ -1,43 +1,185 @@
 ---
-title: "2.5. Proyecto: CDS de Clientes y Obras"
+title: "2.5. Proyecto: el ERP con datos"
 parent: "2. Modelo de datos con CDS"
 nav_order: 5
 ---
 
-# 2.5. Proyecto: CDS de Clientes y Obras
+# 2.5. Proyecto: el ERP con datos
 
 {% raw %}
-Pon en práctica el bloque 2 con las dos primeras entidades del ERP de Obras y Reformas.
+Cerramos el Bloque 2 llenando la base de datos. En Odoo, el `post_init_hook` de `hooks.py` genera al instalar un conjunto de datos de ejemplo coherente (§6 del informe). Aquí haremos lo mismo con una clase de consola, `ZCL_GOR_DATOS_DEMO`, con una diferencia: en vez de datos aleatorios, crearemos **cuatro obras pensadas para probar casos concretos**. La primera es exactamente la del escenario de §12.7. Después comprobaremos que la ficha financiera que calcula `ZI_GorObraFinanzas` coincide, céntimo a céntimo, con la que calculó la simulación de 1.9.
 
-## Qué cambiar al clonar el ejemplo RuedaLibre
-
-| Ejemplo | Para Clientes |
+| Apartado | Qué aporta al proyecto |
 |---|---|
-| `ztl_orden` | `zgor_cli` |
-| `orden_uuid` | `cliente_uuid` |
-| `orden_id` (numc 8) | `cliente_id` (numc 8) |
-| Campos de la orden | Los de tu diseño (nombre, NIF, teléfono, email…) |
-| `ZI_TlOrden` | `ZI_GorCliente` |
-| Alias en CamelCase | `ClienteUuid`, `ClienteId`, `Nombre`… |
+| 2.1 Tablas | Las 16 tablas que se rellenan |
+| 2.2 Vistas | Los nombres con los que se comprueban los datos |
+| 2.3 Relaciones | La navegación en el Data Preview: de la obra a su cliente, a sus partes… |
+| 2.4 Cálculos | La ficha financiera, que no se inserta: se lee |
+| 1.2 a 1.8 | `ZCL_GOR_REGLAS` calcula los campos que **sí** se guardan (totales de presupuesto y de parte, días de falta…) |
 
-## Criterio de «listo»
+## El diseño
 
-- [ ] Las tablas `zgor_cli` y `zgor_obra` están activas.
-- [ ] `ZI_GorCliente` y `ZI_GorObra` están activas y el Data Preview se abre.
-- [ ] `ZI_GorObra` tiene la association hacia `ZI_GorCliente`.
-- [ ] Hay 3 clientes y 3 obras de prueba y se ven en el Data Preview.
-- [ ] Has hecho push con abapGit (mensaje: «Fase 1: tablas y CDS de Cliente y Obra»).
+**Las cuatro obras** cubren las ramas de cada `case` de `ZI_GorObraFinanzas`:
+
+| Obra | Cliente | Qué tiene | Ficha esperada |
+|---|---|---|---|
+| `OBR0001` | `CLI0001` Juan Pérez | El escenario de §12.7 completo: presupuesto aprobado de 10 × 100 € (IVA 21), 8 h de `TRB0001` y 8 h de `TRB0002` a 20 €/h, proveedor 200 €, especialista 150 €, cobros de 500 € y 710 € | Total 1210, gastos 670, beneficio 540, debe 0, 100 %, `pagado`, `verde`, `finalizado` |
+| `OBR0002` | `CLI0002` Ana Ruiz | Presupuesto aprobado de 1 × 2000 € con IVA 10; 60 h de `TRB0003` a 18 €/h; proveedor 1500 €; cobro de 2200 € | Total 2200, gastos 2580, beneficio −380, debe 0, 100 %, `pagado`, **`rojo`**, `finalizado` |
+| `OBR0003` | `CLI0003` Luis Mena | Presupuesto aprobado de 20 × 45 € + 1 × 300 € (IVA 21) y otro **no aprobado** de 800 €; 8 h de `TRB0004` a 25 €/h y 8 h de `TRB0001` a 20 €/h; cobro de 600 € | Total 1452, gastos 360, beneficio 240, debe 852, 41.3 %, `parcial`, `ambar`, `proceso` |
+| `OBR0004` | `CLI0004` Marta Gil | Solo un presupuesto **no aprobado** de 1000 € | Todo a 0, `pendiente`, `ambar`, `proceso` |
+
+Además: el cliente `CLI0005` (Construcciones Ebro SL, una empresa sin apellidos) con un presupuesto `PREP0006` **sin obra**, que usaremos en 3.5 para vincularlo; dos faltas de trabajadores, y una ficha de gastos por obra. En el Bloque 3, la ficha la creará RAP automáticamente; aquí la insertamos a mano.
+
+**El modelo: los datos de demo del taller.** El taller tiene su propia clase, `ZCL_TL_DATOS_DEMO`, que carga el caso `ORD0001` de [0.5](0_5_taller.html) y otras órdenes. Su estructura te sirve de modelo. Cada grupo de datos va en un método, y como unos datos apuntan a otros (la orden al titular, el tramo a la jornada), la clase guarda en una tabla *hashed* el UUID que generó para cada código:
+
+```abap
+CLASS zcl_tl_datos_demo DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    INTERFACES if_oo_adt_classrun.
+  PRIVATE SECTION.
+    TYPES: BEGIN OF ty_uuid,
+             ref  TYPE string,
+             uuid TYPE sysuuid_x16,
+           END OF ty_uuid.
+    DATA mt_uuids TYPE HASHED TABLE OF ty_uuid WITH UNIQUE KEY ref.
+
+    METHODS nuevo
+      IMPORTING iv_ref         TYPE string
+      RETURNING VALUE(rv_uuid) TYPE sysuuid_x16.
+    METHODS de
+      IMPORTING iv_ref         TYPE string
+      RETURNING VALUE(rv_uuid) TYPE sysuuid_x16.
+    METHODS vaciar.
+    METHODS crear_fichas.
+    METHODS crear_caso_ord0001.
+    METHODS crear_otras_ordenes.
+    METHODS sellar.
+ENDCLASS.
+
+CLASS zcl_tl_datos_demo IMPLEMENTATION.
+  METHOD if_oo_adt_classrun~main.
+    vaciar( ).
+    crear_fichas( ).
+    crear_caso_ord0001( ).
+    crear_otras_ordenes( ).
+    sellar( ).
+    out->write( |Datos del taller creados: { lines( mt_uuids ) } registros| ).
+  ENDMETHOD.
+
+  METHOD nuevo.
+    " Genera un UUID y lo apunta con su referencia para usarlo despues
+    TRY.
+        rv_uuid = cl_system_uuid=>create_uuid_x16_static( ).
+      CATCH cx_uuid_error.
+        RETURN.
+    ENDTRY.
+    INSERT VALUE #( ref = iv_ref uuid = rv_uuid ) INTO TABLE mt_uuids.
+  ENDMETHOD.
+
+  METHOD de.
+    rv_uuid = mt_uuids[ ref = iv_ref ]-uuid.
+  ENDMETHOD.
+  ...
+ENDCLASS.
+```
+
+`de` lanza `cx_sy_itab_line_not_found` si se pide una referencia que no se ha creado. Es lo que se quiere: un error en los datos de demo debe verse enseguida, no esconderse.
+
+**Los campos que se guardan se calculan antes de insertar**, con la clase de reglas. Así crea el taller el presupuesto de `ORD0001` y sus partidas:
+
+```abap
+    DATA(lt_partidas) = VALUE zif_tl_tipos=>tt_partidas(
+      ( concepto = `Horas de diagnosis` cantidad = 4 precio_unitario = 45 )
+      ( concepto = `Kit de embrague`    cantidad = 1 precio_unitario = 320 ) ).
+    DATA(lv_neto) = zcl_tl_calculos=>neto_presupuesto( lt_partidas ).
+
+    DATA lt_prs TYPE STANDARD TABLE OF ztl_prs WITH EMPTY KEY.
+    lt_prs = VALUE #( ( presupuesto_uuid  = nuevo( `PRS0001` )
+                        presupuesto_ref   = 'PRS0001'
+                        fecha             = '20261002'
+                        titular_uuid      = de( `TIT0001` )
+                        orden_uuid        = de( `ORD0001` )
+                        titular_nombre    = 'Transportes Moncayo SL'
+                        titular_documento = 'B50111222'
+                        impuesto          = 21
+                        situacion         = zif_tl_tipos=>situacion_presupuesto-aceptado
+                        neto              = lv_neto
+                        cuota             = zcl_tl_calculos=>cuota_impuesto( iv_neto = lv_neto iv_impuesto = 21 )
+                        importe           = zcl_tl_calculos=>importe_presupuesto( iv_neto = lv_neto iv_impuesto = 21 ) ) ).
+    INSERT ztl_prs FROM TABLE @lt_prs.
+
+    DATA lt_par TYPE STANDARD TABLE OF ztl_prs_par WITH EMPTY KEY.
+    lt_par = VALUE #( FOR ls_partida IN lt_partidas INDEX INTO lv_i
+                      ( partida_uuid     = nuevo( |PRS0001-{ lv_i }| )
+                        presupuesto_uuid = de( `PRS0001` )
+                        concepto         = ls_partida-concepto
+                        cantidad         = ls_partida-cantidad
+                        precio_unitario  = ls_partida-precio_unitario
+                        importe_partida  = zcl_tl_calculos=>importe_partida(
+                                             iv_cantidad        = ls_partida-cantidad
+                                             iv_precio_unitario = ls_partida-precio_unitario ) ) ).
+    INSERT ztl_prs_par FROM TABLE @lt_par.
+```
+
+**Los campos de administración** se rellenan todos al final, en `sellar`, con un `UPDATE` por tabla, para no repetirlos en cada fila:
+
+```abap
+  METHOD sellar.
+    DATA lv_ahora TYPE timestampl.
+    GET TIME STAMP FIELD lv_ahora.
+    DATA(lv_usuario) = cl_abap_context_info=>get_user_technical_name( ).
+
+    UPDATE ztl_tit SET created_by      = @lv_usuario, created_at      = @lv_ahora,
+                       last_changed_by = @lv_usuario, last_changed_at = @lv_ahora,
+                       local_last_changed_at = @lv_ahora.
+    " ... lo mismo para cada tabla del taller
+  ENDMETHOD.
+```
+
+En el Bloque 3 importa que `last_changed_at` tenga valor: RAP lo usa para detectar si otra persona ha cambiado el registro mientras lo editabas.
+
+## Preparación del entorno de trabajo
+
+Las dos clases van en `ZGOR_TEST`. La comprobación la descargas de los materiales. Al terminar:
+
+```
+ZGOR_TEST
+├── (clases del Bloque 1)
+├── ZCL_GOR_DATOS_DEMO       ← nueva
+└── ZCL_GOR_COMPROBAR_CDS    ← nueva (de los materiales)
+```
+
+Puedes ejecutar `ZCL_GOR_DATOS_DEMO` tantas veces como quieras: lo primero que hace es vaciar las tablas. **Solo** en tu sistema de pruebas.
 
 ## Ejercicios
 
-1. **Fase 1.** Crea la tabla y la CDS de Clientes, con al menos un campo calculado con `case`. Comprueba con Data Preview.
-2. **Obras.** Repite con Obras, añadiendo una association hacia Clientes.
-3. **Datos.** Inserta 3 clientes con una clase ejecutable ([1.5](1_5_abapSql.html)) y vuelve a mirar el Preview.
+1. **El esqueleto.** Crea `ZCL_GOR_DATOS_DEMO` con la misma estructura que la del taller: una tabla *hashed* de código → UUID, dos métodos para crear y consultar UUID (`registrar` y `uuid_de`), y un método por grupo de datos: `vaciar`, `crear_maestros`, `crear_escenario`, `crear_otras_obras` y `sellar`. Su `main` los llama en ese orden y escribe cuántos registros con código ha creado.
+2. **Vaciar.** Implementa `vaciar`: un `DELETE FROM` por cada una de las 16 tablas. Empieza por las hijas (líneas, faltas, relaciones N:M, ficha de gastos) y termina por las raíces. Las tablas no tienen claves foráneas, así que el orden no daría error, pero así te acostumbras al orden en que se borra en la vida real.
+3. **Maestros.** Implementa `crear_maestros`. Cada entidad, en su tabla interna y con un solo `INSERT ... FROM TABLE`:
 
+    | Entidad | Registros |
+    |---|---|
+    | Clientes | `CLI0001` Juan Pérez López (NIF 12345678Z, CP 28001); `CLI0002` Ana Ruiz Gil (28001); `CLI0003` Luis Mena Sanz (28045); `CLI0004` Marta Gil Romero (50001); `CLI0005` Construcciones Ebro SL (sin apellidos, 50003). Todos con dirección y teléfono |
+    | Trabajadores | `TRB0001` Pedro Sánchez y `TRB0002` Rosa Martín (Oficial 1ª, 20 €/h); `TRB0003` Diego Ortega (Peón, 18 €/h); `TRB0004` Lucía Navarro (Encargada, 25 €/h) |
+    | Faltas | `TRB0001`: vacaciones del 03/08/2026 al 14/08/2026; `TRB0003`: baja médica del 05/10/2026 al 07/10/2026. Calcula `dias` con `zcl_gor_reglas=>dias_falta( )`: 12 y 3 |
+    | Proveedores | `PROV0001` Materiales Centro, `PROV0002` Cerámicas Levante, `PROV0003` Fontanería Express. `base` 200, 450 y 90, `iva` 21, y `total` con `total_proveedor( )` |
+    | Especialistas | `ESP0001` Javier Rubio (Electricista, 150 €), `ESP0002` Sara León (Arquitecta, 900 €), `ESP0003` Iván Prieto (Fontanero, 120 €) |
+
+    Registra cada UUID con su código para poder usarlo después. Las faltas no tienen código: regístralas con un nombre cualquiera o usa `cl_system_uuid` directamente.
+4. **El escenario.** Implementa `crear_escenario` con todo lo de `OBR0001` según la tabla de la sección «El diseño»: la obra, su ficha de gastos `GAS0001` (inicio 07/09/2026, fin 16/10/2026), el presupuesto `PREP0001` del 01/09/2026 con la copia de los datos de Juan y su línea «Reforma integral de baño», un parte de trabajo del 08/09/2026 con sus dos líneas, un parte de proveedor (`PROV0001`, 200 €, pagado), un parte de especialista (`ESP0001`, 150 €, pagado) e ingresos `ING0001` (500 €, 15/09/2026) e `ING0002` (710 €, 20/10/2026). En el parte de trabajo, calcula `coste_subtotal` de cada línea con `coste_subtotal( )`, y `horas_totales` y `coste_total` del parte con `horas_parte( )` y `coste_parte( )`.
+5. **Las otras obras.** Implementa `crear_otras_obras` con `OBR0002`, `OBR0003` y `OBR0004` según la tabla, cada una con su ficha de gastos (`GAS0002` a `GAS0004`), y el presupuesto `PREP0006` de `CLI0005` **sin obra** (1 × 5000 €, IVA 21, no aprobado). Numera los presupuestos `PREP0002` a `PREP0006` y los ingresos `ING0003` y `ING0004`.
+6. **Sellar.** Implementa `sellar` con las 16 tablas. Ejecuta la clase: debe escribir el número de registros con código y no dar ningún *dump*.
+7. **Navega.** En el Data Preview de `ZI_GorObra`, abre `OBR0001` y sigue `_Finanzas`, `_PartesTrabajo` y `_Trabajadores`. En `ZI_GorTrabajador`, sigue `_Acumulado` de `TRB0001`: 16 h y 320 € (8 h en `OBR0001` y 8 h en `OBR0003`).
+8. **Comprueba la ficha.** Crea en `ZGOR_TEST` la clase `ZCL_GOR_COMPROBAR_CDS` con el código de [2_5_comprobar_cds.abap](materiales/tests/2_5_comprobar_cds.abap) y ejecútala. Lee cada obra de `ZI_GorObraFinanzas`, la compara con la tabla de la sección «El diseño» y escribe `OK` o el campo que no cuadra. Si algo falla, el error puede estar en los datos (ejercicios 3 a 5) o en las vistas (2.4): el Data Preview te dirá cuál.
+9. **Investiga.** Cambia en `ZCL_GOR_DATOS_DEMO` el estado del presupuesto de 800 € de `OBR0003` a `aprobado` y vuelve a ejecutar las dos clases. ¿Qué campos fallan ahora? Calcula a mano los valores nuevos, compruébalos en el Data Preview y deja el estado como estaba.
+
+## Comprueba tu solución automáticamente
+
+`ZCL_GOR_COMPROBAR_CDS` (ejercicio 8) debe terminar con **«0 errores»**: 4 obras × 10 campos, más los acumulados de los 4 trabajadores y los participantes de `OBR0001`. No es un test de ABAP Unit, porque lee los datos reales de la base de datos. En [3.8](3_8_proyecto.html) escribiremos el escenario como test de verdad, con las tablas sustituidas por dobles.
 
 ---
 
-**Siguiente:** [3.1. Behavior Definition managed](3_1_behaviorDefinition.html)
+**Siguiente:** [3. Comportamiento con RAP](bloque_B3.html)
 
 [Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/2_5_proyecto.md){: .fs-2 }
 {% endraw %}

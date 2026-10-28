@@ -7,79 +7,109 @@ nav_order: 2
 # 2.2. CDS View Entities
 
 {% raw %}
-> **El ejemplo de referencia.** Todo el bloque 2 a 4 usa un único ejemplo, el taller de reparación de vehículos «RuedaLibre» (`ZTL_*`). Tus ejercicios usan tu proyecto de obras (`ZGOR_*`). Pega el ejemplo para ver cómo funciona y después **haz tu versión**.
+Las tablas guardan los datos, pero RAP no trabaja directamente con ellas: trabaja con **vistas CDS** (*Core Data Services*). Una vista CDS es una definición declarativa, parecida a un `CREATE VIEW` de SQL, que además lleva **anotaciones** (metadatos para el framework y para Fiori) y **associations** (relaciones navegables). En esta unidad creamos una vista por tabla: la capa *interface* del ERP, con prefijo `ZI_`.
 
-Encima de cada tabla se construye una **CDS View Entity**: una definición declarativa de lo que expones. Es el punto de partida de todo en RAP. Hay dos capas típicas:
+## Las capas de vistas
 
-- La **interface view** (prefijo `ZI_`): el modelo de negocio.
-- La **projection view** (prefijo `ZC_`): adapta el modelo a un consumo concreto, como una app Fiori ([4.1](4_1_proyecciones.html)).
+Encima de cada tabla habrá dos vistas:
 
-## Crear una CDS
+| Capa | Prefijo | Qué hace | Bloque |
+|---|---|---|---|
+| **Interface** | `ZI_` | El modelo de negocio: nombres claros, relaciones, cálculos. El comportamiento RAP se define sobre ella | 2 y 3 |
+| **Proyección** | `ZC_` | Adapta el modelo a un uso concreto (una app Fiori): qué campos, qué búsquedas, qué textos | 4 |
 
-1. Clic derecho en el paquete → **New → Other ABAP Repository Object → Data Definition**.
-2. Nombre `ZI_GorCliente`. Plantilla: **Define View Entity** (o **Define Root View Entity** para las raíces).
-3. Completa la CDS, guarda y activa. Con la CDS abierta, **F8** abre el Data Preview.
+Es la misma idea que separar el modelo (`models/`) de las vistas (`views/`) en Odoo.
 
-## La CDS de las líneas
+## Una vista CDS
 
-Pega primero la de las líneas, porque la de la orden la referencia. Si la orden da error por la línea, activa antes la línea.
-
-```sql
-@AccessControl.authorizationCheck: #NOT_REQUIRED
-@EndUserText.label: 'Linea de coste'
-define view entity ZI_TlLinea
-  as select from ztl_linea
-  association to parent ZI_TlOrden as _Orden
-    on $projection.OrdenUuid = _Orden.OrdenUuid
-{
-  key linea_uuid as LineaUuid,
-      orden_uuid as OrdenUuid,
-      concepto   as Concepto,
-      @Semantics.amount.currencyCode: 'Moneda'
-      importe    as Importe,
-      moneda     as Moneda,
-      _Orden
-}
-```
-
-## La CDS de la orden
+Así es la de los titulares del taller:
 
 ```sql
 @AccessControl.authorizationCheck: #NOT_REQUIRED
-@EndUserText.label: 'Orden de reparacion'
-define root view entity ZI_TlOrden
-  as select from ztl_orden
-  composition [0..*] of ZI_TlLinea as _Lineas
+@EndUserText.label: 'Taller - Titulares'
+@Metadata.ignorePropagatedAnnotations: true
+define view entity ZI_TlTitular
+  as select from ztl_tit
 {
-  key orden_uuid    as OrdenUuid,
-      orden_id      as OrdenId,
-      matricula     as Matricula,
-      descripcion   as Descripcion,
-      estado        as Estado,
-      case estado
-        when 'P' then 'Pendiente'
-        when 'C' then 'En curso'
-        when 'F' then 'Finalizada'
-        else 'Desconocido'
-      end           as EstadoTexto,
-      fecha_entrada as FechaEntrada,
-      @Semantics.amount.currencyCode: 'Moneda'
-      coste_total   as CosteTotal,
-      moneda        as Moneda,
-      _Lineas
+  key titular_uuid          as TitularUUID,
+      titular_ref           as TitularRef,
+      razon_social          as RazonSocial,
+      documento_id          as DocumentoId,
+      contacto              as Contacto,
+      poblacion             as Poblacion,
+      cp                    as Cp,
+      @Semantics.user.createdBy: true
+      created_by            as CreatedBy,
+      @Semantics.systemDateTime.createdAt: true
+      created_at            as CreatedAt,
+      @Semantics.user.localInstanceLastChangedBy: true
+      last_changed_by       as LastChangedBy,
+      @Semantics.systemDateTime.lastChangedAt: true
+      last_changed_at       as LastChangedAt,
+      @Semantics.systemDateTime.localInstanceLastChangedAt: true
+      local_last_changed_at as LocalLastChangedAt
 }
 ```
 
-Cuando estén activas, pulsa **F8** con la CDS abierta para abrir el **Data Preview**. La tabla estará vacía, pero la vista debe abrirse sin errores.
+- **`define view entity`** es el tipo moderno de vista CDS. Hay otro antiguo (`define view` con `@AbapCatalog.sqlViewName`) que verás en código viejo; en ABAP Cloud se usa siempre `view entity`.
+- **Alias en *CamelCase***: la columna `razon_social` se expone como `RazonSocial`. Los nombres de la vista son los que verán el comportamiento RAP, el servicio OData y Fiori. En el taller, los UUID terminan en `UUID` y los códigos visibles, en `Ref`.
+- **`@Semantics...`** en los campos de administración indica a RAP qué es cada uno, para que los rellene solo al crear y al modificar. Sin estas anotaciones, se quedarían vacíos.
+- **`@AccessControl.authorizationCheck: #NOT_REQUIRED`**: de momento, sin control de acceso. En [6.1](6_1_seguridad.html) lo cambiaremos.
+- **`@Metadata.ignorePropagatedAnnotations: true`**: no hereda anotaciones de las tablas de debajo, para que la vista diga exactamente lo que declaramos.
 
-> **Puente a Odoo.** Un campo calculado en la CDS (como `EstadoTexto`) equivale a un `compute` sin `store` de Odoo, pero se resuelve en SQL, no en el servidor de aplicación.
+## Crear una vista
+
+1. Clic derecho en `ZGOR_CDS` → **New → Other ABAP Repository Object** → *Data Definition*.
+2. Nombre de la vista, descripción y, en *Referenced Object*, la tabla de debajo.
+3. El asistente ofrece plantillas: elige **Define View Entity**. Con la tabla de referencia, Eclipse ya rellena las columnas. Ponles los alias, guarda y activa.
+
+## Data Preview
+
+Con la vista abierta, **F8** abre el *Data Preview*: los datos de la vista tal como los vería RAP. Después de cada vista nueva, ábrelo. Debe mostrar las mismas filas que la tabla, con los nombres de columna nuevos.
+
+El Data Preview permite también filtrar, ordenar y, cuando haya associations (2.3), **navegar** de un registro a sus relacionados.
+
+## Preparación del entorno de trabajo
+
+Todas las vistas van en `ZGOR_CDS`. Al terminar habrá una por tabla:
+
+```
+ZGOR_CDS
+├── ZI_GorCliente, ZI_GorTrabajador, ZI_GorFalta
+├── ZI_GorProveedor, ZI_GorEspecialista
+├── ZI_GorPresupuesto, ZI_GorPresuLin, ZI_GorPresuProv, ZI_GorPresuEsp
+├── ZI_GorObra, ZI_GorGasto
+├── ZI_GorIngreso
+└── ZI_GorParteTrabajo, ZI_GorParteTrabLin, ZI_GorParteEsp, ZI_GorParteProv
+```
 
 ## Ejercicios
 
-1. **CDS de Clientes.** Crea `ZI_GorCliente` con al menos un campo calculado con `case`.
-2. **Interface frente a projection.** Explica con tus palabras la diferencia práctica entre una interface view y una projection view.
-3. **CDS de Obras.** Crea `ZI_GorObra` con un campo calculado de estado en texto.
+1. **Clientes.** Crea `ZI_GorCliente` (descripción `Clientes`) sobre `zgor_cli`, con estos alias: `ClienteUUID` (clave), `ClienteId`, `Nombre`, `Apellidos`, `Nif`, `Direccion`, `CodPostal`, `Telf` y los cinco campos de administración con sus `@Semantics`, igual que en el taller. Con los datos de 1.5, el Data Preview debe mostrar tus tres clientes con los nombres nuevos.
+2. **Líneas de presupuesto.** Crea `ZI_GorPresuLin` sobre `zgor_presu_lin`: `LineaUUID`, `PresupuestoUUID`, `Descripcion`, `Uds`, `Precio`, `TotalLinea` y los cinco de administración. Fíjate en que la columna `presupuesto_uuid` se llama `PresupuestoUUID`, igual que la clave de la cabecera: así, en 2.3, la relación se lee sola.
+3. **Todas las demás.** Crea una vista por tabla con este reparto de nombres:
 
+    | Vista | Tabla | Alias que no son evidentes |
+    |---|---|---|
+    | `ZI_GorTrabajador` | `zgor_trab` | `TrabajadorUUID`, `TrabajadorId`, `CosteHoraEstandar` |
+    | `ZI_GorFalta` | `zgor_falta` | `FaltaUUID`, `TrabajadorUUID`, `FechaInicio`, `FechaFin`, `Dias` |
+    | `ZI_GorProveedor` | `zgor_prov` | `ProveedorUUID`, `ProveedorId`, `NumDocumento` |
+    | `ZI_GorEspecialista` | `zgor_esp` | `EspecialistaUUID`, `EspecialistaId`, `ComunicacionParte` |
+    | `ZI_GorPresupuesto` | `zgor_presu` | `PresupuestoUUID`, `PresupuestoId`, `ClienteUUID`, `ObraUUID`, `NombreCliente`, `BaseImponible`, `CuotaIva` |
+    | `ZI_GorPresuProv` | `zgor_presu_pv` | `PresuProvUUID`, `PresupuestoUUID`, `ProveedorUUID` |
+    | `ZI_GorPresuEsp` | `zgor_presu_es` | `PresuEspUUID`, `PresupuestoUUID`, `EspecialistaUUID` |
+    | `ZI_GorObra` | `zgor_obra` | `ObraUUID`, `ObraId`, `ClienteUUID` |
+    | `ZI_GorGasto` | `zgor_gasto` | `GastoUUID`, `ObraUUID`, `GastoId`, `PresupuestoUUID`, `DireccionObra`, `InicioObra`, `FinObra`, `SolicitudObra`, `GestionLicencia`, `PagoIcio` |
+    | `ZI_GorIngreso` | `zgor_ing` | `IngresoUUID`, `IngresoId`, `ObraUUID`, `ClienteUUID`, `NombreObra`, `NumDocumento` |
+    | `ZI_GorParteTrabajo` | `zgor_pt` | `ParteUUID`, `ObraUUID`, `HorasTotales`, `CosteTotal` |
+    | `ZI_GorParteTrabLin` | `zgor_pt_lin` | `LineaUUID`, `ParteUUID`, `TrabajadorUUID`, `CosteHora`, `CosteSubtotal` |
+    | `ZI_GorParteEsp` | `zgor_pe` | `ParteUUID`, `ObraUUID`, `EspecialistaUUID`, `EstadoPago` |
+    | `ZI_GorParteProv` | `zgor_pp` | `ParteUUID`, `ObraUUID`, `ProveedorUUID`, `EstadoPago` |
+
+    El resto de columnas se traduce sin sorpresas: `fecha` → `Fecha`, `descripcion` → `Descripcion`, `importe` → `Importe`… Todas llevan los cinco campos de administración con sus `@Semantics`.
+
+4. **Una vista con condición.** Crea una vista auxiliar de prueba, `ZI_GorClienteMadrid`, sobre `zgor_cli`, con `where cod_postal like '28%'` (se escribe después de la lista de campos, tras la llave de cierre). Ábrela con **F8**: deben salir los clientes de Madrid de 1.5. Después **bórrala** (clic derecho → *Delete*): era solo para practicar y no forma parte del ERP.
+5. **Investiga.** Abre `ZI_GorCliente`, pon el cursor sobre `zgor_cli` y pulsa **F2**. Después pulsa **F3**. ¿Qué hace cada tecla? Anótalo: las usarás constantemente para navegar entre vistas, tablas y clases.
 
 ---
 

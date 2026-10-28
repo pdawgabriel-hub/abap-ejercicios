@@ -1,0 +1,373 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="2110" height="874" viewBox="0 0 2110 874" font-family="Helvetica, Arial, sans-serif">
+<rect width="100%" height="100%" fill="#ffffff"/>
+<text x="30" y="38" font-size="18" font-weight="bold" fill="#1d2733">Taller RuedaLibre - modelo relacional (ZTL)</text>
+<polyline points="280,135 294,135 294,117 390,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="280" cy="135" r="2.5" fill="#555555"/>
+<text x="284" y="131" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="390" cy="117" r="2.5" fill="#555555"/>
+<text x="297" y="113" font-size="10" text-anchor="start" fill="#555555">1</text>
+<polyline points="280,319 303,319 303,117 390,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="280" cy="319" r="2.5" fill="#555555"/>
+<text x="284" y="315" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="390" cy="117" r="2.5" fill="#555555"/>
+<text x="306" y="113" font-size="10" text-anchor="start" fill="#555555">1</text>
+<polyline points="640,171 654,171 654,409 640,409" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="640" cy="171" r="2.5" fill="#555555"/>
+<text x="644" y="167" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="640" cy="409" r="2.5" fill="#555555"/>
+<text x="651" y="405" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="640,189 663,189 663,117 750,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="640" cy="189" r="2.5" fill="#555555"/>
+<text x="644" y="185" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="750" cy="117" r="2.5" fill="#555555"/>
+<text x="666" y="113" font-size="10" text-anchor="start" fill="#555555">0..1</text>
+<polyline points="750,189 672,189 672,409 640,409" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="750" cy="189" r="2.5" fill="#555555"/>
+<text x="746" y="185" font-size="10" text-anchor="end" fill="#555555">N</text>
+<circle cx="640" cy="409" r="2.5" fill="#555555"/>
+<text x="669" y="405" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="1000,301 1014,301 1014,117 1000,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1000" cy="301" r="2.5" fill="#555555"/>
+<text x="1004" y="297" font-size="10" text-anchor="start" fill="#555555">0..1</text>
+<circle cx="1000" cy="117" r="2.5" fill="#555555"/>
+<text x="1011" y="113" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="1000,503 1023,503 1023,117 1000,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1000" cy="503" r="2.5" fill="#555555"/>
+<text x="1004" y="499" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="1000" cy="117" r="2.5" fill="#555555"/>
+<text x="1020" y="113" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="750,521 681,521 681,409 640,409" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="750" cy="521" r="2.5" fill="#555555"/>
+<text x="746" y="517" font-size="10" text-anchor="end" fill="#555555">N</text>
+<circle cx="640" cy="409" r="2.5" fill="#555555"/>
+<text x="678" y="405" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="1110,135 1032,135 1032,117 1000,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1110" cy="135" r="2.5" fill="#555555"/>
+<text x="1106" y="131" font-size="10" text-anchor="end" fill="#555555">N</text>
+<circle cx="1000" cy="117" r="2.5" fill="#555555"/>
+<text x="1029" y="113" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="1110,319 1041,319 1041,117 1000,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1110" cy="319" r="2.5" fill="#555555"/>
+<text x="1106" y="315" font-size="10" text-anchor="end" fill="#555555">N</text>
+<circle cx="1000" cy="117" r="2.5" fill="#555555"/>
+<text x="1038" y="113" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="1110,503 1050,503 1050,117 1000,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1110" cy="503" r="2.5" fill="#555555"/>
+<text x="1106" y="499" font-size="10" text-anchor="end" fill="#555555">N</text>
+<circle cx="1000" cy="117" r="2.5" fill="#555555"/>
+<text x="1047" y="113" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="1470,135 1374,135 1374,117 1360,117" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1470" cy="135" r="2.5" fill="#555555"/>
+<text x="1466" y="131" font-size="10" text-anchor="end" fill="#555555">N</text>
+<circle cx="1360" cy="117" r="2.5" fill="#555555"/>
+<text x="1371" y="113" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="1720,153 1734,153 1734,301 1720,301" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1720" cy="153" r="2.5" fill="#555555"/>
+<text x="1724" y="149" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="1720" cy="301" r="2.5" fill="#555555"/>
+<text x="1731" y="297" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="1360,337 1383,337 1383,485 1470,485" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1360" cy="337" r="2.5" fill="#555555"/>
+<text x="1364" y="333" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="1470" cy="485" r="2.5" fill="#555555"/>
+<text x="1386" y="481" font-size="10" text-anchor="start" fill="#555555">1</text>
+<polyline points="1360,521 1392,521 1392,669 1470,669" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1360" cy="521" r="2.5" fill="#555555"/>
+<text x="1364" y="517" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="1470" cy="669" r="2.5" fill="#555555"/>
+<text x="1395" y="665" font-size="10" text-anchor="start" fill="#555555">1</text>
+<polyline points="1830,135 1743,135 1743,301 1720,301" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="1830" cy="135" r="2.5" fill="#555555"/>
+<text x="1826" y="131" font-size="10" text-anchor="end" fill="#555555">N</text>
+<circle cx="1720" cy="301" r="2.5" fill="#555555"/>
+<text x="1740" y="297" font-size="10" text-anchor="end" fill="#555555">1</text>
+<polyline points="280,337 312,337 312,778 1401,778 1401,485 1470,485" fill="none" stroke="#555555" stroke-width="1.3" stroke-linejoin="round"/>
+<circle cx="280" cy="337" r="2.5" fill="#555555"/>
+<text x="284" y="333" font-size="10" text-anchor="start" fill="#555555">N</text>
+<circle cx="1470" cy="485" r="2.5" fill="#555555"/>
+<text x="1404" y="481" font-size="10" text-anchor="start" fill="#555555">1</text>
+<rect x="30" y="70" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M30,106 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#4f8a5b"/>
+<text x="40" y="86" font-size="13" font-weight="bold" fill="#ffffff">ztl_prs_par</text>
+<text x="40" y="100" font-size="10" fill="#e8eef3">Partidas de presupuesto</text>
+<text x="40" y="121" font-size="11" font-weight="bold" fill="#1d2733">partida_uuid</text>
+<text x="246" y="121" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="272" y="121" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="40" y="139" font-size="11" font-weight="normal" fill="#1d2733">presupuesto_uuid</text>
+<text x="246" y="139" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="272" y="139" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="40" y="157" font-size="11" font-weight="normal" fill="#1d2733">concepto</text>
+<text x="246" y="157" font-size="10" text-anchor="end" fill="#6b7785">char 120</text>
+<text x="40" y="175" font-size="11" font-weight="normal" fill="#1d2733">cantidad</text>
+<text x="246" y="175" font-size="10" text-anchor="end" fill="#6b7785">int4</text>
+<text x="40" y="193" font-size="11" font-weight="normal" fill="#1d2733">precio_unitario</text>
+<text x="246" y="193" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<text x="40" y="211" font-size="11" font-weight="normal" fill="#1d2733">importe_partida</text>
+<text x="246" y="211" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<rect x="30" y="254" width="250" height="96" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M30,290 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#4f8a5b"/>
+<text x="40" y="270" font-size="13" font-weight="bold" fill="#ffffff">ztl_prs_dis</text>
+<text x="40" y="284" font-size="10" fill="#e8eef3">Distribuidores previstos</text>
+<text x="40" y="305" font-size="11" font-weight="bold" fill="#1d2733">prs_dis_uuid</text>
+<text x="246" y="305" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="272" y="305" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="40" y="323" font-size="11" font-weight="normal" fill="#1d2733">presupuesto_uuid</text>
+<text x="246" y="323" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="272" y="323" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="40" y="341" font-size="11" font-weight="normal" fill="#1d2733">distribuidor_uuid</text>
+<text x="246" y="341" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="272" y="341" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<rect x="390" y="70" width="250" height="258" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M390,106 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="400" y="86" font-size="13" font-weight="bold" fill="#ffffff">ztl_prs</text>
+<text x="400" y="100" font-size="10" fill="#e8eef3">Presupuestos</text>
+<text x="400" y="121" font-size="11" font-weight="bold" fill="#1d2733">presupuesto_uuid</text>
+<text x="606" y="121" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="632" y="121" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="400" y="139" font-size="11" font-weight="normal" fill="#1d2733">presupuesto_ref</text>
+<text x="606" y="139" font-size="10" text-anchor="end" fill="#6b7785">char 8</text>
+<text x="400" y="157" font-size="11" font-weight="normal" fill="#1d2733">fecha</text>
+<text x="606" y="157" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="400" y="175" font-size="11" font-weight="normal" fill="#1d2733">titular_uuid</text>
+<text x="606" y="175" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="632" y="175" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="400" y="193" font-size="11" font-weight="normal" fill="#1d2733">orden_uuid</text>
+<text x="606" y="193" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="632" y="193" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="400" y="211" font-size="11" font-weight="normal" fill="#1d2733">titular_nombre</text>
+<text x="606" y="211" font-size="10" text-anchor="end" fill="#6b7785">char 100</text>
+<text x="400" y="229" font-size="11" font-weight="normal" fill="#1d2733">titular_documento</text>
+<text x="606" y="229" font-size="10" text-anchor="end" fill="#6b7785">char 12</text>
+<text x="400" y="247" font-size="11" font-weight="normal" fill="#1d2733">impuesto</text>
+<text x="606" y="247" font-size="10" text-anchor="end" fill="#6b7785">dec 5,2</text>
+<text x="400" y="265" font-size="11" font-weight="normal" fill="#1d2733">situacion</text>
+<text x="606" y="265" font-size="10" text-anchor="end" fill="#6b7785">char 15</text>
+<text x="400" y="283" font-size="11" font-weight="normal" fill="#1d2733">neto</text>
+<text x="606" y="283" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<text x="400" y="301" font-size="11" font-weight="normal" fill="#1d2733">cuota</text>
+<text x="606" y="301" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<text x="400" y="319" font-size="11" font-weight="normal" fill="#1d2733">importe</text>
+<text x="606" y="319" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<rect x="390" y="362" width="250" height="168" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M390,398 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="400" y="378" font-size="13" font-weight="bold" fill="#ffffff">ztl_tit</text>
+<text x="400" y="392" font-size="10" fill="#e8eef3">Titulares</text>
+<text x="400" y="413" font-size="11" font-weight="bold" fill="#1d2733">titular_uuid</text>
+<text x="606" y="413" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="632" y="413" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="400" y="431" font-size="11" font-weight="normal" fill="#1d2733">titular_ref</text>
+<text x="606" y="431" font-size="10" text-anchor="end" fill="#6b7785">char 8</text>
+<text x="400" y="449" font-size="11" font-weight="normal" fill="#1d2733">razon_social</text>
+<text x="606" y="449" font-size="10" text-anchor="end" fill="#6b7785">char 100</text>
+<text x="400" y="467" font-size="11" font-weight="normal" fill="#1d2733">documento_id</text>
+<text x="606" y="467" font-size="10" text-anchor="end" fill="#6b7785">char 12</text>
+<text x="400" y="485" font-size="11" font-weight="normal" fill="#1d2733">contacto</text>
+<text x="606" y="485" font-size="10" text-anchor="end" fill="#6b7785">char 20</text>
+<text x="400" y="503" font-size="11" font-weight="normal" fill="#1d2733">poblacion</text>
+<text x="606" y="503" font-size="10" text-anchor="end" fill="#6b7785">char 60</text>
+<text x="400" y="521" font-size="11" font-weight="normal" fill="#1d2733">cp</text>
+<text x="606" y="521" font-size="10" text-anchor="end" fill="#6b7785">char 5</text>
+<rect x="750" y="70" width="250" height="132" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M750,106 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="760" y="86" font-size="13" font-weight="bold" fill="#ffffff">ztl_orden</text>
+<text x="760" y="100" font-size="10" fill="#e8eef3">Ordenes de reparacion</text>
+<text x="760" y="121" font-size="11" font-weight="bold" fill="#1d2733">orden_uuid</text>
+<text x="966" y="121" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="992" y="121" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="760" y="139" font-size="11" font-weight="normal" fill="#1d2733">orden_ref</text>
+<text x="966" y="139" font-size="10" text-anchor="end" fill="#6b7785">char 8</text>
+<text x="760" y="157" font-size="11" font-weight="normal" fill="#1d2733">matricula</text>
+<text x="966" y="157" font-size="10" text-anchor="end" fill="#6b7785">char 10</text>
+<text x="760" y="175" font-size="11" font-weight="normal" fill="#1d2733">averia</text>
+<text x="966" y="175" font-size="10" text-anchor="end" fill="#6b7785">char 255</text>
+<text x="760" y="193" font-size="11" font-weight="normal" fill="#1d2733">titular_uuid</text>
+<text x="966" y="193" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="992" y="193" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<rect x="750" y="236" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M750,272 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#4f8a5b"/>
+<text x="760" y="252" font-size="13" font-weight="bold" fill="#ffffff">ztl_hco</text>
+<text x="760" y="266" font-size="10" fill="#e8eef3">Hoja de costes (1:1 con la orden)</text>
+<text x="760" y="287" font-size="11" font-weight="bold" fill="#1d2733">hoja_uuid</text>
+<text x="966" y="287" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="992" y="287" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="760" y="305" font-size="11" font-weight="normal" fill="#1d2733">orden_uuid</text>
+<text x="966" y="305" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="992" y="305" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="760" y="323" font-size="11" font-weight="normal" fill="#1d2733">hoja_ref</text>
+<text x="966" y="323" font-size="10" text-anchor="end" fill="#6b7785">char 8</text>
+<text x="760" y="341" font-size="11" font-weight="normal" fill="#1d2733">fecha_entrada</text>
+<text x="966" y="341" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="760" y="359" font-size="11" font-weight="normal" fill="#1d2733">fecha_entrega</text>
+<text x="966" y="359" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="760" y="377" font-size="11" font-weight="normal" fill="#1d2733">garantia</text>
+<text x="966" y="377" font-size="10" text-anchor="end" fill="#6b7785">boolean</text>
+<rect x="750" y="420" width="250" height="168" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M750,456 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="760" y="436" font-size="13" font-weight="bold" fill="#ffffff">ztl_abo</text>
+<text x="760" y="450" font-size="10" fill="#e8eef3">Abonos del titular</text>
+<text x="760" y="471" font-size="11" font-weight="bold" fill="#1d2733">abono_uuid</text>
+<text x="966" y="471" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="992" y="471" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="760" y="489" font-size="11" font-weight="normal" fill="#1d2733">abono_ref</text>
+<text x="966" y="489" font-size="10" text-anchor="end" fill="#6b7785">char 8</text>
+<text x="760" y="507" font-size="11" font-weight="normal" fill="#1d2733">orden_uuid</text>
+<text x="966" y="507" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="992" y="507" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="760" y="525" font-size="11" font-weight="normal" fill="#1d2733">titular_uuid</text>
+<text x="966" y="525" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="992" y="525" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="760" y="543" font-size="11" font-weight="normal" fill="#1d2733">fecha</text>
+<text x="966" y="543" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="760" y="561" font-size="11" font-weight="normal" fill="#1d2733">cantidad_abonada</text>
+<text x="966" y="561" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<text x="760" y="579" font-size="11" font-weight="normal" fill="#1d2733">medio_pago</text>
+<text x="966" y="579" font-size="10" text-anchor="end" fill="#6b7785">char 20</text>
+<rect x="1110" y="70" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M1110,106 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="1120" y="86" font-size="13" font-weight="bold" fill="#ffffff">ztl_jor</text>
+<text x="1120" y="100" font-size="10" fill="#e8eef3">Registros de jornada</text>
+<text x="1120" y="121" font-size="11" font-weight="bold" fill="#1d2733">jornada_uuid</text>
+<text x="1326" y="121" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1352" y="121" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="1120" y="139" font-size="11" font-weight="normal" fill="#1d2733">orden_uuid</text>
+<text x="1326" y="139" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1352" y="139" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="1120" y="157" font-size="11" font-weight="normal" fill="#1d2733">dia</text>
+<text x="1326" y="157" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="1120" y="175" font-size="11" font-weight="normal" fill="#1d2733">trabajo</text>
+<text x="1326" y="175" font-size="10" text-anchor="end" fill="#6b7785">char 255</text>
+<text x="1120" y="193" font-size="11" font-weight="normal" fill="#1d2733">tiempo_total</text>
+<text x="1326" y="193" font-size="10" text-anchor="end" fill="#6b7785">dec 7,2</text>
+<text x="1120" y="211" font-size="11" font-weight="normal" fill="#1d2733">coste_total</text>
+<text x="1326" y="211" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<rect x="1110" y="254" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M1110,290 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="1120" y="270" font-size="13" font-weight="bold" fill="#ffffff">ztl_alb</text>
+<text x="1120" y="284" font-size="10" fill="#e8eef3">Albaranes de recambios</text>
+<text x="1120" y="305" font-size="11" font-weight="bold" fill="#1d2733">albaran_uuid</text>
+<text x="1326" y="305" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1352" y="305" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="1120" y="323" font-size="11" font-weight="normal" fill="#1d2733">orden_uuid</text>
+<text x="1326" y="323" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1352" y="323" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="1120" y="341" font-size="11" font-weight="normal" fill="#1d2733">distribuidor_uuid</text>
+<text x="1326" y="341" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1352" y="341" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="1120" y="359" font-size="11" font-weight="normal" fill="#1d2733">fecha</text>
+<text x="1326" y="359" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="1120" y="377" font-size="11" font-weight="normal" fill="#1d2733">importe_neto</text>
+<text x="1326" y="377" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<text x="1120" y="395" font-size="11" font-weight="normal" fill="#1d2733">liquidado</text>
+<text x="1326" y="395" font-size="10" text-anchor="end" fill="#6b7785">boolean</text>
+<rect x="1110" y="438" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M1110,474 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="1120" y="454" font-size="13" font-weight="bold" fill="#ffffff">ztl_fac</text>
+<text x="1120" y="468" font-size="10" fill="#e8eef3">Facturas de subcontrata</text>
+<text x="1120" y="489" font-size="11" font-weight="bold" fill="#1d2733">factura_uuid</text>
+<text x="1326" y="489" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1352" y="489" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="1120" y="507" font-size="11" font-weight="normal" fill="#1d2733">orden_uuid</text>
+<text x="1326" y="507" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1352" y="507" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="1120" y="525" font-size="11" font-weight="normal" fill="#1d2733">subcontrata_uuid</text>
+<text x="1326" y="525" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1352" y="525" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="1120" y="543" font-size="11" font-weight="normal" fill="#1d2733">fecha</text>
+<text x="1326" y="543" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="1120" y="561" font-size="11" font-weight="normal" fill="#1d2733">importe_neto</text>
+<text x="1326" y="561" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<text x="1120" y="579" font-size="11" font-weight="normal" fill="#1d2733">liquidado</text>
+<text x="1326" y="579" font-size="10" text-anchor="end" fill="#6b7785">boolean</text>
+<rect x="1470" y="70" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M1470,106 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#4f8a5b"/>
+<text x="1480" y="86" font-size="13" font-weight="bold" fill="#ffffff">ztl_jor_tra</text>
+<text x="1480" y="100" font-size="10" fill="#e8eef3">Tramos de la jornada</text>
+<text x="1480" y="121" font-size="11" font-weight="bold" fill="#1d2733">tramo_uuid</text>
+<text x="1686" y="121" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1712" y="121" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="1480" y="139" font-size="11" font-weight="normal" fill="#1d2733">jornada_uuid</text>
+<text x="1686" y="139" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1712" y="139" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="1480" y="157" font-size="11" font-weight="normal" fill="#1d2733">mecanico_uuid</text>
+<text x="1686" y="157" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1712" y="157" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="1480" y="175" font-size="11" font-weight="normal" fill="#1d2733">tiempo</text>
+<text x="1686" y="175" font-size="10" text-anchor="end" fill="#6b7785">dec 5,2</text>
+<text x="1480" y="193" font-size="11" font-weight="normal" fill="#1d2733">tarifa_aplicada</text>
+<text x="1686" y="193" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<text x="1480" y="211" font-size="11" font-weight="normal" fill="#1d2733">coste_tramo</text>
+<text x="1686" y="211" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<rect x="1470" y="254" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M1470,290 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="1480" y="270" font-size="13" font-weight="bold" fill="#ffffff">ztl_mec</text>
+<text x="1480" y="284" font-size="10" fill="#e8eef3">Mecanicos</text>
+<text x="1480" y="305" font-size="11" font-weight="bold" fill="#1d2733">mecanico_uuid</text>
+<text x="1686" y="305" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1712" y="305" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="1480" y="323" font-size="11" font-weight="normal" fill="#1d2733">mecanico_ref</text>
+<text x="1686" y="323" font-size="10" text-anchor="end" fill="#6b7785">char 8</text>
+<text x="1480" y="341" font-size="11" font-weight="normal" fill="#1d2733">nombre</text>
+<text x="1686" y="341" font-size="10" text-anchor="end" fill="#6b7785">char 60</text>
+<text x="1480" y="359" font-size="11" font-weight="normal" fill="#1d2733">apellidos</text>
+<text x="1686" y="359" font-size="10" text-anchor="end" fill="#6b7785">char 80</text>
+<text x="1480" y="377" font-size="11" font-weight="normal" fill="#1d2733">categoria</text>
+<text x="1686" y="377" font-size="10" text-anchor="end" fill="#6b7785">char 40</text>
+<text x="1480" y="395" font-size="11" font-weight="normal" fill="#1d2733">tarifa_base</text>
+<text x="1686" y="395" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<rect x="1470" y="438" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M1470,474 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="1480" y="454" font-size="13" font-weight="bold" fill="#ffffff">ztl_dis</text>
+<text x="1480" y="468" font-size="10" fill="#e8eef3">Distribuidores</text>
+<text x="1480" y="489" font-size="11" font-weight="bold" fill="#1d2733">distribuidor_uuid</text>
+<text x="1686" y="489" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1712" y="489" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="1480" y="507" font-size="11" font-weight="normal" fill="#1d2733">distribuidor_ref</text>
+<text x="1686" y="507" font-size="10" text-anchor="end" fill="#6b7785">char 8</text>
+<text x="1480" y="525" font-size="11" font-weight="normal" fill="#1d2733">nombre</text>
+<text x="1686" y="525" font-size="10" text-anchor="end" fill="#6b7785">char 80</text>
+<text x="1480" y="543" font-size="11" font-weight="normal" fill="#1d2733">neto</text>
+<text x="1686" y="543" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<text x="1480" y="561" font-size="11" font-weight="normal" fill="#1d2733">impuesto</text>
+<text x="1686" y="561" font-size="10" text-anchor="end" fill="#6b7785">dec 5,2</text>
+<text x="1480" y="579" font-size="11" font-weight="normal" fill="#1d2733">bruto</text>
+<text x="1686" y="579" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<rect x="1470" y="622" width="250" height="132" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M1470,658 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#1f5f8b"/>
+<text x="1480" y="638" font-size="13" font-weight="bold" fill="#ffffff">ztl_sub</text>
+<text x="1480" y="652" font-size="10" fill="#e8eef3">Subcontratas</text>
+<text x="1480" y="673" font-size="11" font-weight="bold" fill="#1d2733">subcontrata_uuid</text>
+<text x="1686" y="673" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="1712" y="673" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="1480" y="691" font-size="11" font-weight="normal" fill="#1d2733">subcontrata_ref</text>
+<text x="1686" y="691" font-size="10" text-anchor="end" fill="#6b7785">char 8</text>
+<text x="1480" y="709" font-size="11" font-weight="normal" fill="#1d2733">nombre</text>
+<text x="1686" y="709" font-size="10" text-anchor="end" fill="#6b7785">char 80</text>
+<text x="1480" y="727" font-size="11" font-weight="normal" fill="#1d2733">oficio</text>
+<text x="1686" y="727" font-size="10" text-anchor="end" fill="#6b7785">char 40</text>
+<text x="1480" y="745" font-size="11" font-weight="normal" fill="#1d2733">tarifa_referencia</text>
+<text x="1686" y="745" font-size="10" text-anchor="end" fill="#6b7785">dec 15,2</text>
+<rect x="1830" y="70" width="250" height="150" rx="6" fill="#ffffff" stroke="#9aa5b1"/>
+<path d="M1830,106 v-30 a6,6 0 0 1 6,-6 h238 a6,6 0 0 1 6,6 v30 z" fill="#4f8a5b"/>
+<text x="1840" y="86" font-size="13" font-weight="bold" fill="#ffffff">ztl_aus</text>
+<text x="1840" y="100" font-size="10" fill="#e8eef3">Ausencias del mecanico</text>
+<text x="1840" y="121" font-size="11" font-weight="bold" fill="#1d2733">ausencia_uuid</text>
+<text x="2046" y="121" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="2072" y="121" font-size="9" font-weight="bold" text-anchor="end" fill="#b8860b">PK</text>
+<text x="1840" y="139" font-size="11" font-weight="normal" fill="#1d2733">mecanico_uuid</text>
+<text x="2046" y="139" font-size="10" text-anchor="end" fill="#6b7785">uuid</text>
+<text x="2072" y="139" font-size="9" font-weight="bold" text-anchor="end" fill="#7a3e9d">FK</text>
+<text x="1840" y="157" font-size="11" font-weight="normal" fill="#1d2733">desde</text>
+<text x="2046" y="157" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="1840" y="175" font-size="11" font-weight="normal" fill="#1d2733">hasta</text>
+<text x="2046" y="175" font-size="10" text-anchor="end" fill="#6b7785">dats</text>
+<text x="1840" y="193" font-size="11" font-weight="normal" fill="#1d2733">motivo</text>
+<text x="2046" y="193" font-size="10" text-anchor="end" fill="#6b7785">char 60</text>
+<text x="1840" y="211" font-size="11" font-weight="normal" fill="#1d2733">jornadas</text>
+<text x="2046" y="211" font-size="10" text-anchor="end" fill="#6b7785">int4</text>
+<rect x="30" y="828" width="14" height="10" fill="#1f5f8b"/>
+<text x="50" y="837" font-size="11" fill="#1d2733">Tabla raiz de un objeto de negocio</text>
+<rect x="260" y="828" width="14" height="10" fill="#4f8a5b"/>
+<text x="280" y="837" font-size="11" fill="#1d2733">Tabla hija (composicion)</text>
+<text x="460" y="837" font-size="11" fill="#1d2733">PK clave · FK referencia · N / 1 / 0..1 cardinalidad</text>
+<text x="30" y="856" font-size="11" fill="#6b7785">Todas las tablas llevan ademas client y los 5 campos de administracion. No se dibujan las tablas de notas, avisos y fotos (_not, _avi, _fot).</text>
+</svg>

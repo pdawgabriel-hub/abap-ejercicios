@@ -1,6 +1,6 @@
 ---
 title: "0.1. Instalación y preparación del entorno"
-parent: "0. Entorno y fundamentos"
+parent: "0. Introducción y entorno"
 nav_order: 1
 ---
 
@@ -62,18 +62,18 @@ Después instala el plugin:
 
 ## Primer objeto: paquete y «Hola mundo»
 
-1. Clic derecho en el proyecto → **New → ABAP Package**. Nombre `ZEJ` (ejercicios de clase), descripción «Ejercicios de clase». Asigna el Software Component que te ofrezca.
+1. Clic derecho en el paquete `ZLOCAL` del proyecto → **New → ABAP Package**. Nombre `ZEJ`, descripción «Pruebas y ejemplos del taller», *Superpackage* `ZLOCAL` y *Software Component* `ZLOCAL`. Antes, comprueba con **Ctrl+Shift+A** que nadie ha usado ya ese nombre: el trial es un sistema compartido (lo verás en [1.1](1_1_classrun.html)). Este paquete es tu caja de arena: aquí puedes probar los ejemplos del taller; tu ERP irá en `ZGOR`.
 2. Clic derecho en el paquete → **New → ABAP Class**. Nombre `ZCL_EJ_HOLA`.
 3. Sustituye el contenido por el código de abajo, guarda (**Ctrl+S**) y activa (**Ctrl+F3**).
 4. Ejecuta con **F9** (Run as ABAP Application - Console). Debe salir el texto en la pestaña **Console**.
 
 ```abap
-CLASS zcl_tl_hola DEFINITION PUBLIC FINAL CREATE PUBLIC.
+CLASS zcl_ej_hola DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PUBLIC SECTION.
     INTERFACES if_oo_adt_classrun.
 ENDCLASS.
 
-CLASS zcl_tl_hola IMPLEMENTATION.
+CLASS zcl_ej_hola IMPLEMENTATION.
   METHOD if_oo_adt_classrun~main.
     out->write( 'Hola desde ABAP Cloud' ).
   ENDMETHOD.

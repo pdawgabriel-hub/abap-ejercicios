@@ -7,66 +7,108 @@ nav_order: 7
 # 3.7. Numeración
 
 {% raw %}
-En Odoo, tu `create()` asigna el código al crear el registro. En RAP tienes que decidir **cuándo** y **cómo**.
+En Odoo, cada `create()` toma el siguiente número de su secuencia `ir.sequence` y forma el código: `CLI0001`, `OBR0001`… (§10 del informe). La empresa se refiere a todo por esos códigos (§11.5, punto 8). En esta unidad vemos cómo lo hace el taller con sus titulares (`TIT0001`), y tú harás que los ocho objetos con código de tu ERP lo reciban **al guardar**.
 
-| Opción | Cómo funciona | Cuándo usarla |
+## Estrategias de numeración en RAP
+
+| Estrategia | Cómo funciona | Cuándo |
 |---|---|---|
-| **UUID como clave + número visible calculado al guardar** (lo que hace el ejemplo) | La clave técnica es el UUID; un campo aparte (`OrdenId`) se rellena en una determination *on save* | El caso más simple y robusto. **Recomendado** para tu proyecto |
-| Early numbering | La clave se asigna nada más crear (con un manejador propio) | Cuando el usuario debe ver su número desde el primer momento |
-| Late numbering | La clave se asigna al guardar (con un método `adjust_numbers`) | Cuando no puede haber huecos y el número es la clave técnica |
+| **UUID como clave + código visible al guardar** | La clave es el UUID que genera RAP (`numbering : managed`); el código es un campo normal que rellena una determination *on save* | El caso más sencillo y robusto. **El nuestro** |
+| *Early numbering* | La clave se asigna nada más crear, con un método propio | Cuando el código **es** la clave y el usuario debe verlo desde el principio |
+| *Late numbering* | La clave se asigna justo antes de escribir en la base de datos (`adjust_numbers`) | Cuando la clave no puede tener huecos |
 
-## Rango de números
+Con nuestra estrategia, el usuario ve el código en cuanto guarda. Mientras edita el borrador, el campo está vacío. Es lo mismo que en Odoo, donde el código vale «Nuevo» hasta guardar.
 
-Para el número visible, lo correcto en producción es un **rango de números**: se crea un *Number Range Object* en ADT (*New → Other ABAP Repository Object → Number Range Object*) y se consume con la API liberada `CL_NUMBERRANGE_RUNTIME`. Las funciones clásicas (`NUMBER_GET_NEXT`) no están liberadas para Cloud.
+## Máximo + 1
 
-Este bloque sustituye el método `asignarNumero` del ejemplo:
+La versión sencilla busca el código más alto que existe y suma 1:
+
+```sql
+  determination numerar on save { create; }
+```
 
 ```abap
-  METHOD asignarNumero.
-    READ ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden FIELDS ( OrdenId ) WITH CORRESPONDING #( keys )
-      RESULT DATA(ordenes).
-    DELETE ordenes WHERE OrdenId IS NOT INITIAL.
-    CHECK ordenes IS NOT INITIAL.
+  METHOD numerar.
+    READ ENTITIES OF zi_tltitular IN LOCAL MODE
+      ENTITY Titular FIELDS ( TitularRef ) WITH CORRESPONDING #( keys )
+      RESULT DATA(lt_titulares).
+    DELETE lt_titulares WHERE TitularRef IS NOT INITIAL.
+    CHECK lt_titulares IS NOT INITIAL.
 
-    LOOP AT ordenes INTO DATA(orden).
-      TRY.
-          cl_numberrange_runtime=>number_get(
-            EXPORTING
-              nr_range_nr = '01'
-              object      = 'ZTL_ORDEN'
-            IMPORTING
-              number      = DATA(lv_numero) ).
-        CATCH cx_nr_object_not_found cx_number_ranges INTO DATA(lx_nr).
-          APPEND VALUE #( %tky = orden-%tky ) TO failed-orden.
-          APPEND VALUE #( %tky = orden-%tky
-                          %msg = new_message_with_text(
-                                   severity = if_abap_behv_message=>severity-error
-                                   text     = 'No hay rango de numeros configurado' ) )
-                 TO reported-orden.
-          CONTINUE.
-      ENDTRY.
+    SELECT SINGLE FROM ztl_tit FIELDS MAX( titular_ref ) INTO @DATA(lv_maxima).
+    " TIT0041 -> 41 (si no hay ninguno, 0)
+    DATA(lv_ultimo) = COND i( WHEN lv_maxima IS INITIAL THEN 0
+                              ELSE CONV i( substring( val = lv_maxima off = 3 ) ) ).
 
-      MODIFY ENTITIES OF ZI_TlOrden IN LOCAL MODE
-        ENTITY Orden
-          UPDATE FIELDS ( OrdenId )
-          WITH VALUE #( ( %tky = orden-%tky OrdenId = lv_numero ) ).
-    ENDLOOP.
+    MODIFY ENTITIES OF zi_tltitular IN LOCAL MODE
+      ENTITY Titular
+        UPDATE FIELDS ( TitularRef )
+        WITH VALUE #( FOR ls IN lt_titulares INDEX INTO i
+                      ( %tky       = ls-%tky
+                        TitularRef = zcl_tl_calculos=>componer_codigo( iv_serie  = `TIT`
+                                                                       iv_numero = lv_ultimo + i ) ) ).
   ENDMETHOD.
 ```
 
-> **Variante delicada.** El nombre exacto de los parámetros y de las excepciones de la API, y los pasos para crear el objeto de rango, dependen de tu versión. Antes de usarla, comprueba la documentación de `CL_NUMBERRANGE_RUNTIME` con **F2** en Eclipse. Para el portfolio, el máximo + 1 del ejemplo es suficiente si lo explicas en el README.
+- `DELETE ... WHERE TitularRef IS NOT INITIAL`: no se renumera nada que ya tenga código.
+- `MAX( titular_ref )` funciona sobre un texto porque todos los códigos tienen el mismo prefijo y 4 cifras con ceros: `TIT0010` va detrás de `TIT0009`.
+- `substring( ... off = 3 )` se salta las tres letras de la serie. En el taller todas las series tienen tres letras; en tu ERP no (`PROV`, `PREP`).
+- `INDEX INTO i`: si se guardan varios titulares a la vez, cada uno recibe el siguiente número.
+
+**Su límite.** Si dos usuarios guardan un titular **a la vez**, los dos pueden leer el mismo máximo y obtener el mismo código. En una empresa pequeña es poco probable, pero posible. En Odoo no pasa porque `ir.sequence` reserva el número en la base de datos. El equivalente en ABAP Cloud son los **rangos de números**.
+
+## Rangos de números
+
+Un *Number Range Object* es un contador que el sistema reserva de forma segura aunque haya muchos usuarios a la vez. Se crea en ADT (*New → Other ABAP Repository Object → Number Range Object*) y se consume con la clase liberada `CL_NUMBERRANGE_RUNTIME`:
+
+```abap
+    TRY.
+        cl_numberrange_runtime=>number_get(
+          EXPORTING
+            nr_range_nr = '01'
+            object      = 'ZTL_TIT'
+          IMPORTING
+            number      = DATA(lv_numero) ).
+      CATCH cx_nr_object_not_found cx_number_ranges INTO DATA(lx_rango).
+        " sin rango configurado: marcar la instancia como fallida y avisar
+    ENDTRY.
+```
+
+Después, `componer_codigo( iv_serie = `TIT` iv_numero = CONV #( lv_numero ) )` como antes.
+
+> **Variante poco verificada.** El nombre exacto de los parámetros y excepciones de la API, y cómo se mantienen los intervalos del rango, dependen de la versión del sistema. Antes de usarla, mira la documentación de `CL_NUMBERRANGE_RUNTIME` con **F2** en Eclipse. Para el portfolio, el máximo + 1 es suficiente si lo explicas en el README.
+
+## Preparación del entorno de trabajo
+
+Se amplían tu `ZCL_GOR_REGLAS` (y su pestaña de tests) y tus BDEF y clases de los ocho BO con código.
 
 ## Ejercicios
 
-1. **Estrategia por entidad.** Para Cliente, Obra y Presupuesto decide qué estrategia usarías y justifícalo.
-2. **Determination de Obra.** Diseña la determination *on save* equivalente a `asignarNumero` para tu entidad de Obra, con un nombre de rango propio.
-3. **Ventaja y límite.** Explica por qué el máximo + 1 no es seguro con varios usuarios.
+1. **Leer el número de un código.** Añade a tu `ZCL_GOR_REGLAS` el método estático `numero_de_codigo`, que recibe `iv_codigo` e `iv_prefijo` (`string`) y devuelve `rv_numero` (`i`): 0 si el código está vacío y, si no, el número que sigue al prefijo, sea cual sea su longitud (`OBR0041` → 41, `PROV0123` → 123). Es el inverso de tu `formatear_codigo`.
+2. **El cliente.** Añade a tu cliente la determination `asignarCodigo` (*on save*, al crear): `ClienteId` con el código siguiente al mayor que exista, usando tus `numero_de_codigo` y `formatear_codigo`. Con EML, crea dos clientes en el mismo `MODIFY` y guarda: con los datos de demo de 2.5, deben recibir `CLI0006` y `CLI0007`.
+3. **Los demás.** Haz lo mismo en los otros siete:
 
+    | BO / entidad | Campo | Tabla | Prefijo |
+    |---|---|---|---|
+    | Trabajador | `TrabajadorId` | `zgor_trab` | `TRB` |
+    | Proveedor | `ProveedorId` | `zgor_prov` | `PROV` |
+    | Especialista | `EspecialistaId` | `zgor_esp` | `ESP` |
+    | Presupuesto | `PresupuestoId` | `zgor_presu` | `PREP` |
+    | Obra | `ObraId` | `zgor_obra` | `OBR` |
+    | Gasto (hijo de la obra) | `GastoId` | `zgor_gasto` | `GAS` |
+    | Ingreso | `IngresoId` | `zgor_ing` | `ING` |
+
+    Como el método es casi igual en los ocho, piensa si merece la pena sacar el `SELECT MAX` a un método de una clase auxiliar. Si lo haces, ten en cuenta que cada uno lee una tabla distinta.
+4. **La obra y su ficha.** Crea una obra con EML y haz *commit*. Comprueba en el Data Preview que la obra tiene `ObraId` **y** su ficha de gastos tiene `GastoId`: la ficha la creó una determination *on modify* de la obra (3.3), y su código, la determination *on save* del gasto.
+5. **Investiga.** En tu ERP, ¿qué pasa con los códigos si borras el cliente `CLI0007` y creas otro? ¿Y si borras `CLI0005`? Compáralo con lo que hace `ir.sequence` en Odoo. Anota la diferencia en `diseno.md`, junto con el límite de varios usuarios, para el README.
+
+## Comprueba tu solución automáticamente (opcional)
+
+Pega [3_7_ltcl_codigos.abap](materiales/tests/3_7_ltcl_codigos.abap) en la pestaña **Test Classes** de `ZCL_GOR_REGLAS`, debajo de las de 1.8: **36 tests en verde** (34 + 2).
 
 ---
 
-**Siguiente:** [3.8. Proyecto: comportamiento de Clientes y Obras](3_8_proyecto.html)
+**Siguiente:** [3.8. Proyecto: el escenario completo como test](3_8_proyecto.html)
 
 [Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_7_numeracion.md){: .fs-2 }
 {% endraw %}

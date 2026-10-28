@@ -7,101 +7,236 @@ nav_order: 2
 # 1.2. Variables, tipos de datos y plantillas de texto
 
 {% raw %}
-> **Cómo ejecutar los ejemplos.** Los ejemplos muestran solo el **contenido del método `main`** de una clase ejecutable. Pégalos dentro de la plantilla de [1.1](1_1_classrun.html) (cambiando el nombre de la clase), activa con **Ctrl+F3** y ejecuta con **F9**.
+Empezamos a escribir reglas de negocio. En el taller, las primeras son las del presupuesto ([0.5](0_5_taller.html)): el importe de cada partida, la cuota del impuesto y el importe final. En esta unidad las programamos con los tipos de ABAP, y tú harás lo mismo con las fórmulas del presupuesto de tu ERP (§11.2 del informe técnico).
 
 ## Tipos básicos
 
-| Tipo ABAP | Para qué sirve | Ejemplo |
+| Tipo | Para qué | Ejemplo |
 |---|---|---|
-| `i` | Entero | `DATA lv_cant TYPE i VALUE 3.` |
-| `string` | Texto de longitud variable | `DATA lv_txt TYPE string VALUE 'hola'.` |
-| `c LENGTH n` | Texto de longitud fija (típico en tablas) | `DATA lv_mat TYPE c LENGTH 10.` |
-| `decfloat34` | Número decimal (importes, porcentajes) | `DATA lv_p TYPE decfloat34 VALUE '12.50'.` |
-| `d` | Fecha (AAAAMMDD) | `DATA lv_fecha TYPE d.` |
-| `abap_bool` | Verdadero/falso | `DATA lv_ok TYPE abap_bool VALUE abap_true.` |
+| `i` | Entero | `DATA lv_cantidad TYPE i VALUE 4.` |
+| `decfloat34` | Decimal exacto: importes, porcentajes, horas | `DATA lv_precio TYPE decfloat34 VALUE '45.50'.` |
+| `string` | Texto de longitud variable | `DATA lv_concepto TYPE string VALUE 'Embrague'.` |
+| `c LENGTH n` | Texto de longitud fija (códigos, situaciones) | `DATA lv_ref TYPE c LENGTH 8 VALUE 'ORD0001'.` |
+| `d` | Fecha, en formato `AAAAMMDD` | `DATA lv_entrada TYPE d VALUE '20261102'.` |
+| `abap_bool` | Verdadero o falso (`abap_true` / `abap_false`) | `DATA lv_garantia TYPE abap_bool.` |
 
-**Declaraciones inline**: `DATA(lv_x) = expresion.` declara la variable y le da el tipo de la expresión. Es la forma habitual en código moderno. Una **estructura** agrupa varios campos y se construye con `VALUE #( ... )`.
+**¿Por qué `decfloat34` y no `f`?** El tipo `f` es coma flotante binaria, como el `float` de Python: `0.1 + 0.2` no da exactamente `0.3`. Con dinero eso es inaceptable. `decfloat34` guarda los números en base 10 y opera sin esos errores. Lo usaremos en todos los cálculos; en las tablas (Bloque 2), decimales de 2 cifras.
+
+Los literales decimales van **entre comillas**: `'45.50'`. Sin comillas, ABAP no admite decimales en un literal.
+
+## Variables, constantes y declaraciones inline
 
 ```abap
-    CONSTANTS c_iva TYPE decfloat34 VALUE '0.21'.
+    DATA lv_cantidad TYPE i VALUE 4.
+    CONSTANTS lc_impuesto TYPE decfloat34 VALUE 21.
 
-    DATA(lv_cantidad) = 3.
-    DATA(lv_precio)   = CONV decfloat34( '12.50' ).
-    DATA(lv_base)     = lv_cantidad * lv_precio.
-
-    out->write( |Base: { lv_base DECIMALS = 2 }| ).
-    out->write( |Total con IVA: { lv_base * ( 1 + c_iva ) DECIMALS = 2 }| ).
-
-    TYPES: BEGIN OF ty_vehiculo,
-             matricula TYPE c LENGTH 10,
-             marca     TYPE string,
-             anio      TYPE i,
-           END OF ty_vehiculo.
-
-    DATA ls_vehiculo TYPE ty_vehiculo.
-    ls_vehiculo = VALUE #( matricula = '1234ABC' marca = 'Seat' anio = 2015 ).
-
-    out->write( ls_vehiculo ).
-    out->write( |Matricula: { ls_vehiculo-matricula }, marca: { ls_vehiculo-marca }| ).
+    " Declaracion inline: el tipo sale de la expresion de la derecha
+    DATA(lv_precio) = CONV decfloat34( '45' ).
+    DATA(lv_neto)   = lv_cantidad * lv_precio.
 ```
 
-> **Puente a Odoo.** Una estructura es como un diccionario Python con campos tipados. Las plantillas `|...{ var }...|` son los f-strings de Python.
+- `DATA` declara una variable; `CONSTANTS`, un valor que no cambia.
+- `DATA(x) = ...` es una **declaración inline**: declara la variable donde se usa por primera vez, con el tipo del resultado. Es la forma habitual en ABAP moderno.
+- `CONV tipo( valor )` convierte un valor a un tipo. `CONV #( valor )` deja que ABAP deduzca el tipo del destino (lo verás en los tests).
+
+## Estructuras y tipos propios
+
+`TYPES` define un tipo nuevo. Una **estructura** agrupa varios campos, como un diccionario de Python con los campos fijados de antemano. Se rellena con `VALUE #( campo = valor ... )` y cada campo se lee con un guion: `ls_partida-precio_unitario`.
+
+```abap
+    TYPES: BEGIN OF ty_partida,
+             concepto        TYPE string,
+             cantidad        TYPE i,
+             precio_unitario TYPE decfloat34,
+           END OF ty_partida.
+
+    DATA(ls_partida) = VALUE ty_partida( concepto        = 'Horas de diagnosis'
+                                         cantidad        = 4
+                                         precio_unitario = '45' ).
+    out->write( ls_partida ).
+    out->write( |{ ls_partida-cantidad } x { ls_partida-precio_unitario }| ).
+```
+
+Los tipos que se usan en varias clases no se repiten en cada una: se declaran una vez en una **interfaz de tipos** y se usan con su nombre completo. La del taller es así:
+
+```abap
+INTERFACE zif_tl_tipos PUBLIC.
+  TYPES ty_euros    TYPE decfloat34.
+  TYPES ty_tanto    TYPE decfloat34.          " porcentajes
+  TYPES ty_tiempo   TYPE decfloat34.          " horas
+  TYPES ty_ref      TYPE c LENGTH 8.          " codigos TIT0001, ORD0001...
+  TYPES ty_situacion TYPE c LENGTH 15.
+
+  TYPES: BEGIN OF ty_partida,
+           concepto        TYPE string,
+           cantidad        TYPE i,
+           precio_unitario TYPE ty_euros,
+         END OF ty_partida.
+
+  CONSTANTS: BEGIN OF situacion_presupuesto,
+               borrador TYPE ty_situacion VALUE 'borrador',
+               aceptado TYPE ty_situacion VALUE 'aceptado',
+             END OF situacion_presupuesto.
+ENDINTERFACE.
+```
+
+Las constantes se usan así: `zif_tl_tipos=>situacion_presupuesto-aceptado`. Así no se escribe `'aceptado'` a mano en veinte sitios (y no hay errores de tecleo en ninguno).
+
+## Plantillas de texto
+
+Una plantilla va entre barras verticales y mezcla texto con expresiones entre llaves. Es el equivalente de los *f-strings* de Python:
+
+```abap
+    DATA(lv_importe) = CONV decfloat34( '605' ).
+    DATA(lv_entrada) = CONV d( '20261102' ).
+
+    out->write( |Importe: { lv_importe DECIMALS = 2 } €| ).           " Importe: 605.00 €
+    out->write( |Entrada: { lv_entrada DATE = ISO }| ).               " Entrada: 2026-11-02
+    out->write( |Orden: { 'ORD' }{ 7 WIDTH = 4 ALIGN = RIGHT PAD = '0' }| ).  " ORD0007
+```
+
+Las opciones de formato van dentro de las llaves: `DECIMALS`, `DATE`, `WIDTH`, `ALIGN`, `PAD`…
+
+Hay dos clases de literales de texto: `'...'` (comillas simples) es de tipo `c` y pierde los espacios del final; `` `...` `` (acentos graves) es de tipo `string` y los conserva.
+
+## Fechas
+
+Una fecha (`d`) es un texto de 8 cifras, pero ABAP sabe operar con ella: **restar dos fechas da los días** entre ellas, y sumar un número a una fecha avanza ese número de días.
+
+```abap
+    DATA(lv_desde) = CONV d( '20261228' ).
+    DATA(lv_hasta) = CONV d( '20270103' ).
+    out->write( lv_hasta - lv_desde ).       " 6
+    out->write( lv_desde + 7 ).              " 20270104
+```
+
+## Redondeo
+
+`round( val = x dec = 2 )` redondea a 2 decimales, **hacia arriba en el empate** (`31.665` → `31.67`).
+
+## Métodos estáticos: la clase de cálculos
+
+Las fórmulas van como **métodos estáticos** (`CLASS-METHODS`): se llaman con el nombre de la clase, sin crear ningún objeto. En 1.6 veremos las clases con objetos; por ahora, así es la clase de cálculos del taller con sus primeras fórmulas:
+
+```abap
+CLASS zcl_tl_calculos DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    " Redondeo a centimos (empate hacia arriba)
+    CLASS-METHODS ajustar_centimos
+      IMPORTING iv_valor        TYPE zif_tl_tipos=>ty_euros
+      RETURNING VALUE(rv_valor) TYPE zif_tl_tipos=>ty_euros.
+
+    " importe_partida = ajustar_centimos( cantidad * precio_unitario )
+    CLASS-METHODS importe_partida
+      IMPORTING iv_cantidad        TYPE i
+                iv_precio_unitario TYPE zif_tl_tipos=>ty_euros
+      RETURNING VALUE(rv_importe)  TYPE zif_tl_tipos=>ty_euros.
+
+    " cuota = ajustar_centimos( neto * impuesto / 100 )
+    CLASS-METHODS cuota_impuesto
+      IMPORTING iv_neto         TYPE zif_tl_tipos=>ty_euros
+                iv_impuesto     TYPE zif_tl_tipos=>ty_tanto
+      RETURNING VALUE(rv_cuota) TYPE zif_tl_tipos=>ty_euros.
+
+    " jornadas de una ausencia, contando los dos extremos
+    CLASS-METHODS jornadas_ausencia
+      IMPORTING iv_desde           TYPE d
+                iv_hasta           TYPE d
+      RETURNING VALUE(rv_jornadas) TYPE i.
+ENDCLASS.
+
+CLASS zcl_tl_calculos IMPLEMENTATION.
+  METHOD ajustar_centimos.
+    rv_valor = round( val = iv_valor dec = 2 ).
+  ENDMETHOD.
+
+  METHOD importe_partida.
+    rv_importe = ajustar_centimos( iv_cantidad * iv_precio_unitario ).
+  ENDMETHOD.
+
+  METHOD cuota_impuesto.
+    rv_cuota = ajustar_centimos( iv_neto * iv_impuesto / 100 ).
+  ENDMETHOD.
+
+  METHOD jornadas_ausencia.
+    IF iv_desde IS INITIAL OR iv_hasta IS INITIAL.
+      RETURN.                 " rv_jornadas queda en 0
+    ENDIF.
+    rv_jornadas = iv_hasta - iv_desde + 1.
+  ENDMETHOD.
+ENDCLASS.
+```
+
+Cómo se lee la firma de un método:
+
+- `IMPORTING` son los parámetros de entrada; `RETURNING VALUE(...)`, el valor que devuelve. Se llama así: `zcl_tl_calculos=>importe_partida( iv_cantidad = 4 iv_precio_unitario = 45 )`.
+- Dentro de la propia clase, un método estático se llama sin el nombre de la clase: `ajustar_centimos( ... )`.
+- Los prefijos son una convención: `iv_` para los parámetros de entrada, `rv_` para el valor devuelto, `lv_` para las variables locales y `ls_` para las estructuras locales (ver el [Anexo B](B_nombres.html)).
+- `RETURN` sale del método. Como `rv_jornadas` empieza en 0, si falta una fecha se devuelve 0.
+
+## Preparación del entorno de trabajo
+
+Seguimos en los paquetes de [1.1](1_1_classrun.html). Al terminar, tu proyecto tendrá esta forma:
+
+```
+ZGOR
+├── ZGOR_BUS
+│   ├── ZIF_GOR_TIPOS        ← tipos comunes (nueva)
+│   └── ZCL_GOR_REGLAS       ← reglas de negocio (nueva)
+└── ZGOR_TEST
+    ├── ZCL_GOR_INICIO       (1.1)
+    └── ZCL_GOR_TIPOS_DEMO   ← pruebas de esta unidad (nueva)
+```
 
 ## Ejercicios
 
-1. **Estructura de una obra.** Define una estructura con 4 campos de una entidad de tu proyecto (código, dirección, presupuesto, fecha de inicio), asígnale valores y escríbela en la consola.
-2. **IVA.** Calcula el IVA de un importe y muestra el resultado con 2 decimales. ¿Por qué se usa `decfloat34` y no `i` para importes?
-3. **Total con IVA.** Crea la clase `ZCL_EJ_PRECIOS` con el esqueleto de abajo e implementa `total_con_iva`.
+1. **La interfaz de tipos.** Crea en `ZGOR_BUS` la interfaz `ZIF_GOR_TIPOS` (descripción `Tipos comunes del ERP`) con:
 
-```abap
-CLASS zcl_ej_precios DEFINITION PUBLIC FINAL CREATE PUBLIC.
-  PUBLIC SECTION.
-    " Devuelve cantidad * precio * ( 1 + iva ). El iva va como 0.21 para el 21%
-    CLASS-METHODS total_con_iva
-      IMPORTING iv_cantidad TYPE i
-                iv_precio   TYPE decfloat34
-                iv_iva      TYPE decfloat34
-      RETURNING VALUE(rv_total) TYPE decfloat34.
-ENDCLASS.
+    | Elemento | Definición |
+    |---|---|
+    | `ty_importe`, `ty_horas`, `ty_porcentaje` | `decfloat34` |
+    | `ty_codigo` | Texto de 8 caracteres |
+    | `ty_estado` | Texto de 15 caracteres |
+    | `ty_presu_linea` | Estructura con `descripcion` (`string`), `uds` (`i`) y `precio` (`ty_importe`): la línea de un presupuesto (§3.6) |
+    | `estado_presu` | Constantes `aprobado` y `no_aprobado`, de tipo `ty_estado`, con esos mismos valores |
 
-CLASS zcl_ej_precios IMPLEMENTATION.
-  METHOD total_con_iva.
-    " TODO: escribe tu solucion aqui
-  ENDMETHOD.
-ENDCLASS.
-```
+2. **Las fórmulas del presupuesto.** Crea en `ZGOR_BUS` la clase `ZCL_GOR_REGLAS` (descripción `Reglas de negocio del ERP`) con estos cuatro métodos estáticos. El IVA llega como porcentaje: 21, no 0.21.
+
+    | Método | Parámetros de entrada | Devuelve | Regla (§11.2) |
+    |---|---|---|---|
+    | `redondear` | `iv_valor` (`ty_importe`) | `rv_valor` (`ty_importe`) | 2 decimales, empate hacia arriba |
+    | `total_linea` | `iv_uds` (`i`), `iv_precio` (`ty_importe`) | `rv_total` (`ty_importe`) | `redondear(uds × precio)` |
+    | `cuota_iva` | `iv_base` (`ty_importe`), `iv_iva` (`ty_porcentaje`) | `rv_cuota` (`ty_importe`) | `redondear(base × iva / 100)` |
+    | `total_presupuesto` | `iv_base`, `iv_iva` | `rv_total` (`ty_importe`) | `base + cuota_iva`. Reutiliza `cuota_iva` |
+
+3. **Más fórmulas.** Añade estos tres:
+
+    | Método | Parámetros de entrada | Devuelve | Regla |
+    |---|---|---|---|
+    | `total_proveedor` | `iv_base`, `iv_iva` | `rv_total` (`ty_importe`) | `base × (1 + iva / 100)`, **sin redondear** (§11.2 *Otros*) |
+    | `coste_subtotal` | `iv_horas` (`ty_horas`), `iv_coste_hora` (`ty_importe`) | `rv_coste` (`ty_importe`) | `horas × coste_hora` (§11.2 *Obra*), sin redondear |
+    | `dias_falta` | `iv_inicio`, `iv_fin` (tipo `d`) | `rv_dias` (`i`) | `fin − inicio + 1`; **0** si falta alguna de las dos fechas (§3.12) |
+
+4. **El presupuesto del escenario.** Crea en `ZGOR_TEST` la clase ejecutable `ZCL_GOR_TIPOS_DEMO`. Declara una línea de presupuesto de 10 uds a 100 € y escribe, con `ZCL_GOR_REGLAS`, su total, la cuota con IVA 21 y el total del presupuesto, con 2 decimales. Es el paso 2 de §12.7: debe salir **base 1000.00, cuota 210.00 y total 1210.00**.
+5. **Una estructura por entidad.** En la misma clase, declara con `TYPES` una estructura con los campos propios de cada entidad del ERP (sin relaciones ni campos calculados): cliente (§3.1), trabajador (§3.2), proveedor (§3.3), especialista (§3.4), obra (§3.5), ingreso (§3.8) y falta (§3.12). Para elegir los tipos:
+
+    | En Odoo | En ABAP |
+    |---|---|
+    | `Char` de código o de estado | `ty_codigo` o `ty_estado` |
+    | `Char` de nombres, direcciones, teléfonos… y `Text` | `string` |
+    | `Integer` | `i` |
+    | `Float`, `Monetary` | `ty_importe` (las horas, `ty_horas`) |
+    | `Date` | `d` |
+    | `Boolean` o `Selection` de sí/no | `abap_bool` |
+
+    Crea un cliente y un trabajador de ejemplo con `VALUE` y escríbelos con `out->write( )`.
+6. **Investiga.** En Python, `round(31.665, 2)` no da `31.67`. Pruébalo y busca por qué (pista: cómo guarda `float` los decimales y qué regla de empate usa `round`). Calcula después `zcl_gor_reglas=>redondear( CONV #( '31.665' ) )`. Escribe en un comentario qué diferencia hay y por qué, al portar, conviene que el ERP en SAP use siempre `redondear`.
 
 ## Comprueba tu solución automáticamente (opcional)
 
-Abre tu clase y, en la pestaña inferior **Test Classes**, pega este test. Ejecútalo con **Ctrl+Shift+F10** (*Run As → ABAP Unit Test*). Al terminar deben salir en verde los dos tests. Más detalles en [1.8](1_8_abapUnit.html).
+Abre `ZCL_GOR_REGLAS`, ve a la pestaña inferior **Test Classes** y pega el contenido de [1_2_ltcl_presupuesto.abap](materiales/tests/1_2_ltcl_presupuesto.abap). Ejecútalo con **Ctrl+Shift+F10** (*Run As → ABAP Unit Test*). Si tu solución es correcta, salen **7 tests en verde**. Si alguno sale en rojo, el mensaje dice qué valor esperaba y cuál ha salido. En [1.8](1_8_abapUnit.html) aprenderás a escribirlos tú.
 
-```abap
-CLASS ltcl_precios DEFINITION FINAL FOR TESTING
-  DURATION SHORT RISK LEVEL HARMLESS.
-  PRIVATE SECTION.
-    METHODS tres_unidades_con_iva FOR TESTING.
-    METHODS sin_iva FOR TESTING.
-ENDCLASS.
-
-CLASS ltcl_precios IMPLEMENTATION.
-  METHOD tres_unidades_con_iva.
-    cl_abap_unit_assert=>assert_equals(
-      act = zcl_ej_precios=>total_con_iva( iv_cantidad = 3
-                                           iv_precio   = CONV #( '12.50' )
-                                           iv_iva      = CONV #( '0.21' ) )
-      exp = CONV decfloat34( '45.375' ) ).
-  ENDMETHOD.
-
-  METHOD sin_iva.
-    cl_abap_unit_assert=>assert_equals(
-      act = zcl_ej_precios=>total_con_iva( iv_cantidad = 2
-                                           iv_precio   = CONV #( '10' )
-                                           iv_iva      = CONV #( '0' ) )
-      exp = CONV decfloat34( '20' ) ).
-  ENDMETHOD.
-ENDCLASS.
-```
-
+Cada unidad del bloque añade otra clase de test **a continuación** de las anteriores, en la misma pestaña: no borres las de unidades previas.
 
 ---
 

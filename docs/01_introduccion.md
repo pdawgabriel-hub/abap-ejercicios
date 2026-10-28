@@ -1,6 +1,6 @@
 ---
 title: "0.2. Introducción: ABAP Cloud y SAP BTP"
-parent: "0. Entorno y fundamentos"
+parent: "0. Introducción y entorno"
 nav_order: 2
 ---
 
@@ -59,7 +59,7 @@ Fiori Elements  ->  Service Binding  ->  Runtime RAP            ->  CDS + tabla
                                           validations, actions)
 ```
 
-> **Puente a tu ERP.** Es el recorrido petición HTTP → router → controlador → base de datos de tu ERP en React. La diferencia es que aquí el framework hace casi toda la fontanería (OData, tipos, concurrencia): tú escribes CDS, comportamiento y lógica.
+> **Puente a lo que ya conoces.** Es el recorrido petición HTTP → router → controlador → base de datos de cualquier aplicación web. La diferencia es que aquí el framework hace casi toda la fontanería (OData, tipos, concurrencia): tú escribes CDS, comportamiento y lógica.
 
 ## Paquetes, Software Components y transportes
 
@@ -75,7 +75,7 @@ Los permisos se organizan por aplicación: un *Business Catalog* agrupa apps Fio
 
 Cuando un usuario rellena un formulario Fiori sin pulsar «Guardar», RAP puede guardar un **borrador** en una tabla de sombra, separado del registro activo. Se activa con `with draft;` en la Behavior Definition y exige una tabla de borrador y alguna acción más.
 
-> **Para tu primera versión no uses draft.** Funciona sin él y tiene menos piezas que fallan. Cuando todo esté bien, puedes añadirlo siguiendo el tutorial oficial de SAP.
+> **En estos apuntes, todo con draft.** Es lo que espera el usuario de una app Fiori (editar, guardar o descartar, como en un formulario de Odoo) y lo que vas a ver en los proyectos RAP de empresa. Tiene algunas piezas más, que se explican en [3.1](3_1_behaviorDefinition.html).
 
 ## Ejercicios
 
@@ -86,7 +86,7 @@ Cuando un usuario rellena un formulario Fiori sin pulsar «Guardar», RAP puede 
 
 ---
 
-**Siguiente:** [1.1. Tu primer programa: clases ejecutables](1_1_classrun.html)
+**Siguiente:** [0.3. Los dos proyectos](0_3_dosProyectos.html)
 
 [Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/01_introduccion.md){: .fs-2 }
 {% endraw %}

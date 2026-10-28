@@ -1,33 +1,48 @@
 ---
 title: "Restaurar en un trial nuevo"
 parent: "Anexos"
-nav_order: 5
+nav_order: 7
 ---
 
+# Restaurar en un trial nuevo
+
 {% raw %}
-# Restaurar este repositorio en un trial nuevo
+El sistema SAP es desechable; los repositorios son la copia de seguridad (5.3). Cuando caduque el trial, o lo vayas a perder, sigue estos pasos. Apunta al final lo que hayas tenido que hacer distinto.
 
-El sistema SAP es desechable; este repositorio es la copia de seguridad.
-Cuando caduque el trial (o lo vayas a perder), sigue estos pasos.
+## Antes de que caduque (día ~75)
 
-## Antes de que caduque (dia ~75)
-
-1. Activa todos los objetos y pasa el ATC.
-2. Haz push con abapGit de todos los paquetes (`ZEJ`).
-3. En GitHub, comprueba que el ultimo commit esta.
-4. Apunta lo que abapGit NO guarda: usuarios, roles, configuracion del cockpit.
+1. Activa todos los objetos, ejecuta los tests de `ZGOR` (en verde) y pasa el ATC.
+2. Haz *push* con abapGit de los dos paquetes: `ZGOR` → `erp-obras-reformas-sap` y `ZEJ` → `abap-ejercicios`.
+3. En GitHub, comprueba que el último commit de cada repositorio está.
+4. Apunta abajo lo que abapGit **no** guarda.
 
 ## En el trial nuevo
 
-1. Registra el trial nuevo y ejecuta el booster "Prepare an Account for ABAP Trial".
-2. Anota la fecha de registro y genera recordatorios:
-   `python3 herramientas/generar_recordatorios.py AAAA-MM-DD > trial.ics`
-3. En Eclipse (ADT) crea el proyecto ABAP Cloud con la nueva instancia.
-4. Crea el paquete `ZEJ` (mismo nombre que antes) y la orden de transporte.
-5. Abre la vista abapGit Repositories, enlaza este repositorio y haz **Pull**.
-6. Activa todos los objetos (Ctrl+Shift+F3 sobre el paquete).
-7. Ejecuta los tests de ABAP Unit (Ctrl+Shift+F10) para comprobar la restauracion.
+1. Registra el trial y ejecuta el booster **Prepare an Account for ABAP Trial**.
+2. Apunta la fecha de registro y genera los recordatorios: `python3 herramientas/generar_recordatorios.py AAAA-MM-DD > trial.ics`.
+3. En Eclipse, crea el proyecto ABAP Cloud con la nueva instancia (0.1).
+4. Comprueba con **Ctrl+Shift+A** que `ZGOR` y `ZEJ` siguen libres. Si no, para: hay que cambiar de prefijo antes de traer nada.
+5. Crea el paquete `ZGOR` (en `ZLOCAL`, con el mismo nombre y descripción que antes). Los subpaquetes los creará el *pull*.
+6. En la vista **abapGit Repositories**, enlaza `erp-obras-reformas-sap` con `ZGOR` y haz **Pull**. Repite con `abap-ejercicios` y `ZEJ`.
+7. Activa todo `ZGOR` (clic derecho → *Activate*). Si algo no activa a la primera, vuelve a activar: a veces el orden importa.
+8. Publica los tres *service bindings* (`ZUI_GOR_*_O4`).
+9. Ejecuta `ZCL_GOR_DATOS_DEMO` y después `ZCL_GOR_COMPROBAR_CDS`: «0 errores».
+10. Ejecuta los tests de `ZGOR`: todos en verde. Abre una app.
 
-Si el nombre de paquete ya esta ocupado o el pull da errores, copia el mensaje
-exacto y consultalo antes de borrar nada.
+Si el *pull* da errores, copia el mensaje exacto y consúltalo antes de borrar nada.
+
+## Lo que abapGit no guarda
+
+| Qué | Cómo se repite |
+|---|---|
+| El usuario y su acceso a la instancia | Booster del paso 1 |
+| La publicación de los *bindings* | Paso 8 |
+| Roles y catálogos asignados (6.1) | A mano, si los usaste |
+| Datos | `ZCL_GOR_DATOS_DEMO` |
+| Ajustes de Eclipse | A mano |
+| (añade aquí lo que encuentres) | |
+
+---
+
+[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/RESTAURAR.md){: .fs-2 }
 {% endraw %}

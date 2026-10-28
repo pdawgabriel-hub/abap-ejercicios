@@ -7,179 +7,145 @@ nav_order: 2
 # 3.2. La clase de implementación
 
 {% raw %}
-La lógica de negocio de una BDEF vive en una **clase de implementación**. La clase global (la que ves en el explorador) está casi vacía a propósito: en RAP la lógica va en **clases locales** (`lhc_...`), una por entidad.
+La BDEF declara **qué** hace cada objeto de negocio; la **clase de implementación** (*behavior pool*) dice **cómo**. En esta unidad ves cómo es la del titular del taller y crearás las diez de tu ERP, todavía casi vacías, para que las BDEF activen. Y aprenderás **EML** (*Entity Manipulation Language*), el lenguaje con el que se leen y modifican los objetos de negocio desde ABAP. Lo usaremos en toda la lógica del bloque y en los tests.
+
+## La clase y sus pestañas
+
+Una clase de comportamiento es una clase global **abstracta y vacía**. Todo el código va en sus clases **locales**, en la pestaña inferior **Local Types**:
+
+```abap
+CLASS zbp_i_tltitular DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_tltitular.
+ENDCLASS.
+
+CLASS zbp_i_tltitular IMPLEMENTATION.
+ENDCLASS.
+```
+
+En *Local Types* hay una clase **manejadora** (*handler*, `lhc_`) por entidad, con un método por cada cosa que declara la BDEF. Para el titular, de momento, solo los permisos:
+
+```abap
+CLASS lhc_titular DEFINITION INHERITING FROM cl_abap_behavior_handler.
+  PRIVATE SECTION.
+    METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
+      IMPORTING REQUEST requested_authorizations FOR Titular RESULT result.
+ENDCLASS.
+
+CLASS lhc_titular IMPLEMENTATION.
+  METHOD get_global_authorizations.
+    " De momento se permite todo; los roles llegan en 6.1
+    result = VALUE #( %create      = if_abap_behv=>auth-allowed
+                      %update      = if_abap_behv=>auth-allowed
+                      %delete      = if_abap_behv=>auth-allowed
+                      %action-Edit = if_abap_behv=>auth-allowed ).
+  ENDMETHOD.
+ENDCLASS.
+```
+
+Cada vez que añadamos una *determination*, una *validation* o una acción a la BDEF, aparecerá aquí su método. **No hace falta escribir las firmas a mano**: con el cursor sobre el nombre en la BDEF, **Ctrl+1** → *Add missing method*.
 
 ## Crear la clase
 
-1. Con la BDEF abierta, cursor sobre el nombre de la clase (`zbp_i_tlorden`) y **Ctrl+1** (*Quick Fix*).
-2. Elige **Create behavior implementation class zbp_i_tlorden**, acepta el asistente y elige tu orden de transporte.
-3. Se crea la clase global. La lógica va en la pestaña inferior **Local Types** del editor de la clase (abajo, junto a «Global Class»).
-4. Sustituye el contenido de **Global Class** y el de **Local Types** por los bloques de abajo.
+1. En la BDEF, cursor sobre el nombre de la clase (`zbp_i_tltitular`) → **Ctrl+1** → *Create behavior implementation class*.
+2. Eclipse crea la clase con *Local Types* ya rellena: un `lhc_titular` con `get_global_authorizations` vacío.
+3. Completa `get_global_authorizations` como arriba y activa la clase. Después activa la BDEF.
 
-> Si tu ADT ya generó los métodos vacíos en Local Types, sustituye todo el contenido por el bloque de abajo. Si ves el nombre de la pestaña distinto, busca la que contenga las clases `lhc_...`.
+## EML: leer y modificar objetos de negocio
 
-## Pestaña Global Class
+EML son sentencias ABAP para trabajar con un BO **a través de su comportamiento**: al crear un titular con EML se ejecutan sus *determinations* y *validations*, igual que si lo creara un usuario desde Fiori. Con ABAP SQL directo (como en 2.5) no se ejecuta nada de eso.
 
-```abap
-CLASS zbp_i_tlorden DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF ZI_TlOrden.
-ENDCLASS.
-
-CLASS zbp_i_tlorden IMPLEMENTATION.
-ENDCLASS.
-```
-
-## Pestaña Local Types
-
-La lógica completa del ejemplo está en esta pestaña. La tienes explicada por partes en las unidades siguientes ([3.3](3_3_determinations.html), [3.4](3_4_validations.html), [3.5](3_5_actions.html) y [3.6](3_6_composiciones.html)).
+**Crear:**
 
 ```abap
-CLASS lhc_Orden DEFINITION INHERITING FROM cl_abap_behavior_handler.
-  PRIVATE SECTION.
-    METHODS iniciarOrden FOR DETERMINE ON MODIFY
-      IMPORTING keys FOR Orden~iniciarOrden.
-    METHODS asignarNumero FOR DETERMINE ON SAVE
-      IMPORTING keys FOR Orden~asignarNumero.
-    METHODS validarMatricula FOR VALIDATE ON SAVE
-      IMPORTING keys FOR Orden~validarMatricula.
-    METHODS cerrarOrden FOR MODIFY
-      IMPORTING keys FOR ACTION Orden~cerrarOrden RESULT result.
-ENDCLASS.
+    MODIFY ENTITIES OF zi_tltitular
+      ENTITY Titular
+        CREATE FIELDS ( RazonSocial DocumentoId Contacto )
+        WITH VALUE #( ( %cid        = 'nuevo'
+                        RazonSocial = 'Autoescuela Pilar'
+                        DocumentoId = 'B50999888'
+                        Contacto    = '976333444' ) )
+      MAPPED   DATA(ls_mapped)
+      FAILED   DATA(ls_failed)
+      REPORTED DATA(ls_reported).
 
-CLASS lhc_Orden IMPLEMENTATION.
-
-  METHOD iniciarOrden.
-    READ ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden FIELDS ( Estado ) WITH CORRESPONDING #( keys )
-      RESULT DATA(ordenes).
-    DELETE ordenes WHERE Estado IS NOT INITIAL.
-    CHECK ordenes IS NOT INITIAL.
-
-    MODIFY ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden
-        UPDATE FIELDS ( Estado FechaEntrada Moneda )
-        WITH VALUE #( FOR orden IN ordenes
-                      ( %tky         = orden-%tky
-                        Estado       = 'P'
-                        FechaEntrada = cl_abap_context_info=>get_system_date( )
-                        Moneda       = 'EUR' ) ).
-  ENDMETHOD.
-
-  METHOD asignarNumero.
-    READ ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden FIELDS ( OrdenId ) WITH CORRESPONDING #( keys )
-      RESULT DATA(ordenes).
-    DELETE ordenes WHERE OrdenId IS NOT INITIAL.
-    CHECK ordenes IS NOT INITIAL.
-
-    SELECT SINGLE FROM ztl_orden FIELDS MAX( orden_id ) INTO @DATA(lv_max).
-
-    MODIFY ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden
-        UPDATE FIELDS ( OrdenId )
-        WITH VALUE #( FOR orden IN ordenes INDEX INTO i
-                      ( %tky    = orden-%tky
-                        OrdenId = lv_max + i ) ).
-  ENDMETHOD.
-
-  METHOD validarMatricula.
-    READ ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden FIELDS ( Matricula ) WITH CORRESPONDING #( keys )
-      RESULT DATA(ordenes).
-
-    LOOP AT ordenes INTO DATA(orden).
-      IF orden-Matricula IS INITIAL.
-        APPEND VALUE #( %tky = orden-%tky ) TO failed-orden.
-        APPEND VALUE #( %tky = orden-%tky
-                        %msg = new_message_with_text(
-                                 severity = if_abap_behv_message=>severity-error
-                                 text     = 'La matricula es obligatoria' )
-                        %element-Matricula = if_abap_behv=>mk-on )
-               TO reported-orden.
-      ENDIF.
-    ENDLOOP.
-  ENDMETHOD.
-
-  METHOD cerrarOrden.
-    READ ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden FIELDS ( Estado ) WITH CORRESPONDING #( keys )
-      RESULT DATA(ordenes).
-
-    DATA lt_cerrar LIKE ordenes.
-    LOOP AT ordenes INTO DATA(orden).
-      IF orden-Estado = 'C'.
-        APPEND orden TO lt_cerrar.
-      ELSE.
-        APPEND VALUE #( %tky = orden-%tky ) TO failed-orden.
-        APPEND VALUE #( %tky = orden-%tky
-                        %msg = new_message_with_text(
-                                 severity = if_abap_behv_message=>severity-error
-                                 text     = 'Solo se puede cerrar una orden en curso' ) )
-               TO reported-orden.
-      ENDIF.
-    ENDLOOP.
-
-    MODIFY ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden
-        UPDATE FIELDS ( Estado )
-        WITH VALUE #( FOR o IN lt_cerrar ( %tky = o-%tky Estado = 'F' ) ).
-
-    READ ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden ALL FIELDS WITH CORRESPONDING #( keys )
-      RESULT DATA(ordenes_nuevas).
-    result = VALUE #( FOR o IN ordenes_nuevas ( %tky = o-%tky %param = o ) ).
-  ENDMETHOD.
-
-ENDCLASS.
-
-CLASS lhc_Linea DEFINITION INHERITING FROM cl_abap_behavior_handler.
-  PRIVATE SECTION.
-    METHODS recalcularCoste FOR DETERMINE ON MODIFY
-      IMPORTING keys FOR Linea~recalcularCoste.
-ENDCLASS.
-
-CLASS lhc_Linea IMPLEMENTATION.
-
-  METHOD recalcularCoste.
-    READ ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Linea BY \_Orden FIELDS ( OrdenUuid )
-      WITH CORRESPONDING #( keys )
-      RESULT DATA(ordenes).
-    SORT ordenes BY OrdenUuid.
-    DELETE ADJACENT DUPLICATES FROM ordenes COMPARING OrdenUuid.
-
-    READ ENTITIES OF ZI_TlOrden IN LOCAL MODE
-      ENTITY Orden BY \_Lineas FIELDS ( OrdenUuid Importe )
-      WITH CORRESPONDING #( ordenes )
-      RESULT DATA(lineas).
-
-    DATA lv_total TYPE ztl_orden-coste_total.
-    LOOP AT ordenes INTO DATA(orden).
-      lv_total = 0.
-      LOOP AT lineas INTO DATA(linea) WHERE OrdenUuid = orden-OrdenUuid.
-        lv_total = lv_total + linea-Importe.
-      ENDLOOP.
-      MODIFY ENTITIES OF ZI_TlOrden IN LOCAL MODE
-        ENTITY Orden
-          UPDATE FIELDS ( CosteTotal )
-          WITH VALUE #( ( %tky = orden-%tky CosteTotal = lv_total ) ).
-    ENDLOOP.
-  ENDMETHOD.
-
-ENDCLASS.
+    COMMIT ENTITIES RESPONSE OF zi_tltitular
+      FAILED   DATA(ls_commit_failed)
+      REPORTED DATA(ls_commit_reported).
 ```
 
-## Cosas que conviene entender
+- `ENTITY Cliente` usa el **alias** de la BDEF.
+- `FIELDS ( ... )` dice qué campos se informan; el resto queda vacío (o lo rellena una *determination*).
+- `%cid` es un identificador temporal de la petición: todavía no hay UUID, y con `%cid` se puede referir al registro nuevo en la misma sentencia (por ejemplo, para crearle partidas).
+- `MAPPED` devuelve el UUID asignado a cada `%cid`; `FAILED`, las instancias que fallaron; `REPORTED`, los mensajes.
+- **`COMMIT ENTITIES`** guarda. Antes del *commit* se ejecutan las *determinations* y *validations* «on save», y si alguna falla no se guarda nada. Es como el `env.cr.commit()` del `odoo shell` (§13.3 del informe): sin él, los cambios se pierden.
 
-- `IN LOCAL MODE`: el código se salta las comprobaciones de autorización y los campos `readonly`. Es lo que se usa dentro de la lógica de negocio.
-- `%tky`: identifica la instancia (en este ejemplo, el UUID). Siempre se propaga tal cual.
-- `failed-orden` marca qué instancias han fallado; `reported-orden` lleva el mensaje que verá el usuario. Los nombres `orden` y `linea` son los alias de la BDEF en minúsculas.
-- `BY \_Orden`: navegación por la association. La barra invertida es parte de la sintaxis.
+**Leer:**
+
+```abap
+    READ ENTITIES OF zi_tltitular
+      ENTITY Titular
+        FIELDS ( TitularRef RazonSocial ) WITH VALUE #( ( TitularUUID = lv_uuid ) )
+      RESULT DATA(lt_titulares)
+      FAILED DATA(ls_failed_read).
+```
+
+**Modificar y borrar:**
+
+```abap
+    MODIFY ENTITIES OF zi_tltitular
+      ENTITY Titular
+        UPDATE FIELDS ( Contacto ) WITH VALUE #( ( TitularUUID = lv_uuid Contacto = '976000111' ) )
+      ENTITY Titular
+        DELETE FROM VALUE #( ( TitularUUID = lv_uuid ) )
+      FAILED DATA(ls_failed_mod).
+    COMMIT ENTITIES.
+```
+
+**Hijos a través de la raíz** (`CREATE BY \_Partidas`): se crea el presupuesto y su partida en la misma sentencia, enlazados por `%cid_ref`:
+
+```abap
+    MODIFY ENTITIES OF zi_tlpresupuesto
+      ENTITY Presupuesto
+        CREATE FIELDS ( TitularUUID Impuesto ) WITH VALUE #( ( %cid = 'p1' TitularUUID = lv_titular Impuesto = 21 ) )
+        CREATE BY \_Partidas FIELDS ( Concepto Cantidad PrecioUnitario )
+          WITH VALUE #( ( %cid_ref = 'p1'
+                          %target  = VALUE #( ( %cid = 'pa1' Concepto = 'Kit de embrague'
+                                                Cantidad = 1 PrecioUnitario = 320 ) ) ) )
+      MAPPED DATA(ls_mapped_p).
+```
+
+La barra invertida de `\_Partidas` es parte de la sintaxis: indica que se navega por una association.
+
+## Algunas piezas de EML
+
+| Pieza | Qué es |
+|---|---|
+| `%tky` | La clave de una instancia **incluyendo si es borrador o activa**. Dentro de la lógica, siempre se propaga tal cual: `%tky = ls_titular-%tky` |
+| `%is_draft` | `if_abap_behv=>mk-on` si es un borrador. Desde una clase de consola, por defecto se trabaja con datos activos |
+| `IN LOCAL MODE` | Dentro de la clase de comportamiento: se saltan los permisos y los campos `readonly`. Es como el `sudo()` de Odoo para la lógica del propio BO |
+| `failed-titular`, `reported-titular` | Dentro de la lógica, las tablas donde se marca qué instancias fallan y con qué mensaje. El nombre es el alias en minúsculas |
+
+## Preparación del entorno de trabajo
+
+Una clase `zbp_i_gor<raíz>` por BDEF, en `ZGOR_BUS`. La de pruebas de EML, en `ZGOR_TEST`:
+
+```
+ZGOR_BUS
+├── ZI_GorCliente (BDEF) + ZBP_I_GORCLIENTE
+├── ZI_GorTrabajador (BDEF) + ZBP_I_GORTRABAJADOR
+├── ...                                         (diez en total)
+ZGOR_TEST
+└── ZCL_GOR_EML_DEMO                            ← nueva
+```
 
 ## Ejercicios
 
-1. **Clase de Cliente.** Crea la clase de implementación de `ZI_GorCliente` y actívala aunque no tenga lógica todavía.
-2. **Lectura del ejemplo.** Lee la clase local del ejemplo y explica con tus palabras para qué sirve cada `READ ENTITIES` y cada `MODIFY ENTITIES`.
-
+1. **El cliente.** Crea `zbp_i_gorcliente` con *Ctrl+1* desde tu BDEF. Su `get_global_authorizations` debe permitir, de momento, crear, modificar, borrar y editar. Activa la clase y la BDEF.
+2. **Las demás.** Haz lo mismo con las otras nueve BDEF. En las que tienen hijos, Eclipse crea un `lhc_` por entidad, pero solo la raíz tiene `get_global_authorizations` (los hijos dependen de ella). Activa todo junto (clic derecho en `ZGOR_BUS` → *Activate*).
+3. **Crear con EML.** Crea en `ZGOR_TEST` la clase ejecutable `ZCL_GOR_EML_DEMO`. Crea con EML la clienta Elena Vidal Soler (C/ Sol 3, Zaragoza, 600222333), guarda con `COMMIT ENTITIES` y escribe en la consola su UUID nuevo (sale en `MAPPED`) y si hubo errores al guardar.
+4. **Leer, cambiar y borrar.** En la misma clase, lee la clienta recién creada, cámbiale el teléfono, vuelve a leerla para comprobarlo y bórrala, guardando tras cada modificación. Comprueba en el Data Preview de `ZI_GorCliente` que ha desaparecido.
+5. **Mira los campos de administración.** Crea otra vez a Elena y **no** la borres. En el Data Preview, `CreatedBy`, `CreatedAt` y `LastChangedAt` tienen valor, porque los ha rellenado RAP gracias a las anotaciones `@Semantics` de 2.2. `ClienteId` sigue vacío: lo pondrás en 3.7.
+6. **Un presupuesto con línea.** Crea con EML, en una sola sentencia, un presupuesto para Elena con IVA 21 y una línea de 10 uds a 100 €, y guarda. Comprueba en el Data Preview que la línea apunta al presupuesto. `TotalLinea`, `BaseImponible` y `Total` siguen a 0: los calcularán tus *determinations* de 3.3.
+7. **Investiga.** Intenta cambiar con EML (sin `IN LOCAL MODE`, desde tu clase de consola) el campo `ClienteId` de Elena. ¿Qué devuelve `FAILED` o `REPORTED`? ¿Por qué la lógica del propio BO sí podrá escribirlo?
 
 ---
 

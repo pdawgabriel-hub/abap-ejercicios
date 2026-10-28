@@ -7,135 +7,199 @@ nav_order: 4
 # 1.4. Tablas internas
 
 {% raw %}
-> **Cómo ejecutar los ejemplos.** Los ejemplos muestran solo el **contenido del método `main`** de una clase ejecutable. Pégalos dentro de la plantilla de [1.1](1_1_classrun.html) (cambiando el nombre de la clase), activa con **Ctrl+F3** y ejecuta con **F9**.
+Casi todo lo que calcula un sistema de gestión es una **suma sobre una lista**. En el taller, el neto del presupuesto es la suma de sus partidas; el importe de la orden, la suma de sus presupuestos aceptados; la mano de obra, la suma de los tramos de sus jornadas. En ABAP, las listas en memoria son **tablas internas**. En esta unidad aprendemos a trabajar con ellas, y tú añadirás a `ZCL_GOR_REGLAS` todas las reglas de §11.2 que trabajan con listas y la búsqueda por palabras de §11.5 (punto 10).
 
-Una **tabla interna** es una colección en memoria de filas del mismo tipo: el equivalente de una lista de diccionarios en Python o de un recordset de Odoo en memoria. Es la estructura de datos más usada en ABAP. Hay tres tipos:
+## Qué es una tabla interna
 
-- **STANDARD**: acceso por posición, la más común.
-- **SORTED**: ordenada por clave.
-- **HASHED**: acceso rápido por clave única.
+Una tabla interna es una colección en memoria de filas del mismo tipo: el equivalente de una lista de diccionarios en Python, o de un *recordset* de Odoo ya leído. Hay tres clases:
+
+| Clase | Acceso | Cuándo |
+|---|---|---|
+| `STANDARD TABLE` | Por posición; búsquedas recorriendo la tabla | La habitual, para listas pequeñas o que se recorren enteras |
+| `SORTED TABLE` | Siempre ordenada por su clave | Cuando se busca mucho por un campo y se necesita el orden |
+| `HASHED TABLE` | Por clave única, muy rápido | Cuando se busca por una clave única (un código) en tablas grandes |
 
 ```abap
-    TYPES: BEGIN OF ty_linea,
-             concepto TYPE string,
-             importe  TYPE decfloat34,
-           END OF ty_linea.
-    TYPES tt_lineas TYPE STANDARD TABLE OF ty_linea WITH EMPTY KEY.
-
-    DATA(lt_lineas) = VALUE tt_lineas(
-      ( concepto = 'Aceite'  importe = '25.50' )
-      ( concepto = 'Filtro'  importe = '12.00' )
-      ( concepto = 'Pastillas' importe = '48.90' ) ).
-
-    APPEND VALUE #( concepto = 'Mano de obra' importe = '60.00' ) TO lt_lineas.
-
-    LOOP AT lt_lineas INTO DATA(ls_linea).
-      out->write( |{ ls_linea-concepto }: { ls_linea-importe }| ).
-    ENDLOOP.
-
-    " Buscar una fila (si no existe, el resultado queda vacio)
-    DATA(ls_filtro) = VALUE #( lt_lineas[ concepto = 'Filtro' ] OPTIONAL ).
-    out->write( ls_filtro ).
-
-    SORT lt_lineas BY importe DESCENDING.
-    DELETE lt_lineas WHERE importe < 20.
-
-    DATA(lv_suma) = REDUCE decfloat34( INIT s = CONV decfloat34( 0 )
-                                       FOR l IN lt_lineas
-                                       NEXT s = s + l-importe ).
-    out->write( |Filas: { lines( lt_lineas ) }, suma: { lv_suma }| ).
-
-    DATA(lt_caras) = VALUE tt_lineas( FOR l IN lt_lineas
-                                      WHERE ( importe > 50 ) ( l ) ).
-    out->write( lt_caras ).
+    TYPES tt_partidas TYPE STANDARD TABLE OF zif_tl_tipos=>ty_partida WITH EMPTY KEY.
 ```
 
-> **Puente a Odoo.** `LOOP AT ... WHERE` es un `filtered()`; `REDUCE` es un `sum()` o `mapped()` con acumulador; `VALUE #( FOR ... )` es una *list comprehension*.
+`WITH EMPTY KEY` indica que la tabla no tiene clave: se accede por posición o buscando por los campos que interesen. Para listas como estas es lo más sencillo.
+
+## Rellenar una tabla
+
+```abap
+    DATA(lt_partidas) = VALUE tt_partidas(
+      ( concepto = 'Horas de diagnosis' cantidad = 4 precio_unitario = '45' )
+      ( concepto = 'Kit de embrague'    cantidad = 1 precio_unitario = '320' ) ).
+
+    APPEND VALUE #( concepto = 'Liquido de frenos' cantidad = 2 precio_unitario = '12.50' ) TO lt_partidas.
+
+    out->write( lines( lt_partidas ) ).    " 3
+    out->write( lt_partidas ).             " la tabla entera, en columnas
+```
+
+Cada par de paréntesis interiores es una fila. `lines( )` devuelve el número de filas.
+
+## Recorrer una tabla
+
+```abap
+    DATA lv_neto TYPE zif_tl_tipos=>ty_euros.
+
+    LOOP AT lt_partidas INTO DATA(ls_partida).
+      lv_neto = lv_neto + zcl_tl_calculos=>importe_partida( iv_cantidad        = ls_partida-cantidad
+                                                            iv_precio_unitario = ls_partida-precio_unitario ).
+    ENDLOOP.
+
+    LOOP AT lt_partidas INTO ls_partida WHERE cantidad > 1.
+      out->write( |{ ls_partida-concepto }: { ls_partida-cantidad }| ).
+    ENDLOOP.
+```
+
+`LOOP AT ... INTO` copia cada fila en una estructura. Con `WHERE` solo se recorren las filas que cumplen la condición.
+
+## Leer una fila
+
+```abap
+    " Por posicion (la primera fila es la 1, no la 0)
+    DATA(ls_primera) = lt_partidas[ 1 ].
+
+    " Por contenido
+    IF line_exists( lt_partidas[ concepto = 'Kit de embrague' ] ).
+      DATA(ls_embrague) = lt_partidas[ concepto = 'Kit de embrague' ].
+    ENDIF.
+```
+
+Si la fila no existe, `lt_partidas[ ... ]` lanza una **excepción** (en 1.7 veremos cómo tratarla). Por eso, antes de leer, se pregunta con `line_exists( )`. Otra opción es `VALUE #( lt_partidas[ ... ] OPTIONAL )`, que devuelve una fila vacía si no la encuentra.
+
+## Modificar filas: *field symbols*
+
+`LOOP AT ... INTO` trabaja con una **copia**: cambiarla no cambia la tabla. Para modificar la fila de verdad se usa un *field symbol*, que es un **alias** de la fila (un puntero, si vienes de C):
+
+```abap
+    LOOP AT lt_partidas ASSIGNING FIELD-SYMBOL(<ls_partida>).
+      <ls_partida>-precio_unitario = <ls_partida>-precio_unitario * '1.03'.   " sube un 3 % en la tabla
+    ENDLOOP.
+```
+
+Con `ASSIGN` se apunta a una fila concreta. Si no existe, no hay excepción: `sy-subrc` vale distinto de 0. Este patrón sirve para **acumular por clave**. Así hace el taller su ranking de mecánicos por **euros** facturados:
+
+```abap
+  METHOD ranking_mecanicos.
+    LOOP AT it_tramos INTO DATA(ls_tramo).
+      ASSIGN rt_ranking[ mecanico = ls_tramo-mecanico ] TO FIELD-SYMBOL(<ls_puesto>).
+      IF sy-subrc <> 0.
+        APPEND VALUE #( mecanico = ls_tramo-mecanico ) TO rt_ranking ASSIGNING <ls_puesto>.
+      ENDIF.
+      <ls_puesto>-euros  += coste_tramo( iv_tiempo = ls_tramo-tiempo iv_tarifa = ls_tramo-tarifa_aplicada ).
+      <ls_puesto>-tiempo += ls_tramo-tiempo.
+    ENDLOOP.
+    SORT rt_ranking BY euros DESCENDING mecanico ASCENDING.
+  ENDMETHOD.
+```
+
+`+=` suma sobre el propio campo: `a += b` es `a = a + b`.
+
+## Ordenar, quitar duplicados y borrar
+
+```abap
+    SORT lt_refs BY table_line.
+    DELETE ADJACENT DUPLICATES FROM lt_refs COMPARING table_line.
+
+    DELETE lt_partidas WHERE cantidad = 0.
+```
+
+`table_line` significa «la fila entera», para tablas cuyas filas no son estructuras (una tabla de códigos). `DELETE ADJACENT DUPLICATES` solo quita duplicados **seguidos**: por eso se ordena antes. Con eso se sacan, por ejemplo, los mecánicos distintos que han trabajado en una orden.
+
+## Expresiones de tabla: `VALUE ... FOR` y `REDUCE`
+
+Las dos formas modernas de construir una tabla o un valor a partir de otra tabla, sin escribir el `LOOP`:
+
+```abap
+    " Una tabla nueva con una columna de otra (como una list comprehension)
+    DATA(lt_conceptos) = VALUE zif_tl_tipos=>tt_textos( FOR ls IN lt_partidas ( ls-concepto ) ).
+
+    " Un valor acumulado (como sum() con un generador)
+    DATA(lv_neto_total) = REDUCE zif_tl_tipos=>ty_euros(
+                            INIT lv_suma = CONV zif_tl_tipos=>ty_euros( 0 )
+                            FOR ls IN lt_partidas
+                            NEXT lv_suma = lv_suma + zcl_tl_calculos=>importe_partida(
+                                                       iv_cantidad        = ls-cantidad
+                                                       iv_precio_unitario = ls-precio_unitario ) ).
+
+    " Con condicion: solo los presupuestos aceptados
+    DATA(lv_importe_orden) = REDUCE zif_tl_tipos=>ty_euros(
+                               INIT lv_suma = CONV zif_tl_tipos=>ty_euros( 0 )
+                               FOR ls IN lt_presupuestos
+                               WHERE ( situacion = zif_tl_tipos=>situacion_presupuesto-aceptado )
+                               NEXT lv_suma = lv_suma + ls-importe ).
+```
+
+## Partir un texto en palabras
+
+`SPLIT ... AT ... INTO TABLE` convierte un texto en una tabla de palabras. El filtro de mecánicos del taller lo usa para que «García Ruiz» encuentre al mecánico aunque «García» esté en el nombre y «Ruiz» en los apellidos. En el taller, cada palabra tiene que ser el **principio** de algún campo (`garc` encuentra a García, `arcía` no):
+
+```abap
+  METHOD encaja_filtro.
+    rv_encaja = abap_true.
+    SPLIT condense( to_lower( iv_texto ) ) AT space INTO TABLE DATA(lt_palabras).
+    LOOP AT lt_palabras INTO DATA(lv_palabra) WHERE table_line IS NOT INITIAL.
+      DATA(lv_encontrada) = abap_false.
+      LOOP AT it_campos INTO DATA(lv_campo).
+        IF to_lower( lv_campo ) CP |{ lv_palabra }*|.
+          lv_encontrada = abap_true.
+          EXIT.                         " sale del LOOP interior
+        ENDIF.
+      ENDLOOP.
+      IF lv_encontrada = abap_false.
+        rv_encaja = abap_false.
+        RETURN.
+      ENDIF.
+    ENDLOOP.
+  ENDMETHOD.
+```
+
+`CP` (*covers pattern*) compara con un patrón en el que `*` es «cualquier cosa». `EXIT` sale del bucle en el que está.
+
+## Preparación del entorno de trabajo
+
+Seguimos con `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y `ZCL_GOR_TIPOS_DEMO` de [1.2](1_2_tipos.html) y [1.3](1_3_flujo.html).
 
 ## Ejercicios
 
-1. **Presupuesto en memoria.** Crea una tabla interna con las líneas de un presupuesto de tu proyecto (concepto, cantidad, precio unitario), calcula el subtotal de cada línea y el total.
-2. **IVA y orden.** Añade el IVA al total y ordena las líneas de más a menos caras.
-3. **HASHED frente a STANDARD.** ¿Cuándo usarías una tabla HASHED? Investiga la diferencia y explícala.
-4. **Clase de líneas.** Crea `ZCL_EJ_LINEAS` con este esqueleto e implementa `total` y `ordenar_por_importe`.
+1. **Los tipos de tabla.** Añade a `ZIF_GOR_TIPOS`:
 
-```abap
-CLASS zcl_ej_lineas DEFINITION PUBLIC FINAL CREATE PUBLIC.
-  PUBLIC SECTION.
-    TYPES: BEGIN OF ty_linea,
-             concepto TYPE string,
-             cantidad TYPE i,
-             precio   TYPE decfloat34,
-           END OF ty_linea.
-    TYPES tt_lineas TYPE STANDARD TABLE OF ty_linea WITH EMPTY KEY.
+    | Tipo | Definición |
+    |---|---|
+    | `tt_presu_lineas` | Tabla estándar sin clave de `ty_presu_linea` |
+    | `ty_presupuesto` | Estructura con `codigo` (`ty_codigo`), `estado` (`ty_estado`) y `total` (`ty_importe`): un presupuesto visto desde su obra (§3.5) |
+    | `tt_presupuestos` | Tabla estándar sin clave de `ty_presupuesto` |
+    | `ty_parte_linea` | Estructura con `trabajador` (`ty_codigo`), `horas` (`ty_horas`) y `coste_hora` (`ty_importe`): una línea de parte de trabajo (§3.9) |
+    | `tt_parte_lineas` | Tabla estándar sin clave de `ty_parte_linea` |
+    | `ty_horas_trabajador` | Estructura con `trabajador` (`ty_codigo`), `horas` (`ty_horas`) y `coste` (`ty_importe`) |
+    | `tt_horas_trabajador` | Tabla estándar sin clave de `ty_horas_trabajador` |
+    | `tt_codigos` | Tabla estándar sin clave de `ty_codigo` |
+    | `tt_textos` | Tabla estándar sin clave de `string` |
 
-    " Suma de cantidad * precio de todas las lineas
-    CLASS-METHODS total
-      IMPORTING it_lineas TYPE tt_lineas
-      RETURNING VALUE(rv_total) TYPE decfloat34.
+2. **Las sumas de la obra.** Añade a `ZCL_GOR_REGLAS`:
 
-    " Devuelve las lineas ordenadas de mayor a menor importe (cantidad * precio)
-    CLASS-METHODS ordenar_por_importe
-      IMPORTING it_lineas TYPE tt_lineas
-      RETURNING VALUE(rt_lineas) TYPE tt_lineas.
-ENDCLASS.
+    | Método | Recibe | Devuelve | Regla (§11.2) |
+    |---|---|---|---|
+    | `base_imponible` | `it_lineas` (`tt_presu_lineas`) | `rv_base` (`ty_importe`) | `redondear(Σ total_linea)`, reutilizando `total_linea` |
+    | `total_obra` | `it_presupuestos` (`tt_presupuestos`) | `rv_total` (`ty_importe`) | `redondear(Σ total)` **solo** de los presupuestos con estado `aprobado`; 0 si no hay ninguno |
+    | `horas_parte` | `it_lineas` (`tt_parte_lineas`) | `rv_horas` (`ty_horas`) | `Σ horas` |
+    | `coste_parte` | `it_lineas` (`tt_parte_lineas`) | `rv_coste` (`ty_importe`) | `Σ coste_subtotal`, reutilizando `coste_subtotal` |
 
-CLASS zcl_ej_lineas IMPLEMENTATION.
-  METHOD total.
-    " TODO: escribe tu solucion aqui
-  ENDMETHOD.
+3. **Quién participa.** Añade `participantes`, que recibe `it_lineas` (`tt_parte_lineas`) y devuelve `rt_trabajadores` (`tt_codigos`): los trabajadores **distintos** de las líneas, ordenados (§11.2 *Otros*: «trabajadores distintos de las líneas de sus partes»).
+4. **Horas por trabajador.** Añade `horas_por_trabajador`, que recibe `it_lineas` y devuelve `rt_horas` (`tt_horas_trabajador`): una fila por trabajador con la suma de sus horas y de su coste, ordenada de **más a menos horas** y, si empatan, por código. Es la base del «top 5 trabajadores por horas» del dashboard (§3.14). Ojo: el ranking del taller ordena por euros.
+5. **La búsqueda por palabras.** Añade `coincide_busqueda`, que recibe `iv_busqueda` (`string`) e `it_campos` (`tt_textos`) y devuelve `rv_coincide` (`abap_bool`). Regla (§11.5, punto 10): cada palabra de la búsqueda debe **aparecer** en alguno de los campos, en cualquier posición y sin distinguir mayúsculas. Una búsqueda vacía coincide siempre. Fíjate en la diferencia con el filtro del taller, que exige que la palabra sea el principio del campo.
 
-  METHOD ordenar_por_importe.
-    " TODO: escribe tu solucion aqui
-  ENDMETHOD.
-ENDCLASS.
-```
+    Pruébalo en `ZCL_GOR_TIPOS_DEMO` con los campos de un cliente (nombre `Juan`, apellidos `Pérez López`, NIF `12345678Z`, teléfono `600111222`): `Juan Pérez`, `pérez  JUAN` y `5678` deben coincidir; `Juan García`, no.
+6. **El precio de la obra.** En `ZCL_GOR_TIPOS_DEMO`, monta una tabla de tres presupuestos de la misma obra: uno aprobado de 1210 €, otro no aprobado de 500 € y otro aprobado de 363 €. `total_obra` debe dar **1573.00**. Cambia el estado del segundo a aprobado (con un *field symbol*) y vuelve a calcular: **2073.00**. Es la regla §11.5 (punto 1): aprobar un presupuesto cambia el precio de la obra.
+7. **Investiga.** Reescribe `horas_por_trabajador` con `LOOP AT ... GROUP BY` y `LOOP AT GROUP` (búscalos con **F1**). ¿Qué versión te parece más clara? Deja la que prefieras y explica en un comentario por qué.
 
 ## Comprueba tu solución automáticamente (opcional)
 
-```abap
-CLASS ltcl_lineas DEFINITION FINAL FOR TESTING
-  DURATION SHORT RISK LEVEL HARMLESS.
-  PRIVATE SECTION.
-    DATA mt_lineas TYPE zcl_ej_lineas=>tt_lineas.
-    METHODS setup.
-    METHODS total_correcto FOR TESTING.
-    METHODS total_tabla_vacia FOR TESTING.
-    METHODS orden_descendente FOR TESTING.
-ENDCLASS.
-
-CLASS ltcl_lineas IMPLEMENTATION.
-  METHOD setup.
-    mt_lineas = VALUE #(
-      ( concepto = 'Aceite'  cantidad = 1 precio = '5.50' )
-      ( concepto = 'Filtros' cantidad = 2 precio = '10.00' )
-      ( concepto = 'Bujias'  cantidad = 4 precio = '3.00' ) ).
-  ENDMETHOD.
-
-  METHOD total_correcto.
-    cl_abap_unit_assert=>assert_equals(
-      act = zcl_ej_lineas=>total( mt_lineas )
-      exp = CONV decfloat34( '37.5' ) ).
-  ENDMETHOD.
-
-  METHOD total_tabla_vacia.
-    DATA lt_vacia TYPE zcl_ej_lineas=>tt_lineas.
-    cl_abap_unit_assert=>assert_equals(
-      act = zcl_ej_lineas=>total( lt_vacia )
-      exp = CONV decfloat34( '0' ) ).
-  ENDMETHOD.
-
-  METHOD orden_descendente.
-    DATA(lt_orden) = zcl_ej_lineas=>ordenar_por_importe( mt_lineas ).
-    cl_abap_unit_assert=>assert_equals( act = lines( lt_orden ) exp = 3 ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lt_orden[ 1 ]-concepto exp = `Filtros` ).
-    cl_abap_unit_assert=>assert_equals(
-      act = lt_orden[ 3 ]-concepto exp = `Aceite` ).
-  ENDMETHOD.
-ENDCLASS.
-```
-
+Pega [1_4_ltcl_sumas.abap](materiales/tests/1_4_ltcl_sumas.abap) en la pestaña **Test Classes** de `ZCL_GOR_REGLAS`, debajo de las anteriores, y ejecuta con **Ctrl+Shift+F10**. Deben salir **24 tests en verde** (16 + 8).
 
 ---
 

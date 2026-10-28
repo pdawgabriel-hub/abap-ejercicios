@@ -1,53 +1,183 @@
 ---
-title: "1.9. Proyecto: del modelo de Odoo a tablas ABAP"
+title: "1.9. Proyecto: simulación de una obra"
 parent: "1. Fundamentos del lenguaje"
 nav_order: 9
 ---
 
-# 1.9. Proyecto: del modelo de Odoo a tablas ABAP
+# 1.9. Proyecto: simulación de una obra
 
 {% raw %}
-Este es el primer paso de tu proyecto: **traducir tu modelo de Odoo a tablas de base de datos ABAP**, sin escribir todavía código en el sistema. El resultado será el germen de `docs/diseno.md` en el repositorio `erp-obras-reformas-sap`.
+Cerramos el Bloque 1 con dos entregas. La primera es una **simulación**: una clase que recorre en memoria la vida completa de una obra (presupuesto, aprobación, partes, costes externos, cobros) e imprime su ficha financiera después de cada paso. El modelo es la simulación del taller, que verás a continuación. La segunda es el **diseño de las tablas** de todo el ERP, que construiremos en el Bloque 2.
 
-## Qué tienes que entregar
+Es un proyecto de integración: no aparece ningún concepto nuevo de importancia, sino que se combina lo de todo el bloque.
 
-Para las **4 entidades del núcleo** (Clientes, Obras, Presupuestos con líneas e Ingresos):
-
-1. La tabla con prefijo `ZGOR_`: campos, tipos ABAP y clave.
-2. Las relaciones: Many2one → campo con el UUID del padre; One2many con borrado en cascada → tabla hija; Many2many → tabla de asociación.
-3. Qué campos `compute` con `store=True` se guardan y cuáles se recalcularán al vuelo.
-
-El resto de modelos (Gastos, Trabajadores, Especialistas, Proveedores, Partes de trabajo) puedes dejarlos para más tarde.
-
-## Tabla de equivalencias de tipos
-
-| Odoo | ABAP Cloud (tabla) |
+| Apartado | Qué aporta al proyecto |
 |---|---|
-| Char | `abap.char(n)` o `string` |
-| Text | `abap.string` o `abap.char(255)` |
-| Integer | `abap.int4` |
-| Float / Monetary | `abap.curr(15,2)` con campo de moneda `abap.cuky` |
-| Date | `abap.dats` |
-| Datetime | `abap.utclong` o timestamp |
-| Selection | `abap.char(1)` con la lista de valores en el código |
-| Boolean | `abap.char(1)` o `abap_boolean` |
-| Many2one | campo con el UUID del registro padre |
-| Binary (archivo) | `abap.rawstring` (con precauciones, ver [7.1](7_1_mapaEntidades.html)) |
+| 1.1 Clases ejecutables | `ZCL_GOR_SIMULACION` es una clase de consola |
+| 1.2 Tipos | `ZIF_GOR_TIPOS`; importes en `decfloat34`; plantillas para la ficha |
+| 1.3 Flujo y cadenas | Estados de pago, salud, códigos y etiquetas |
+| 1.4 Tablas internas | Presupuestos de la obra, líneas de parte, ingresos, quién participa |
+| 1.5 ABAP SQL | Las dos primeras tablas, que sirven de modelo para el diseño |
+| 1.6 Objetos | `ZCL_GOR_PRESUPUESTO`, `ZCL_GOR_TRABAJADOR`, `ZCL_GOR_PARTE_TRABAJO` |
+| 1.7 Excepciones | Una línea de 25 h se rechaza y la simulación sigue |
+| 1.8 ABAP Unit | La simulación debe imprimir exactamente lo que dice `ltcl_escenario` |
 
-> **Patrón recomendado.** Cada entidad lleva una **clave UUID** (la genera el framework) y, aparte, un **número visible** (el código del negocio, por ejemplo `cliente_id`). Lo verás en [3.7](3_7_numeracion.html).
+## El diseño de la simulación
 
-Respeta la [convención de nombres](B_nombres.html): tablas de 16 caracteres como máximo y sin tildes.
+La simulación no guarda nada en la base de datos: usa objetos y los métodos de la clase de reglas. La parte nueva es su **estructura**. En vez de escribir todo en `main`, se reparte en métodos privados, uno por paso del negocio. Así es la del taller, que recorre el caso `ORD0001` ([0.5](0_5_taller.html)):
+
+```abap
+CLASS zcl_tl_simulacion DEFINITION PUBLIC FINAL CREATE PUBLIC.
+  PUBLIC SECTION.
+    INTERFACES if_oo_adt_classrun.
+  PRIVATE SECTION.
+    TYPES tt_euros TYPE STANDARD TABLE OF zif_tl_tipos=>ty_euros WITH EMPTY KEY.
+
+    DATA mo_out          TYPE REF TO if_oo_adt_classrun_out.
+    DATA mt_presupuestos TYPE zif_tl_tipos=>tt_presupuestos.
+    DATA mt_tramos       TYPE zif_tl_tipos=>tt_tramos.
+    DATA mt_abonos       TYPE tt_euros.
+    DATA mv_recambios    TYPE zif_tl_tipos=>ty_euros.
+    DATA mv_subcontratas TYPE zif_tl_tipos=>ty_euros.
+
+    METHODS presupuestar.
+    METHODS reparar.
+    METHODS abonar
+      IMPORTING iv_cantidad TYPE zif_tl_tipos=>ty_euros.
+    METHODS mostrar_hoja
+      IMPORTING iv_titulo TYPE string.
+ENDCLASS.
+```
+
+- `mo_out` guarda la salida de la consola para que cualquier método pueda escribir, no solo `main`.
+- Los atributos `mt_*` y `mv_*` son el **estado de la orden** durante la simulación. Hacen el papel de las tablas que llegan en el Bloque 2.
+- `main` solo encadena los pasos, así que se lee como la tabla del caso:
+
+```abap
+  METHOD if_oo_adt_classrun~main.
+    mo_out = out.
+    presupuestar( ).
+    mostrar_hoja( `Paso 2: presupuesto aceptado` ).
+    reparar( ).
+    mostrar_hoja( `Paso 4: jornada, recambios y subcontrata` ).
+    abonar( 300 ).
+    mostrar_hoja( `Paso 5: primer abono` ).
+    abonar( 305 ).
+    mostrar_hoja( `Paso 6: orden liquidada` ).
+  ENDMETHOD.
+```
+
+La hoja se calcula siempre a partir del estado actual, con `resumen_orden` (1.8):
+
+```abap
+  METHOD mostrar_hoja.
+    DATA(ls_resumen) = zcl_tl_calculos=>resumen_orden(
+      iv_importe      = zcl_tl_calculos=>importe_orden( mt_presupuestos )
+      iv_mano_obra    = zcl_tl_calculos=>coste_jornada( mt_tramos )
+      iv_recambios    = mv_recambios
+      iv_subcontratas = mv_subcontratas
+      iv_abonado      = REDUCE #( INIT lv_suma = CONV zif_tl_tipos=>ty_euros( 0 )
+                                  FOR lv_cantidad IN mt_abonos
+                                  NEXT lv_suma = lv_suma + lv_cantidad ) ).
+
+    mo_out->write( |--- { iv_titulo } ---| ).
+    mo_out->write( |Importe:      { ls_resumen-importe DECIMALS = 2 }| ).
+    mo_out->write( |Costes:       { ls_resumen-costes DECIMALS = 2 }| ).
+    mo_out->write( |Rendimiento:  { ls_resumen-rendimiento DECIMALS = 2 }| ).
+    mo_out->write( |Semaforo:     { ls_resumen-semaforo }| ).
+  ENDMETHOD.
+```
+
+Y así el paso que añade la mano de obra, con el registro de jornada de 1.6 y el aviso de 1.7:
+
+```abap
+  METHOD reparar.
+    DATA(lo_jornada) = NEW zcl_tl_jornada( ).
+    TRY.
+        lo_jornada->add_tramo( io_mecanico = NEW zcl_tl_mecanico( iv_ref = 'MEC0001' ) iv_tiempo = 3 ).
+        lo_jornada->add_tramo( io_mecanico = NEW zcl_tl_mecanico( iv_ref = 'MEC0002' iv_tarifa = 35 )
+                               iv_tiempo   = 2 ).
+      CATCH zcx_tl_aviso INTO DATA(lx_aviso).
+        mo_out->write( lx_aviso->get_text( ) ).
+    ENDTRY.
+    mt_tramos       = lo_jornada->tramos( ).
+    mv_recambios    = 180.
+    mv_subcontratas = 60.
+  ENDMETHOD.
+```
+
+## El diseño de las tablas
+
+La segunda entrega es un documento: el diseño de **todas** las tablas del ERP, a partir del modelo relacional del informe (§12.2). En 1.5 ya hiciste dos (`zgor_cli` y `zgor_obra`); ahora toca el resto, sobre el papel. En 2.1 las crearemos en el sistema y podrás comparar tu diseño con el definitivo.
+
+**Tabla de tipos** (Odoo → tabla ABAP):
+
+| Odoo | Tabla ABAP | Notas |
+|---|---|---|
+| `Char` | `abap.char(n)` | Elige `n` según el dato: códigos 8, NIF 12, teléfono 20, nombres 60–80, direcciones 120 |
+| `Text` | `abap.char(255)` | Para descripciones; las bitácoras usan `abap.string(0)` |
+| `Integer` | `abap.int4` | |
+| `Float` / `Monetary` | `abap.dec(15,2)` | Horas `abap.dec(5,2)`, IVA `abap.dec(5,2)`. La moneda es siempre EUR (§12.1); se añade en 6.2 |
+| `Date` | `abap.dats` | |
+| `Datetime` automático | Los cinco campos `abp_*` de administración | Autor y fecha de las bitácoras salen de ahí |
+| `Selection` | `abap.char(15)` | Con los valores en minúscula de Odoo: `aprobado`, `pendiente`… |
+| `Boolean` / sí-no | `abap_boolean` | |
+| `Many2one` | `<entidad>_uuid : sysuuid_x16` | El UUID del registro padre |
+| `One2many` | Nada | Es la FK del hijo vista desde el padre |
+| `Many2many` | Tabla puente con dos UUID | Solo las informativas; las calculadas se sacan de los partes (§12.2) |
+| `Binary` (adjunto) | `abap.rawstring(0)` + `mimetype` + `nombre_archivo` | Con un tamaño razonable; lo veremos en 3.6 |
+
+**Qué se guarda y qué no.** Cada campo calculado de Odoo cae en uno de estos tres casos:
+
+| Caso | Dónde se calcula | Ejemplos |
+|---|---|---|
+| Cambia mientras se edita el registro y depende **solo de él** (o de sus hijos) | Se **guarda**, y lo recalcula una *determination* de RAP llamando a `ZCL_GOR_REGLAS` (Bloque 3) | Total de línea, base, cuota y total del presupuesto; coste de línea y totales del parte; días de una falta; total del proveedor |
+| Depende de **otros** registros | **No se guarda**: lo calcula una vista CDS al leer (Bloque 2) | Total de la obra, gastos, ingresos, beneficio, debe, estado de pago, salud; horas del trabajador; participantes |
+| Se **copia** una vez y no cambia | Se guarda; lo copia una *determination* al elegir el dato de origen | Datos del cliente en el presupuesto; tarifa en la línea del parte |
+
+## Preparación del entorno de trabajo
+
+La clase de la simulación va en `ZGOR_TEST`. El diseño es un fichero Markdown en el repositorio del proyecto, `erp-obras-reformas-sap`: si aún no lo tienes clonado en tu equipo, créalo ahora en GitHub (vacío y público) y clónalo con `git clone`. Al terminar, el proyecto queda así:
+
+```
+ZGOR
+├── ZGOR_DDIC   zgor_cli, zgor_obra                                    (1.5)
+├── ZGOR_BUS    ZIF_GOR_TIPOS, ZCL_GOR_REGLAS, ZCX_GOR_REGLA,
+│               ZCL_GOR_PRESUPUESTO, ZCL_GOR_TRABAJADOR, ZCL_GOR_PARTE_TRABAJO
+└── ZGOR_TEST   ZCL_GOR_INICIO, ZCL_GOR_TIPOS_DEMO, ZCL_GOR_SQL_DEMO,
+                ZCL_GOR_OO_DEMO, ZCL_GOR_EXC_DEMO,
+                ZCL_GOR_SIMULACION                                     ← nueva
+
+erp-obras-reformas-sap/
+└── docs/
+    ├── diseno.md                                                      ← nuevo
+    └── odoo/informe-tecnico.md                                        ← copia del informe
+```
 
 ## Ejercicios
 
-1. **Diseño del núcleo.** Entrega el diseño de las 4 entidades: campos, tipos, claves y relaciones.
-2. **DDL de Clientes.** Escribe el DDL de la tabla de Clientes con la sintaxis de [2.1](2_1_tablas.html) (aunque aún no la actives).
-3. **Subida al repo.** Guarda el diseño en `docs/diseno.md` del repositorio `erp-obras-reformas-sap` y pásaselo a Claude para revisarlo antes de tocar el sistema.
+1. **El esqueleto.** Crea `ZCL_GOR_SIMULACION` en `ZGOR_TEST`, con la misma estructura que la del taller: atributos para el estado de la obra (presupuestos, líneas de parte, ingresos, coste de proveedores y de especialistas) y cuatro métodos privados, `presupuestar`, `trabajar`, `cobrar( iv_importe )` e `imprimir_ficha( iv_titulo )`. Su `main` debe recorrer los pasos 3, 6, 7 y 8 de §12.7, imprimiendo la ficha después de cada uno.
+2. **Presupuestar.** Con `ZCL_GOR_PRESUPUESTO`: una línea de 10 uds a 100 €, aprobada. Guarda el presupuesto en el estado de la obra con su código (`formatear_codigo`), su estado y su total. Escribe en la consola la etiqueta del cliente de la obra (Juan Pérez López, `CLI0001`, NIF 12345678Z) y el total del presupuesto.
+3. **La ficha.** `imprimir_ficha` debe escribir **todos** los campos de `ty_kpi_obra`, calculados con `kpi_obra`: total, gastos, ingresos, beneficio, debe, margen, porcentaje cobrado (con 1 decimal), estado de pago, salud y estado del gasto. La ficha del paso 3 debe mostrar total 1210.00, gastos 0.00 y estado `pendiente`.
+4. **Trabajar.** Con `ZCL_GOR_PARTE_TRABAJO`: dos trabajadores a 20 €/h con 8 h cada uno, más 200 € de proveedor y 150 € de especialista. Si se lanza `ZCX_GOR_REGLA`, escribe su texto.
+5. **Cobrar.** Añade el importe a los ingresos. Ejecuta la simulación completa: las fichas de los pasos 7 y 8 deben coincidir **una a una** con los valores de `ltcl_escenario` (1.8).
+6. **Una línea imposible.** En `trabajar`, después de las dos líneas buenas, intenta añadir una de 25 h. La simulación debe escribir el mensaje del error y seguir: el coste del parte sigue siendo 320.
+7. **Quién trabajó.** Añade al final de `main` un listado de los participantes de la obra (`participantes`) y de sus horas (`horas_por_trabajador`).
+8. **Una obra con pérdidas.** Añade un segundo recorrido con otra obra: presupuesto de 1 línea de 2000 € con IVA 10, aprobado; 60 h de un trabajador a 20 €/h; un proveedor de 1500 €; un cobro de 2200 €. Antes de ejecutar, calcula a mano qué ficha esperas (estado de pago, salud y beneficio) y apúntalo en un comentario. Después comprueba. Para no mezclar estados, vacía los atributos con `CLEAR` antes de empezar la segunda obra.
+9. **El diseño de tablas.** Crea `docs/diseno.md` en `erp-obras-reformas-sap` con una sección por tabla. Usa como modelo `zgor_cli` y `zgor_obra` de 1.5 y la tabla de tipos de la sección «El diseño de las tablas». Para cada una: nombre (como mucho 16 caracteres, sin tildes; ver el [Anexo B](B_nombres.html)), columnas con tipo, clave y relaciones, y en qué caso de «qué se guarda» cae cada campo calculado de Odoo. Las entidades son las diez raíces del informe (Clientes, Trabajadores, Proveedores, Especialistas, Presupuestos, Obras, Ingresos y los tres tipos de parte) más sus tablas hijas: líneas de presupuesto y de parte, faltas, la ficha de gastos y las dos relaciones N:M informativas de los presupuestos. Las tablas satélite (observaciones, incidencias y adjuntos) basta con describirlas una vez, porque todas tienen la misma forma (§2 del informe).
+10. **Copia del informe.** Guarda el informe técnico de Odoo en `docs/odoo/informe-tecnico.md` del mismo repositorio: los apuntes citan sus secciones. Haz commit y push de los dos ficheros.
 
+## Comprueba tu solución
+
+No hay test automático de la simulación, porque es una salida por consola. Para comprobarla:
+
+- Las fichas de los pasos 7 y 8 deben coincidir con [1_8_ltcl_escenario.abap](materiales/tests/1_8_ltcl_escenario.abap).
+- Clic derecho en `ZGOR` → **Run As → ABAP Unit Test**: todos los tests del bloque en verde. Son 34 en `ZCL_GOR_REGLAS`, 3 en `ZCL_GOR_PRESUPUESTO` y 3 en `ZCL_GOR_PARTE_TRABAJO`: **40 en total**.
+- Del diseño, lo importante es que cada campo calculado tenga claro su caso. En [2.1](2_1_tablas.html) verás la versión definitiva: anota las diferencias con la tuya y por qué.
 
 ---
 
-**Siguiente:** [2.1. Tablas persistentes en ADT](2_1_tablas.html)
+**Siguiente:** [2. Modelo de datos con CDS](bloque_B2.html)
 
 [Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/1_9_proyecto.md){: .fs-2 }
 {% endraw %}

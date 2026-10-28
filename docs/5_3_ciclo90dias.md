@@ -7,45 +7,56 @@ nav_order: 3
 # 5.3. El ciclo de 90 días
 
 {% raw %}
-El trial de SAP BTP dura **90 días desde el registro** y al final se elimina la cuenta con sus datos. Hay que iniciar sesión al menos cada **30 días**. Después se puede abrir un trial nuevo. La documentación no dice nada de la duración de la instancia ABAP: **consúltalo en el cockpit** y apúntalo.
+El trial de SAP BTP dura **90 días desde el registro**. Al terminar, se elimina la cuenta con todo lo que contiene. Además, hay que **iniciar sesión al menos cada 30 días**: si no, se puede cerrar antes. Después se puede abrir un trial nuevo y empezar de cero. La página de SAP no dice cuánto dura la **instancia ABAP** dentro del trial: **consúltalo en el cockpit** (en la instancia del servicio ABAP) y apúntalo.
 
-## Estrategia
+Con estas reglas, el sistema SAP es **desechable**. Lo que no se puede perder es el repositorio.
 
-- El **GitHub es la copia de seguridad**; el sistema es desechable.
-- Un repositorio por tipo de trabajo: ejercicios (`abap-ejercicios`) y proyecto (`erp-obras-reformas-sap`).
-- Datos de prueba reproducibles con `herramientas/generar_carga.py`.
+## Qué se guarda y dónde
 
-## Calendario
+| Qué | Dónde está a salvo | Cómo se recupera |
+|---|---|---|
+| Código: tablas, vistas, BDEF, clases, servicios | GitHub, con abapGit (5.2) | *Pull* |
+| Datos de prueba | `ZCL_GOR_DATOS_DEMO` (2.5), que está en GitHub con el código | Ejecutarla |
+| Diseño, decisiones, capturas | `docs/` del repositorio | Ya están |
+| Usuario, *bindings* publicados, configuración del cockpit | **En ningún sitio** | Repetir a mano: apúntalo en el anexo [Restaurar](RESTAURAR.html) |
+
+Por eso los datos de demo se crean con una clase y no a mano: así forman parte del código.
+
+## El calendario
 
 | Día | Qué hacer |
 |---|---|
-| 0 | Registro. Apunta la fecha y genera recordatorios (`generar_recordatorios.py`) |
+| 0 | Registro. Apunta la fecha y genera los recordatorios con `herramientas/generar_recordatorios.py` |
 | Cada ≤ 30 | Inicia sesión en el cockpit (evita el cierre por inactividad) |
-| ~60 | Revisa que todo está subido y probado |
-| ~75 | **Copia de seguridad final**: push de todo, descarga de datos |
+| ~60 | Revisa que todo está subido; ensayo de restauración si no lo has hecho (5.4) |
+| ~75 | **Copia final**: tests en verde, ATC y *push* de todo. Comprueba en GitHub el último commit |
 | 90 | Caducidad |
-| 90+ | Nuevo trial y [restauración](RESTAURAR.html) |
+| 90+ | Trial nuevo y [restauración](RESTAURAR.html) |
 
-## Restaurar en un trial nuevo
+```bash
+python3 herramientas/generar_recordatorios.py 2026-12-01 > trial.ics
+```
 
-1. Registra el trial nuevo y ejecuta el booster «Prepare an Account for ABAP Trial».
-2. Conecta ADT con la nueva instancia.
-3. Enlaza los repositorios con abapGit y haz **Pull** (primero el de ejercicios, luego el proyecto).
-4. Activa los objetos y recarga los datos de prueba.
-5. Comprueba el servicio y la app.
+Importa `trial.ics` en tu calendario. El fichero está en `.gitignore`: no se sube.
 
-El documento paso a paso está en `RESTAURAR.md` de cada repositorio.
+## Planificar los ciclos
+
+En 90 días caben, con margen, los Bloques 2 a 5 si trabajas con regularidad. Una forma de repartirlo (ajústala en el [Anexo D](D_planificacion.html)):
+
+- **Antes del trial:** el Bloque 1 casi entero se puede escribir y razonar sin sistema; pruébalo en cuanto abras el trial.
+- **Primer trial:** Bloques 1 a 5, con un ensayo de restauración hacia el día 60.
+- **Segundo trial:** restaurar y seguir con los Bloques 6 y 7.
 
 ## Ejercicios
 
-1. **Fecha.** Apunta tu fecha de registro y calcula las fechas clave.
-2. **Simulacro.** Haz un pull en un paquete nuevo para comprobar que el repositorio es completo.
-3. **Lo que no se guarda.** Haz una lista de lo que abapGit **no** guarda (usuarios, configuración del cockpit, datos) y dónde lo anotas.
-
+1. **Fechas.** Apunta tu fecha de registro, la de caducidad y las de los avisos. Genera los recordatorios.
+2. **La instancia.** Busca en el cockpit cuánto dura tu instancia ABAP y si coincide con la cuenta. Anótalo en el anexo de restauración.
+3. **Lo que no se guarda.** Completa la lista de la tabla con todo lo que has configurado a mano desde 0.1 (usuarios, *bindings* publicados, ajustes de Eclipse…) y dónde lo anotas.
+4. **Investiga.** ¿Qué pasa con los objetos que creaste en `ZLOCAL` si el trial es compartido y caduca **tu** cuenta? ¿Siguen ahí para los demás? Anota lo que encuentres y la fuente.
 
 ---
 
-**Siguiente:** [5.4. Proyecto: control de calidad y copia](5_4_proyecto.html)
+**Siguiente:** [5.4. Proyecto: ensayo de restauración](5_4_proyecto.html)
 
 [Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/5_3_ciclo90dias.md){: .fs-2 }
 {% endraw %}

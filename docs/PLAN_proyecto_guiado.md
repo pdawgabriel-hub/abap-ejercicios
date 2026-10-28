@@ -4,9 +4,11 @@ nav_exclude: true
 ---
 
 {% raw %}
-# Plan de reorganización: los apuntes como proyecto guiado (ZGOR) · v1
+# Plan de reorganización: los apuntes como proyecto guiado (ZGOR) · v2
 
-**Objetivo:** que los ejercicios de los apuntes construyan, unidad a unidad, el **ERP de Obras y Reformas**: el port del módulo `gestion_bd` (Odoo 18) a RAP / ABAP Cloud, en el paquete `ZGOR`. Así, al terminar el Bloque 5 la aplicación funciona y al terminar el Bloque 7 el repositorio `erp-obras-reformas-sap` está listo como portfolio. El modelo es el REA del profesor (`marcapersonalFP_REA`, 0613 Servidor): cada unidad explica con el código del proyecto, los ejercicios son pasos concretos y acumulativos, y cada bloque se cierra con una unidad de **Proyecto** que integra lo visto.
+> **Cambios en la v2 (28/10/2026), ya aplicados en los apuntes.** (1) La teoría vuelve a explicarse con un **proyecto de ejemplo**, el taller RuedaLibre ([0.5](0_5_taller.html)), con **otros nombres** a propósito; los ejercicios especifican el objeto del ERP (campos, datos y resultado esperado) pero **sin código**, y los tests lo comprueban. Sustituye al patrón «guiado + réplica» de la v1. (2) Se resuelven las dudas de diseño del apartado 6. (3) Los derivados que cambian al editar un registro se **guardan** con *determinations*; solo los que dependen de otros BO se calculan en CDS (apartado 3.3).
+
+**Objetivo:** que los ejercicios de los apuntes construyan, unidad a unidad, el **ERP de Obras y Reformas**: el port del módulo `gestion_bd` (Odoo 18) a RAP / ABAP Cloud, en el paquete `ZGOR`. Así, al terminar el Bloque 5 la aplicación funciona y al terminar el Bloque 7 el repositorio `erp-obras-reformas-sap` está listo como portfolio. El modelo es el REA del profesor (`marcapersonalFP_REA`, 0613 Servidor): cada unidad explica con código completo de un proyecto de ejemplo, los ejercicios son pasos concretos y acumulativos sobre el ERP, y cada bloque se cierra con una unidad de **Proyecto** que integra lo visto.
 
 **Referencia funcional:** el *Informe Técnico — Módulo `gestion_bd`* (septiembre de 2026). En este plan, «§11.2» significa la sección 11.2 de ese informe. Las secciones que se usan son la 11 (reglas de negocio), la 12.2 (modelo relacional), la 12.6 (orden de implementación) y la 12.7 (casos de prueba).
 
@@ -19,14 +21,16 @@ nav_exclude: true
 | Método | Primero este plan; después se reescribe unidad a unidad, revisando cada una antes de pasar a la siguiente |
 | Nombre | **ERP de Obras y Reformas**. Repo `erp-obras-reformas-sap`; el paquete sigue siendo `ZGOR`. El módulo de Odoo conserva su nombre, `gestion_bd` |
 | IDE | **Eclipse con ADT** en los apuntes, en Linux; anexo F con las equivalencias en VS Code, que se escribe después de probarlo en el trial |
+| Ejemplos de la teoría | **Taller RuedaLibre** (prefijo `ZTL`, paquete `ZEJ`), con todas las funcionalidades de `gestion_bd` y nombres distintos (titular, mecánico, orden de reparación, hoja de costes, abono…). Los ejercicios no traen código; los tests de `docs/materiales/tests/` los comprueban |
+| Draft | En **todas** las BO |
 | Commits | Los hace Gabriel |
 
 ## 1. Qué cambia respecto a la versión actual
 
 | Hoy | Después |
 |---|---|
-| La teoría usa un **taller de coches** (`ztl_vehiculo`, `ZI_TlOrden`, `zcl_tl_*`), los ejercicios usan clases `ZCL_EJ_*` y los proyectos usan `ZGOR`: tres dominios distintos | Un solo dominio. Los ejemplos de teoría **son** objetos de `ZGOR` y el ejercicio consiste en crearlos, ampliarlos y comprobarlos |
-| Ejercicios abiertos («escribe una validation para…») | Pasos concretos: «crea `X` con este código», «añade `Y`», «comprueba que sale `Z`», con el resultado esperado |
+| La teoría usa un taller de coches sencillo, los ejercicios usan clases `ZCL_EJ_*` sueltas y los proyectos usan `ZGOR` | Dos proyectos con la misma estructura: el **taller** (ejemplo, con código) y el **ERP** (ejercicios, sin código). Las clases `ZCL_EJ_*` desaparecen |
+| Ejercicios abiertos («escribe una validation para…») | Pasos concretos: «crea `X` con estos campos», «añade el método `Y` con esta firma y esta regla del informe», «comprueba que sale `Z`» |
 | Algunos ejercicios no siguen el informe (por ejemplo, `cerrarObra` con estado `'C'`, o la validación de fechas en Obra) | Cada regla cita su sección del informe; ver la tabla de correcciones en el apartado 7 |
 | El test se pega dentro del `.md` **y** está repetido en `ejercicios/` | Una sola copia en `docs/materiales/tests/`, enlazada desde la unidad, como el `materiales/` del profesor |
 | Bloque 7 «Proyecto gestion_bd» con mapa, fases y lógica al final | El mapa y la lógica pasan a ser material de 1.9 y de los anexos; el Bloque 7 queda como **cierre** (README, comprobación final, explicación en 5 minutos) |
@@ -37,7 +41,7 @@ Igual que en el REA del profesor:
 
 1. `# n.m. Título`
 2. Cita de contexto: «**Bloque n · Título.** Qué llevamos construido y qué añade esta unidad». Solo en la primera unidad del bloque; en las demás, una frase.
-3. Teoría con **ejemplos del propio proyecto**, por secciones `##`.
+3. Teoría con **ejemplos del taller**, con el código completo, por secciones `##`.
 4. `## Preparación del entorno de trabajo`: en qué paquete se trabaja y qué objetos deben existir ya, con enlace a la unidad donde se crearon.
 5. `## Ejercicios`: lista numerada de pasos acumulativos. Cada paso indica el objeto que se crea o modifica y cómo se comprueba (Data Preview, consola, app o test).
 6. `## Comprueba tu solución automáticamente (opcional)`: enlace al test en `materiales/tests/`, cómo se pega (pestaña *Test Classes*), cómo se ejecuta (Ctrl+Shift+F10) y el resultado esperado («N tests en verde»).
@@ -45,10 +49,7 @@ Igual que en el REA del profesor:
 
 Las unidades de **Proyecto** (n.último) llevan además: una tabla «Apartado → Qué aporta al proyecto», un apartado `## El diseño` y el **árbol de objetos del paquete** al terminar, como en 3.8 del profesor.
 
-**Con todas las entidades, ¿no se repite todo diez veces?** Para evitarlo, cada ejercicio sigue el patrón *guiado + réplica*:
-
-- **Guiado:** una entidad representativa, con todo el código. Se elige la que mejor muestra el concepto (ver la columna «Guiada» del apartado 4).
-- **Réplica:** las demás entidades, con una tabla de qué cambia en cada una (campos, reglas, sección del informe) y sin repetir el código. El test comprueba también las réplicas.
+**Ejemplo y ejercicio no coinciden nunca.** La teoría muestra la pieza en el taller; el ejercicio pide la pieza equivalente del ERP con su especificación (objeto, campos y tipos, firma de los métodos, regla del informe, datos y resultado esperado). Como los nombres y algunos detalles de las reglas son distintos (tramos de 10 h frente a líneas de 24 h, porcentaje desde lo abonado frente a desde lo pendiente…), no basta con renombrar: hay que entender la pieza. Con todas las entidades, los ejercicios usan tablas de especificación para no repetir diez veces el mismo enunciado. La columna «Guiada» del apartado 4 queda como referencia de la v1.
 
 ## 3. Modelo RAP de ZGOR
 
@@ -81,7 +82,8 @@ El informe recomienda **calcular al leer** (§12.3), y en RAP eso es lo natural:
 
 | Tipo de dato | Dónde | Ejemplos |
 |---|---|---|
-| Derivado (Odoo `compute`) | **CDS**: campo calculado o vista de agregados (`ZI_GorPresuTotales`, `ZI_GorObraFinanzas`, `ZI_GorTrabAcum`) | `total_linea`, base, cuota y total del presupuesto, `obra.total`, horas y coste MOO, gastos, ingresos, `beneficio_real`, `debe`, `margen_proyectado`, `porcentaje_cobrado`, `estado_pago`, `salud_obra`, `falta.dias`, `proveedor.total` |
+| Derivado que cambia mientras se edita el registro | **Se guarda**: *determination on modify* que llama a `ZCL_GOR_REGLAS` (con *draft*, un campo calculado en CDS no se refresca durante la edición) | `total_linea`, base, cuota y total del presupuesto, `coste_subtotal` y totales del parte, `falta.dias`, `proveedor.total` |
+| Derivado que depende de **otros** BO | **CDS**: vistas de agregados (`ZI_GorObraTotal`, `ZI_GorObraImportes`, `ZI_GorObraFinanzas`, `ZI_GorTrabAcum`) | `obra.total`, horas y coste MOO, gastos, ingresos, `beneficio_real`, `debe`, `margen_proyectado`, `porcentaje_cobrado`, `estado_pago`, `salud_obra`, acumulados del trabajador, participantes |
 | Congelado (se copia una vez, §11.5 puntos 3 y 4) | **Determination *on modify*** | Datos del cliente en el presupuesto; `coste_hora` en la línea del parte |
 | Código visible (§10) | **Determination *on save*** (ver 3.7) | `CLI0001`, `TRB0001`, `PROV0001`, `ESP0001`, `PREP0001`, `OBR0001`, `GAS0001`, `ING0001` |
 | Validaciones (§11.4) | **Validations**, que llaman a `ZCL_GOR_REGLAS` (creada en el Bloque 1) | IVA 0..100, horas 0..24, importe > 0, fechas, mismo cliente |
@@ -110,7 +112,7 @@ Todo el bloque construye **`ZCL_GOR_REGLAS`**: las fórmulas de §11.2 y las val
 | 1.2 Tipos | `ZIF_GOR_TIPOS`: tipos de importe, código, estado y una estructura por entidad. En `ZCL_GOR_REGLAS`: `total_linea`, `cuota_iva` y `total_presupuesto` con redondeo (§11.2 *Presupuesto*) | Presupuesto | `1_2_ltcl_presupuesto.abap` |
 | 1.3 Flujo y cadenas | `estado_pago`, `salud_obra`, `estado_gasto` y `porcentaje_cobrado` acotado (§11.2 *Obra*); `formatear_codigo( 'CLI', 7 )` → `CLI0007`; `coincide_busqueda( )`, la búsqueda por palabras de §11.5.10 | Obra | `1_3_ltcl_estados.abap` |
 | 1.4 Tablas internas | Sumas sobre tablas: base del presupuesto, `obra.total` solo con presupuestos aprobados, coste MOO a partir de líneas de parte, participantes distintos y top de trabajadores por horas | Obra | `1_4_ltcl_sumas.abap` |
-| 1.5 ABAP SQL | Primeras tablas: `zgor_cli` y `zgor_trab`. `ZCL_GOR_SQL_DEMO`: insertar, leer, agrupar, actualizar y borrar sobre ellas (sustituye a `ztl_propietario` y `ztl_vehiculo`) | Cliente | — |
+| 1.5 ABAP SQL | Primeras tablas: `zgor_cli` y `zgor_obra` (para poder unir). `ZCL_GOR_SQL_DEMO`: insertar, leer, agrupar, unir, actualizar y borrar | Cliente | — |
 | 1.6 ABAP OO | `ZCL_GOR_PRESUPUESTO` (objeto con líneas: `add_linea`, `base`, `cuota`, `total`) y `ZCL_GOR_PARTE_TRABAJO` (líneas con tarifa congelada, §11.5.3) | Presupuesto | `1_6_ltcl_objetos.abap` |
 | 1.7 Excepciones | `ZCX_GOR_REGLA` y `ZCL_GOR_REGLAS=>validar_*` para cada fila de §11.4 que no depende de otra entidad | Línea de parte (0..24 h) | `1_7_ltcl_validaciones.abap` |
 | 1.8 ABAP Unit | Qué es un test; se repasan los anteriores y se escribe el **escenario de §12.7, pasos 2 a 8**, sobre `ZCL_GOR_REGLAS` en memoria | — | `1_8_ltcl_escenario.abap` |
@@ -198,13 +200,15 @@ En `erp-obras-reformas-sap` conviene guardar el informe técnico en `docs/odoo/i
 
 ## 6. Puntos que hay que verificar en el sistema
 
-Ninguno bloquea empezar el Bloque 1. Hay que resolverlos antes de la unidad indicada; si el sistema no permite la opción prevista, se usa la alternativa.
+**Estado en la v2:** las decisiones de diseño están tomadas y escritas en los apuntes (columna «Opción prevista»; el borrado de la obra, con **guardado adicional** y SQL en lugar de una acción; el *draft*, en **todas** las BO; el gasto, con `internal create`). Lo que sigue pendiente es **comprobarlo en el sistema**; si algo no funciona, se usa la alternativa.
 
 | Antes de | Duda | Opción prevista | Alternativa |
 |---|---|---|---|
-| 3.1 | ¿*Draft* o no? Con draft, la app de Fiori se comporta como Odoo (guardar o descartar), pero cada tabla necesita otra de draft | Con draft en las raíces que se editan con hijos (Presupuesto, Obra, Parte de Trabajo) | Sin draft en todas |
+| 3.1 | ¿*Draft* o no? | Con draft en **todas** las BO | Sin draft |
+| 3.3 | Borrar una línea no dispara su determination | `Prepare` con `determination ( always )` | `delete` como disparador, si la versión lo admite |
+| 3.8 | Dobles de prueba: ¿bastan los de tablas (`cl_osql_test_environment`) para los tests con EML? | Tablas dobladas; vistas con `cl_cds_test_environment` | Añadir dobles CDS también en los tests de comportamiento |
 | 3.3 | Gasto como hijo `[0..1]` de Obra: ¿se puede crear el hijo en una determination *on save* de la raíz? | Sí, con `MODIFY ENTITIES … CREATE BY \_Gasto` | Determination *on modify* al crear la obra |
-| 3.5 | Borrar una obra **sin** ingresos tiene que borrar sus partes, que son **otras BO** (§11.5.12) y desvincular los presupuestos. ¿Se puede modificar otra BO durante el borrado? | Acción `borrarObra` que hace el EML a las otras BO en la fase de interacción, y `delete` estándar desactivado | Partes como hijos de Obra (el borrado sería automático, pero la app de partes quedaría bajo la obra) |
+| 3.5 | Borrar una obra **sin** ingresos tiene que borrar sus partes, que son **otras BO** (§11.5.12) y desvincular los presupuestos | `managed with additional save`: el guardado de la obra borra con SQL sus partes y desvincula sus presupuestos; `delete ( features : instance, precheck )` impide borrar si hay ingresos | Partes como hijos de Obra |
 | 3.5 | El asistente de §3.15 modifica el presupuesto desde la obra | Acción en **Presupuesto** (`vincularAObra`, con parámetro de obra y ayuda filtrada por cliente): solo modifica su propia BO | Acción en Obra con EML a otra BO |
 | 3.7 | API de rangos de números (`CL_NUMBERRANGE_RUNTIME`) | Rango de números | Máximo + 1, explicado en el README |
 | 4.3 | Búsqueda «Juan Pérez» con nombre y apellidos en columnas distintas (§11.5.10) | `@Search.defaultSearchElement` en nombre, apellidos, NIF y teléfono, y comprobar cómo combina las palabras | Campo calculado `NombreCompleto` buscable |
@@ -222,12 +226,7 @@ Ninguno bloquea empezar el Bloque 1. Hay que resolverlos antes de la unidad indi
 
 ## 8. Orden de ejecución
 
-1. Revisar este plan y cerrar los cambios.
-2. Bloque 1 completo: unidades 1.1 a 1.9 y sus tests en `materiales/tests/`. Es el único bloque que se puede escribir entero antes de abrir el trial, porque solo necesita ABAP sin tablas, salvo 1.5.
-3. `index.md`, `bloque_B*.md` y `B_nombres.md`.
-4. Bloques 2 a 5, de uno en uno. Al empezar cada uno, resolver sus filas del apartado 6.
-5. Bloques 6 y 7 y el anexo E.
-6. Eliminar `ejercicios/` y los restos del taller (`ZTL`).
+Hecho en la v2 (28/10/2026): todas las unidades de los bloques 0 a 7, los anexos (B a F y Restaurar), `index.md`, las portadas de bloque y 13 ficheros de test en `materiales/tests/`. Se han eliminado `ejercicios/`, el `RESTAURAR.md` de la raíz y las antiguas unidades 7.1 a 7.4.
 
-Cada unidad se reescribe fichero a fichero y se revisa antes de pasar a la siguiente.
+Pendiente: compilar todo contra un sistema real y corregir lo que falle (empezando por el Bloque 1 y los tests de RAP de 3.3 a 3.8, los menos verificados); probar VS Code para completar el anexo F.
 {% endraw %}

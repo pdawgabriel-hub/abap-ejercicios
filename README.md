@@ -1,37 +1,20 @@
 # abap-ejercicios
 
-Apuntes y ejercicios de **SAP ABAP Cloud y RAP** (SAP BTP ABAP Environment, trial gratuito).
+Apuntes en español para aprender **SAP ABAP Cloud y RAP** construyendo un proyecto real.
 
-- Apuntes: https://pdawgabriel-hub.github.io/abap-ejercicios/
-- Proyecto asociado: https://github.com/pdawgabriel-hub/erp-obras-reformas-sap
+- **Apuntes:** https://pdawgabriel-hub.github.io/abap-ejercicios/
+- **Proyecto:** https://github.com/pdawgabriel-hub/erp-obras-reformas-sap
 
-## Contenido
+## Para qué es este repositorio
 
-| Carpeta | Qué hay |
-|---|---|
-| `docs/` | El sitio de apuntes (Jekyll, tema just-the-docs) |
-| `ejercicios/` | Esqueletos de clase y sus tests de ABAP Unit |
-| `herramientas/` | Scripts: cargador de datos desde CSV, recordatorios del trial, instalador de Eclipse |
-| `src/` | **Lo genera abapGit** al hacer push del paquete `ZEJ`. No se escribe a mano |
+Lo escribí para prepararme las prácticas de 2º de DAW (CIFP Carlos III) en una empresa que trabaja con SAP. En vez de hacer ejercicios sueltos, el objetivo es reimplementar en SAP una aplicación que ya funciona: `gestion_bd`, el módulo de Odoo que desarrollé para una empresa de construcción y reformas y que usa en producción.
 
-## Publicar los apuntes
+Los apuntes se organizan como un proyecto guiado, en ocho bloques que van del lenguaje ABAP hasta las apps Fiori, la calidad del código y la publicación en GitHub:
 
-1. Sube el repositorio a GitHub.
-2. *Settings, Pages*: origen **Deploy from a branch**, rama `main`, carpeta `/docs`.
-3. La web queda en la URL de arriba (tarda un par de minutos).
+- **La teoría** se explica con un proyecto de ejemplo, un taller mecánico, con el código completo.
+- **Los ejercicios** construyen, pieza a pieza, el **ERP de Obras y Reformas**, tomando el taller como modelo pero sin copiar su código.
+- **Los tests** de ABAP Unit de cada unidad comprueban si cada pieza del ERP está bien.
 
-Si el tema no carga, se puede fijar una versión del tema en `docs/_config.yml`
-(`remote_theme: just-the-docs/just-the-docs@v0.10.0`) o probar en local con `docs/Gemfile`.
+El resultado de los ejercicios vive en su propio repositorio, [erp-obras-reformas-sap](https://github.com/pdawgabriel-hub/erp-obras-reformas-sap). Este contiene los apuntes, los tests y las herramientas de apoyo. También sirve de copia de seguridad del paquete de pruebas `ZEJ`, porque el sistema de pruebas de SAP caduca cada 90 días.
 
-## Uso de los ejercicios
-
-Cada fichero `ejercicios/zcl_ej_*.abap` es un esqueleto con métodos vacíos (`" TODO`) y
-cada `*_test.abap` su test. Se pegan en Eclipse (ADT) en la clase correspondiente.
-Las instrucciones están en los apuntes.
-
-## Si caduca el trial
-
-Mira `RESTAURAR.md`. El repositorio es la copia de seguridad; el sistema SAP es desechable.
-
-> El código no se ha compilado contra un sistema real. Si algo da error al activar,
-> copia el mensaje exacto y revisa los apuntes.
+> El código de los apuntes se ha escrito siguiendo la documentación de SAP, pero todavía no se ha compilado contra un sistema real.

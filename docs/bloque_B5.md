@@ -7,9 +7,11 @@ permalink: /bloque_B5.html
 
 # 5. Calidad, Git y ciclo de 90 días
 
-Revisar el código, guardarlo en GitHub y sobrevivir a la caducidad del trial.
+Que el proyecto dure: control de calidad, GitHub y la restauración en un trial nuevo.
 
-- [5.1. ATC y calidad de código](5_1_atc.html)
-- [5.2. abapGit: tu código en GitHub](5_2_abapgit.html)
-- [5.3. El ciclo de 90 días](5_3_ciclo90dias.html)
-- [5.4. Proyecto: control de calidad y copia](5_4_proyecto.html)
+| Unidad | Qué aporta |
+|---|---|
+| [5.1. ATC y calidad de código](5_1_atc.html) | El ERP pasa el control de calidad de SAP |
+| [5.2. abapGit: tu código en GitHub](5_2_abapgit.html) | `ZGOR` en `erp-obras-reformas-sap` |
+| [5.3. El ciclo de 90 días](5_3_ciclo90dias.html) | Qué se guarda, dónde y cuándo |
+| [5.4. Proyecto: ensayo de restauración](5_4_proyecto.html) | El ERP reconstruido desde GitHub |
