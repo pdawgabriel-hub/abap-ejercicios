@@ -11,7 +11,7 @@ Quien mire tu repositorio dedicará al README menos de un minuto. Tiene que ente
 
 ## Qué debe contar, en este orden
 
-1. **Qué es, en dos frases.** El ERP de Obras y Reformas: una reimplementación en SAP (ABAP Cloud y RAP) del módulo `gestion_bd` de Odoo, que una empresa de reformas usa en producción.
+1. **Qué es, en dos frases.** El ERP de Obras y Reformas: una reimplementación en SAP (ABAP Cloud y RAP) del módulo `gestion_bd` de Odoo para empresas de reformas.
 2. **Una captura.** La ficha de una obra, con sus tarjetas KPI y el semáforo de salud.
 3. **Qué hace.** Las entidades y el ciclo de negocio (cliente → presupuesto → obra → partes → cobros), en una lista corta o un diagrama.
 4. **Odoo → SAP.** Una tabla breve con la traducción de conceptos: modelo → tabla + vista CDS + BDEF; `compute` → vista CDS o *determination*; `@api.constrains` → *validation*; botón → *action*; vistas XML → anotaciones de Fiori.
@@ -29,7 +29,7 @@ Quien mire tu repositorio dedicará al README menos de un minuto. Tiene que ente
 ## Lo que no va en el README
 
 - El detalle campo a campo: va en `docs/diseno.md`.
-- El informe de Odoo entero: se enlaza (`docs/odoo/informe-tecnico.md`).
+- El informe de Odoo entero: se enlaza (`docs/odoo/informe-tecnico.md`), y solo en su versión sin datos de la empresa (1.9).
 - Datos personales de la empresa o de sus clientes: **nunca**. Ni en el README ni en las capturas (usa los datos de demo de 2.5).
 
 ## Ejercicios

@@ -22,7 +22,7 @@ ABAP Cloud no es otro lenguaje: es el mismo ABAP con **reglas más estrictas** y
 | Crear tablas | SE11 (SAP GUI) | Código en Eclipse (*Database Table*) |
 | Herramienta | SAP GUI (SE80, SE24…) | Eclipse con ADT |
 
-> **Para tus prácticas.** Si el cliente usa S/4HANA Cloud, el código nuevo será ABAP Cloud. Si es on-premise, puede seguir en clásico o adoptar RAP. Aprender RAP cubre ambos casos y el lenguaje (tablas internas, SQL, clases) es el mismo. Lo que verás en clásico está resumido en el [Anexo A](A_clasico.html).
+> **En un proyecto de empresa.** Si el cliente usa S/4HANA Cloud, el código nuevo será ABAP Cloud. Si es on-premise, puede seguir en clásico o adoptar RAP. Aprender RAP cubre ambos casos y el lenguaje (tablas internas, SQL, clases) es el mismo. Lo que verás en clásico está resumido en el [Anexo A](A_clasico.html).
 
 ## Cómo está organizado SAP BTP
 

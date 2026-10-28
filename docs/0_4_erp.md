@@ -7,9 +7,9 @@ nav_order: 4
 # 0.4. Guía técnica del ERP de Obras y Reformas
 
 {% raw %}
-El **ERP de Obras y Reformas** es tu proyecto: la reimplementación en SAP (ABAP Cloud y RAP) del módulo `gestion_bd` de Odoo 18 que usa una empresa de construcción y reformas. Esta guía describe **lo que vas a construir**: su modelo de datos, sus objetos de negocio y todas sus funcionalidades, con la unidad de los apuntes donde se construye cada una.
+El **ERP de Obras y Reformas** es tu proyecto: la reimplementación en SAP (ABAP Cloud y RAP) del módulo `gestion_bd` de Odoo 18 para empresas de construcción y reformas. Esta guía describe **lo que vas a construir**: su modelo de datos, sus objetos de negocio y todas sus funcionalidades, con la unidad de los apuntes donde se construye cada una.
 
-La referencia funcional es el *Informe Técnico — Módulo `gestion_bd`* (septiembre de 2026), que guardarás en `docs/odoo/informe-tecnico.md` del repositorio del proyecto. En los apuntes, «§11.2» es su sección 11.2.
+La referencia funcional es el *Informe Técnico — Módulo `gestion_bd`* (septiembre de 2026), que puedes guardar en `docs/odoo/informe-tecnico.md` del repositorio del proyecto (ver la nota de [1.9](1_9_proyecto.html) sobre qué partes quitar antes de publicarlo). En los apuntes, «§11.2» es su sección 11.2.
 
 ## 1. Visión general
 

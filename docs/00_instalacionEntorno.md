@@ -15,7 +15,7 @@ Esta página es la guía práctica para el día en que abras tu cuenta de prueba
 
 1. Una cuenta de pruebas de SAP BTP con una instancia del entorno ABAP.
 2. Eclipse con ABAP Development Tools (ADT) conectado a esa instancia.
-3. Un paquete de prácticas y una clase «Hola mundo» ejecutada.
+3. Un paquete de pruebas y una clase «Hola mundo» ejecutada.
 4. El paquete enlazado con un repositorio de GitHub mediante abapGit.
 
 ## Crear la instancia ABAP (booster)

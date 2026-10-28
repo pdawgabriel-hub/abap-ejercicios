@@ -7,7 +7,7 @@ nav_order: 1
 # 7.1. Comprobación final
 
 {% raw %}
-> **Bloque 7 · Cierre del proyecto.** El ERP está construido. Este último bloque lo convierte en un **portfolio**: comprobar que todo funciona de principio a fin, contarlo bien en el README y saber explicarlo en cinco minutos en las prácticas.
+> **Bloque 7 · Cierre del proyecto.** El ERP está construido. Este último bloque lo convierte en un **portfolio**: comprobar que todo funciona de principio a fin, contarlo bien en el README y saber explicarlo en cinco minutos.
 
 Antes de enseñar el proyecto a nadie, una última pasada con la misma lista que usaría un equipo antes de entregar. Cada punto remite a la unidad donde se hizo.
 

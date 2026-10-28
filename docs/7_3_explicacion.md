@@ -7,13 +7,13 @@ nav_order: 3
 # 7.3. Explicarlo en 5 minutos
 
 {% raw %}
-En las prácticas te preguntarán qué has hecho. Tener preparada una explicación de cinco minutos, con una pequeña demo, marca la diferencia. Esta unidad es un guion para prepararla.
+En una entrevista o en tu primer proyecto con SAP te preguntarán qué has hecho. Tener preparada una explicación de cinco minutos, con una pequeña demo, marca la diferencia. Esta unidad es un guion para prepararla.
 
 ## El guion
 
 | Minuto | Qué cuentas | Qué enseñas |
 |---|---|---|
-| 0:00 - 0:30 | **El problema.** Una empresa de reformas real que necesitaba controlar presupuestos, obras, mano de obra y cobros. Lo resolviste en Odoo y está en producción | — |
+| 0:00 - 0:30 | **El problema.** Una empresa de reformas necesita controlar presupuestos, obras, mano de obra y cobros. La solución original es un módulo de Odoo | — |
 | 0:30 - 1:30 | **El modelo.** Diez objetos de negocio; el ciclo cliente → presupuesto → obra → partes → cobros; la ficha financiera de la obra | El diagrama del README |
 | 1:30 - 3:30 | **La demo.** El escenario de §12.7 resumido: aprobar un presupuesto y ver cambiar el total de la obra; registrar un cobro y ver el semáforo pasar de rojo a verde; intentar borrar una obra con cobros | La app de obras |
 | 3:30 - 4:30 | **Una decisión de diseño.** Elige **una** y explícala bien: por ejemplo, calcular al leer en lugar de guardar los totales, y qué errores del Odoo original evita | El código de `ZI_GorObraFinanzas` o un test |

@@ -6,7 +6,7 @@ nav_order: 0
 # Apuntes de SAP ABAP Cloud y RAP
 
 {% raw %}
-**Apuntes de SAP ABAP Cloud y RAP** para aprender el lenguaje construyendo el **ERP de Obras y Reformas**: el port a SAP del módulo `gestion_bd` de Odoo, que una empresa de reformas usa en producción.
+**Apuntes de SAP ABAP Cloud y RAP** para aprender el lenguaje construyendo el **ERP de Obras y Reformas**: el port a SAP de `gestion_bd`, un módulo de Odoo para gestionar obras y reformas.
 
 > **Dos proyectos.** La teoría se explica con un proyecto de ejemplo, el **taller RuedaLibre**, con el código completo. Los ejercicios te piden construir **tu ERP** tomando el taller como modelo: te dicen qué crear, con qué campos y datos y qué resultado debe salir, pero no te dan el código. Los tests de cada bloque comprueban tu solución. Los dos proyectos, con sus modelos de datos, se presentan en [0.3](0_3_dosProyectos.html), [0.4](0_4_erp.html) y [0.5](0_5_taller.html).
 

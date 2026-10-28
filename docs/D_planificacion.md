@@ -7,7 +7,7 @@ nav_order: 4
 # D. Planificación y hoja de ruta
 
 {% raw %}
-Las prácticas empiezan en **marzo de 2027**. El trial dura **90 días** desde el registro, y al caducar se puede abrir otro (5.3). Con eso, el trabajo cabe en **dos trials**, con un ensayo de restauración entre los dos.
+Este anexo reparte el trabajo en semanas. El trial dura **90 días** desde el registro, y al caducar se puede abrir otro (5.3). Con eso, el trabajo cabe en **dos trials**, con un ensayo de restauración entre los dos.
 
 ## Plan por semanas
 
@@ -26,14 +26,14 @@ Las semanas cuentan desde el día en que abras el primer trial. Con unas 8 a 10 
 | Segundo trial: 2 a 5 | 6 | Las ampliaciones que permita el trial |
 | Segundo trial: 6 y 7 | 7 | README, capturas, guion de 5 minutos |
 
-Si empiezas a principios de noviembre de 2026, el primer trial caduca a principios de febrero y el segundo cubre febrero y marzo. Las vacaciones de Navidad caen en el Bloque 3: es el más largo y conviene no partirlo demasiado.
+Con unas 18 semanas en total, el trabajo cabe en dos trials con margen. El Bloque 3 es el más largo: si coincide con unas vacaciones, conviene no partirlo demasiado.
 
 **Prueba temprana.** Abre el trial pronto para comprobar que el acceso funciona y que los nombres `ZGOR` y `ZEJ` están libres (1.1). No descubras un problema de acceso en la semana 6.
 
 ## Ejercicios
 
 1. **Tu calendario.** Decide la fecha de registro, rellena la tabla con fechas reales y genera los recordatorios (5.3).
-2. **La pregunta pendiente.** Confirma con tu contacto en la empresa si el proyecto de prácticas es RAP / ABAP Cloud sobre S/4HANA. Si es ABAP clásico, refuerza el [Anexo A](A_clasico.html) en el segundo trial.
+2. **Clásico o cloud.** Si el sistema con el que vas a trabajar después es ABAP clásico y no ABAP Cloud, refuerza el [Anexo A](A_clasico.html) en el segundo trial.
 3. **Seguimiento.** Al final de cada semana, apunta en la tabla qué has terminado. Si vas más de dos semanas por detrás, recorta del Bloque 6, no de los Bloques 3 a 5.
 
 ---

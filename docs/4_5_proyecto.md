@@ -7,7 +7,7 @@ nav_order: 5
 # 4.5. Proyecto: las tres apps
 
 {% raw %}
-Cerramos el Bloque 4 usando el ERP **como lo usaría la empresa**: sin EML ni Data Preview, solo con las tres apps. Repetirás a mano el escenario de §12.7 del informe, de la creación de la obra al último cobro, y guardarás capturas de cada paso para el README del portfolio.
+Cerramos el Bloque 4 usando el ERP **como lo usaría la oficina de una empresa de reformas**: sin EML ni Data Preview, solo con las tres apps. Repetirás a mano el escenario de §12.7 del informe, de la creación de la obra al último cobro, y guardarás capturas de cada paso para el README del portfolio.
 
 | Apartado | Qué aporta al proyecto |
 |---|---|

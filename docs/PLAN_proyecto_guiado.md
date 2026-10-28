@@ -8,7 +8,7 @@ nav_exclude: true
 
 > **Cambios en la v2 (28/10/2026), ya aplicados en los apuntes.** (1) La teoría vuelve a explicarse con un **proyecto de ejemplo**, el taller RuedaLibre ([0.5](0_5_taller.html)), con **otros nombres** a propósito; los ejercicios especifican el objeto del ERP (campos, datos y resultado esperado) pero **sin código**, y los tests lo comprueban. Sustituye al patrón «guiado + réplica» de la v1. (2) Se resuelven las dudas de diseño del apartado 6. (3) Los derivados que cambian al editar un registro se **guardan** con *determinations*; solo los que dependen de otros BO se calculan en CDS (apartado 3.3).
 
-**Objetivo:** que los ejercicios de los apuntes construyan, unidad a unidad, el **ERP de Obras y Reformas**: el port del módulo `gestion_bd` (Odoo 18) a RAP / ABAP Cloud, en el paquete `ZGOR`. Así, al terminar el Bloque 5 la aplicación funciona y al terminar el Bloque 7 el repositorio `erp-obras-reformas-sap` está listo como portfolio. El modelo es el REA del profesor (`marcapersonalFP_REA`, 0613 Servidor): cada unidad explica con código completo de un proyecto de ejemplo, los ejercicios son pasos concretos y acumulativos sobre el ERP, y cada bloque se cierra con una unidad de **Proyecto** que integra lo visto.
+**Objetivo:** que los ejercicios de los apuntes construyan, unidad a unidad, el **ERP de Obras y Reformas**: el port del módulo `gestion_bd` (Odoo 18) a RAP / ABAP Cloud, en el paquete `ZGOR`. Así, al terminar el Bloque 5 la aplicación funciona y al terminar el Bloque 7 el repositorio `erp-obras-reformas-sap` está listo como portfolio. El modelo es el de un recurso educativo abierto de FP: cada unidad explica con código completo de un proyecto de ejemplo, los ejercicios son pasos concretos y acumulativos sobre el ERP, y cada bloque se cierra con una unidad de **Proyecto** que integra lo visto.
 
 **Referencia funcional:** el *Informe Técnico — Módulo `gestion_bd`* (septiembre de 2026). En este plan, «§11.2» significa la sección 11.2 de ese informe. Las secciones que se usan son la 11 (reglas de negocio), la 12.2 (modelo relacional), la 12.6 (orden de implementación) y la 12.7 (casos de prueba).
 
@@ -23,7 +23,7 @@ nav_exclude: true
 | IDE | **Eclipse con ADT** en los apuntes, en Linux; anexo F con las equivalencias en VS Code, que se escribe después de probarlo en el trial |
 | Ejemplos de la teoría | **Taller RuedaLibre** (prefijo `ZTL`, paquete `ZEJ`), con todas las funcionalidades de `gestion_bd` y nombres distintos (titular, mecánico, orden de reparación, hoja de costes, abono…). Los ejercicios no traen código; los tests de `docs/materiales/tests/` los comprueban |
 | Draft | En **todas** las BO |
-| Commits | Los hace Gabriel |
+| Commits | Los hace el autor |
 
 ## 1. Qué cambia respecto a la versión actual
 
@@ -32,12 +32,12 @@ nav_exclude: true
 | La teoría usa un taller de coches sencillo, los ejercicios usan clases `ZCL_EJ_*` sueltas y los proyectos usan `ZGOR` | Dos proyectos con la misma estructura: el **taller** (ejemplo, con código) y el **ERP** (ejercicios, sin código). Las clases `ZCL_EJ_*` desaparecen |
 | Ejercicios abiertos («escribe una validation para…») | Pasos concretos: «crea `X` con estos campos», «añade el método `Y` con esta firma y esta regla del informe», «comprueba que sale `Z`» |
 | Algunos ejercicios no siguen el informe (por ejemplo, `cerrarObra` con estado `'C'`, o la validación de fechas en Obra) | Cada regla cita su sección del informe; ver la tabla de correcciones en el apartado 7 |
-| El test se pega dentro del `.md` **y** está repetido en `ejercicios/` | Una sola copia en `docs/materiales/tests/`, enlazada desde la unidad, como el `materiales/` del profesor |
+| El test se pega dentro del `.md` **y** está repetido en `ejercicios/` | Una sola copia en `docs/materiales/tests/`, enlazada desde la unidad, como una carpeta de materiales |
 | Bloque 7 «Proyecto gestion_bd» con mapa, fases y lógica al final | El mapa y la lógica pasan a ser material de 1.9 y de los anexos; el Bloque 7 queda como **cierre** (README, comprobación final, explicación en 5 minutos) |
 
 ## 2. Plantilla de una unidad
 
-Igual que en el REA del profesor:
+Igual que en un recurso educativo abierto de FP:
 
 1. `# n.m. Título`
 2. Cita de contexto: «**Bloque n · Título.** Qué llevamos construido y qué añade esta unidad». Solo en la primera unidad del bloque; en las demás, una frase.
@@ -47,7 +47,7 @@ Igual que en el REA del profesor:
 6. `## Comprueba tu solución automáticamente (opcional)`: enlace al test en `materiales/tests/`, cómo se pega (pestaña *Test Classes*), cómo se ejecuta (Ctrl+Shift+F10) y el resultado esperado («N tests en verde»).
 7. `**Siguiente:** [n.m+1. …]`
 
-Las unidades de **Proyecto** (n.último) llevan además: una tabla «Apartado → Qué aporta al proyecto», un apartado `## El diseño` y el **árbol de objetos del paquete** al terminar, como en 3.8 del profesor.
+Las unidades de **Proyecto** (n.último) llevan además: una tabla «Apartado → Qué aporta al proyecto», un apartado `## El diseño` y el **árbol de objetos del paquete** al terminar.
 
 **Ejemplo y ejercicio no coinciden nunca.** La teoría muestra la pieza en el taller; el ejercicio pide la pieza equivalente del ERP con su especificación (objeto, campos y tipos, firma de los métodos, regla del informe, datos y resultado esperado). Como los nombres y algunos detalles de las reglas son distintos (tramos de 10 h frente a líneas de 24 h, porcentaje desde lo abonado frente a desde lo pendiente…), no basta con renombrar: hay que entender la pieza. Con todas las entidades, los ejercicios usan tablas de especificación para no repetir diez veces el mismo enunciado. La columna «Guiada» del apartado 4 queda como referencia de la v1.
 
@@ -176,7 +176,7 @@ Todo el bloque construye **`ZCL_GOR_REGLAS`**: las fórmulas de §11.2 y las val
 |---|---|
 | 7.1 Comprobación final | Checklist: tests en verde, ATC limpio, escenario de §12.7 en la app y restauración ensayada |
 | 7.2 README | README de `erp-obras-reformas-sap`: mapa Odoo→SAP, decisiones (sobre todo «calcular al leer»), capturas y cómo restaurar |
-| 7.3 Explicación en 5 minutos | Guion para presentar el proyecto en las prácticas |
+| 7.3 Explicación en 5 minutos | Guion para presentar el proyecto |
 
 El contenido actual de 7.1 (mapa de entidades) pasa a 1.9 y al apartado 3.2 de este plan. El de 7.3 (lógica por entidad) pasa a un anexo **E. Reglas de negocio** que resume §11 del informe con enlaces a la unidad que implementa cada regla. 7.2 (fases) desaparece: lo sustituye este plan.
 
@@ -184,7 +184,7 @@ El contenido actual de 7.1 (mapa de entidades) pasa a 1.9 y al apartado 3.2 de e
 
 | Fichero | Cambio |
 |---|---|
-| `docs/index.md` | Tabla de bloques con lo que se tiene al final de cada uno (como la tabla RA/horas del profesor) y lista numerada de unidades |
+| `docs/index.md` | Tabla de bloques con lo que se tiene al final de cada uno  y lista numerada de unidades |
 | `docs/bloque_B*.md` | Cita de contexto del bloque y lista de unidades con el «Qué aporta» |
 | `docs/1_*.md` a `docs/6_*.md` | Teoría con objetos `ZGOR` en lugar de `ZTL`; ejercicios según el apartado 4 |
 | `docs/7_*.md` | Nuevo Bloque 7 de cierre (apartado 4) |
@@ -196,7 +196,7 @@ El contenido actual de 7.1 (mapa de entidades) pasa a 1.9 y al apartado 3.2 de e
 | `README.md` | Se actualiza la tabla de carpetas |
 | `docs/D_planificacion.md` | Semanas por bloque según este plan |
 
-En `erp-obras-reformas-sap` conviene guardar el informe técnico en `docs/odoo/informe-tecnico.md`, porque las unidades citan sus secciones.
+En `erp-obras-reformas-sap` conviene guardar el informe técnico en `docs/odoo/informe-tecnico.md`, porque las unidades citan sus secciones, pero sin la sección 13 ni datos de la empresa.
 
 ## 6. Puntos que hay que verificar en el sistema
 

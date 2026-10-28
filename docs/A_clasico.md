@@ -7,7 +7,7 @@ nav_order: 1
 # A. ABAP clásico: lo mínimo
 
 {% raw %}
-En ABAP Cloud no se usa, pero al ver código antiguo en prácticas conviene reconocerlo.
+En ABAP Cloud no se usa, pero al ver código antiguo en un sistema real conviene reconocerlo.
 
 | Clásico | En ABAP Cloud |
 |---|---|

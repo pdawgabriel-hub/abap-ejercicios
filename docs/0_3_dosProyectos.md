@@ -21,7 +21,7 @@ Estos apuntes trabajan con **dos proyectos a la vez**, con papeles distintos:
 
 ## Por qué dos
 
-Si la teoría se explicara con tu propio ERP, los ejercicios se reducirían a copiar el código del apunte. Con el taller pasa lo contrario: tiene las mismas clases de problemas que tu ERP, pero con **otros nombres** y algunas reglas **distintas en los detalles**. Para resolver un ejercicio tienes que entender qué hace cada pieza del ejemplo y traducirla, que es exactamente lo que harás en las prácticas con el código de otros.
+Si la teoría se explicara con tu propio ERP, los ejercicios se reducirían a copiar el código del apunte. Con el taller pasa lo contrario: tiene las mismas clases de problemas que tu ERP, pero con **otros nombres** y algunas reglas **distintas en los detalles**. Para resolver un ejercicio tienes que entender qué hace cada pieza del ejemplo y traducirla, que es exactamente lo que se hace en un proyecto real con el código de otros.
 
 ## Cómo se parecen
 
