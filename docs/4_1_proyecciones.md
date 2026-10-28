@@ -1,12 +1,5 @@
----
-title: "4.1. Proyecciones"
-parent: "4. Servicios y app Fiori"
-nav_order: 1
----
-
 # 4.1. Proyecciones
 
-{% raw %}
 > **Bloque 4 · Servicios y apps Fiori.** Tu ERP ya funciona por dentro: crea, calcula, valida y guarda, y el escenario de §12.7 pasa como test. Pero de momento solo se usa desde EML. En este bloque le pones **interfaz**: proyecciones, servicios OData y anotaciones para que Fiori Elements genere las pantallas solo. Al final tendrás tres apps con las que repetir a mano el escenario, como lo haría la administrativa de la empresa.
 
 La capa *interface* (`ZI_`) es el modelo completo. Una app no necesita todo: quiere ciertos campos, ciertas búsquedas y ciertos textos. Para eso está la capa de **proyección** (`ZC_`): una vista y una BDEF por encima de cada BO, que eligen qué se expone y cómo. Es lo que en Odoo serían las vistas XML sobre el modelo.
@@ -128,7 +121,4 @@ Las proyecciones de tu ERP van en `ZGOR_SRV`. Necesitas también la proyección 
 
 ---
 
-**Siguiente:** [4.2. Service Definition y Service Binding](4_2_servicio.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/4_1_proyecciones.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [4.2. Service Definition y Service Binding](./4_2_servicio.md)

@@ -1,12 +1,5 @@
----
-title: "3.8. Proyecto: el escenario completo como test"
-parent: "3. Comportamiento con RAP"
-nav_order: 8
----
-
 # 3.8. Proyecto: el escenario completo como test
 
-{% raw %}
 Cerramos el Bloque 3 con la prueba que da sentido a todo el proyecto: el **escenario de §12.7** del informe técnico, ejecutado como test automático contra **tus objetos de negocio reales**. En 1.8 lo probaste en memoria, con la clase de reglas. Ahora cada paso pasa por RAP: se crea con EML, se disparan tus *determinations* y *validations*, se guarda y se lee de las vistas CDS. Si el test pasa, tu ERP se comporta como el `gestion_bd` de Odoo en todo lo que el informe considera crítico.
 
 | Apartado | Qué aporta al proyecto |
@@ -28,7 +21,7 @@ Un test no debe depender de los datos que haya en el sistema ni dejar basura. En
 | `cl_osql_test_environment` | **Tablas**: las sentencias ABAP SQL del código probado (incluidas las del framework RAP al guardar) leen y escriben en copias vacías | Probar comportamiento: crear, validar, borrar |
 | `cl_cds_test_environment` | **Vistas CDS**: la vista probada lee de copias de sus tablas de debajo | Probar cálculos de las vistas, como los de 2.4 |
 
-Así se monta en el taller el test del resumen de la orden `ORD0001` ([0.5](0_5_taller.html)):
+Así se monta en el taller el test del resumen de la orden `ORD0001` ([0.5](./0_5_taller.md)):
 
 ```abap
 CLASS ltcl_resumen DEFINITION FINAL FOR TESTING
@@ -129,11 +122,8 @@ ZGOR
 
 Cuando tus dos clases de test estén en verde, compáralas con [3_8_escenario_12_7.abap](materiales/tests/3_8_escenario_12_7.abap): comprueba los mismos pasos. Si al sustituir las tuyas por las del fichero algo falla, tu ERP tiene un error que tus tests no veían.
 
-Con el Bloque 3 terminado, conviene guardar el trabajo en GitHub. Si no quieres esperar a [5.2](5_2_abapgit.html), adelanta ahora el primer *push* con abapGit.
+Con el Bloque 3 terminado, conviene guardar el trabajo en GitHub. Si no quieres esperar a [5.2](./5_2_abapgit.md), adelanta ahora el primer *push* con abapGit.
 
 ---
 
-**Siguiente:** [4. Servicios y apps Fiori](bloque_B4.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_8_proyecto.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [4.1. Proyecciones](./4_1_proyecciones.md)

@@ -1,12 +1,5 @@
----
-title: "D. Planificación y hoja de ruta"
-parent: "Anexos"
-nav_order: 4
----
-
 # D. Planificación y hoja de ruta
 
-{% raw %}
 Este anexo reparte el trabajo en semanas. El trial dura **90 días** desde el registro, y al caducar se puede abrir otro (5.3). Con eso, el trabajo cabe en **dos trials**, con un ensayo de restauración entre los dos.
 
 ## Plan por semanas
@@ -33,12 +26,9 @@ Con unas 18 semanas en total, el trabajo cabe en dos trials con margen. El Bloqu
 ## Ejercicios
 
 1. **Tu calendario.** Decide la fecha de registro, rellena la tabla con fechas reales y genera los recordatorios (5.3).
-2. **Clásico o cloud.** Si el sistema con el que vas a trabajar después es ABAP clásico y no ABAP Cloud, refuerza el [Anexo A](A_clasico.html) en el segundo trial.
+2. **Clásico o cloud.** Si el sistema con el que vas a trabajar después es ABAP clásico y no ABAP Cloud, refuerza el [Anexo A](./A_clasico.md) en el segundo trial.
 3. **Seguimiento.** Al final de cada semana, apunta en la tabla qué has terminado. Si vas más de dos semanas por detrás, recorta del Bloque 6, no de los Bloques 3 a 5.
 
 ---
 
-**Siguiente:** [E. Reglas de negocio](E_reglas.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/D_planificacion.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [E. Reglas de negocio](./E_reglas.md)

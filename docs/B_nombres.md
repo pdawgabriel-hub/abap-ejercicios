@@ -1,12 +1,5 @@
----
-title: "B. Convenciones de nombres"
-parent: "Anexos"
-nav_order: 2
----
-
 # B. Convenciones de nombres
 
-{% raw %}
 Los nombres de los objetos siguen unas reglas fijas. En el trial, además, todos los usuarios comparten el sistema: antes de crear un objeto, comprueba con **Ctrl+Shift+A** que su nombre está libre (1.1).
 
 ## Prefijos de los proyectos
@@ -65,7 +58,4 @@ Los alias de las entidades en las BDEF van en *CamelCase* singular (`Obra`, `Lin
 
 ---
 
-**Siguiente:** [C. Glosario](C_glosario.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/B_nombres.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [C. Glosario](./C_glosario.md)

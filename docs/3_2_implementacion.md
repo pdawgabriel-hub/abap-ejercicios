@@ -1,12 +1,5 @@
----
-title: "3.2. La clase de implementación"
-parent: "3. Comportamiento con RAP"
-nav_order: 2
----
-
 # 3.2. La clase de implementación
 
-{% raw %}
 La BDEF declara **qué** hace cada objeto de negocio; la **clase de implementación** (*behavior pool*) dice **cómo**. En esta unidad ves cómo es la del titular del taller y crearás las diez de tu ERP, todavía casi vacías, para que las BDEF activen. Y aprenderás **EML** (*Entity Manipulation Language*), el lenguaje con el que se leen y modifican los objetos de negocio desde ABAP. Lo usaremos en toda la lógica del bloque y en los tests.
 
 ## La clase y sus pestañas
@@ -149,7 +142,4 @@ ZGOR_TEST
 
 ---
 
-**Siguiente:** [3.3. Determinations](3_3_determinations.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_2_implementacion.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [3.3. Determinations](./3_3_determinations.md)

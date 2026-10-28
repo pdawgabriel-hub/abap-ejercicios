@@ -1,12 +1,5 @@
----
-title: "6.1. Seguridad: autorizaciones y roles"
-parent: "6. Ampliaciones del proyecto"
-nav_order: 1
----
-
 # 6.1. Seguridad: autorizaciones y roles
 
-{% raw %}
 > **Bloque 6 · Ampliaciones.** Tu ERP ya hace todo lo esencial. Este bloque añade lo que en Odoo completaba la aplicación: permisos por grupo, moneda y menú, documentos imprimibles, la carga de datos reales, el dashboard y el calendario. Son unidades más independientes entre sí: puedes hacerlas en el orden que quieras.
 
 > **Zona menos verificada.** Lo que se programa (objetos de autorización, comprobaciones en el comportamiento) es estable. Lo que se configura en las apps de administración (roles, catálogos, asignación a usuarios) cambia con las versiones y, en un trial **compartido**, puede que tu usuario no tenga permiso para hacerlo. Contrasta con la documentación antes de dar nada por cierto.
@@ -77,7 +70,4 @@ En `gestion_bd` hay dos grupos con los **mismos** permisos (§5): *Administrativ
 
 ---
 
-**Siguiente:** [6.2. Moneda y Fiori Launchpad](6_2_monedaLaunchpad.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/6_1_seguridad.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [6.2. Moneda y Fiori Launchpad](./6_2_monedaLaunchpad.md)

@@ -1,12 +1,5 @@
----
-title: "0.2. Introducción: ABAP Cloud y SAP BTP"
-parent: "0. Introducción y entorno"
-nav_order: 2
----
-
 # 0.2. Introducción: ABAP Cloud y SAP BTP
 
-{% raw %}
 En esta unidad entiendes **dónde** vas a trabajar y **por qué** ABAP Cloud tiene las reglas que tiene. No hay código: es el mapa del terreno.
 
 ## ABAP Cloud y Clean Core
@@ -22,7 +15,7 @@ ABAP Cloud no es otro lenguaje: es el mismo ABAP con **reglas más estrictas** y
 | Crear tablas | SE11 (SAP GUI) | Código en Eclipse (*Database Table*) |
 | Herramienta | SAP GUI (SE80, SE24…) | Eclipse con ADT |
 
-> **En un proyecto de empresa.** Si el cliente usa S/4HANA Cloud, el código nuevo será ABAP Cloud. Si es on-premise, puede seguir en clásico o adoptar RAP. Aprender RAP cubre ambos casos y el lenguaje (tablas internas, SQL, clases) es el mismo. Lo que verás en clásico está resumido en el [Anexo A](A_clasico.html).
+> **En un proyecto de empresa.** Si el cliente usa S/4HANA Cloud, el código nuevo será ABAP Cloud. Si es on-premise, puede seguir en clásico o adoptar RAP. Aprender RAP cubre ambos casos y el lenguaje (tablas internas, SQL, clases) es el mismo. Lo que verás en clásico está resumido en el [Anexo A](./A_clasico.md).
 
 ## Cómo está organizado SAP BTP
 
@@ -69,13 +62,13 @@ Fiori Elements  ->  Service Binding  ->  Runtime RAP            ->  CDS + tabla
 
 ## Autorizaciones en cloud
 
-Los permisos se organizan por aplicación: un *Business Catalog* agrupa apps Fiori, se asigna a un *Business Role* y el rol al usuario. Lo verás en [6.1](6_1_seguridad.html).
+Los permisos se organizan por aplicación: un *Business Catalog* agrupa apps Fiori, se asigna a un *Business Role* y el rol al usuario. Lo verás en [6.1](./6_1_seguridad.md).
 
 ## Draft handling
 
 Cuando un usuario rellena un formulario Fiori sin pulsar «Guardar», RAP puede guardar un **borrador** en una tabla de sombra, separado del registro activo. Se activa con `with draft;` en la Behavior Definition y exige una tabla de borrador y alguna acción más.
 
-> **En estos apuntes, todo con draft.** Es lo que espera el usuario de una app Fiori (editar, guardar o descartar, como en un formulario de Odoo) y lo que vas a ver en los proyectos RAP de empresa. Tiene algunas piezas más, que se explican en [3.1](3_1_behaviorDefinition.html).
+> **En estos apuntes, todo con draft.** Es lo que espera el usuario de una app Fiori (editar, guardar o descartar, como en un formulario de Odoo) y lo que vas a ver en los proyectos RAP de empresa. Tiene algunas piezas más, que se explican en [3.1](./3_1_behaviorDefinition.md).
 
 ## Ejercicios
 
@@ -83,10 +76,6 @@ Cuando un usuario rellena un formulario Fiori sin pulsar «Guardar», RAP puede 
 2. **De Odoo a RAP.** De las restricciones de la tabla comparativa, ¿cuál crees que más te va a costar viniendo de Odoo? Justifícalo.
 3. **Mapa mental.** Dibuja (a mano o en texto) el recorrido de una petición desde el navegador hasta la tabla, nombrando cada capa.
 
-
 ---
 
-**Siguiente:** [0.3. Los dos proyectos](0_3_dosProyectos.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/01_introduccion.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [0.3. Los dos proyectos](./0_3_dosProyectos.md)

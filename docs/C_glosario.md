@@ -1,12 +1,5 @@
----
-title: "C. Glosario"
-parent: "Anexos"
-nav_order: 3
----
-
 # C. Glosario
 
-{% raw %}
 | Término | Significado |
 |---|---|
 | **ABAP Cloud** | Modelo de desarrollo de ABAP que solo permite objetos liberados por SAP |
@@ -40,7 +33,4 @@ nav_order: 3
 
 ---
 
-**Siguiente:** [D. Planificación y hoja de ruta](D_planificacion.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/C_glosario.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [D. Planificación y hoja de ruta](./D_planificacion.md)

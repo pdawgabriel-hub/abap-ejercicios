@@ -1,12 +1,5 @@
----
-title: "5.4. Proyecto: ensayo de restauración"
-parent: "5. Calidad, Git y ciclo de 90 días"
-nav_order: 4
----
-
 # 5.4. Proyecto: ensayo de restauración
 
-{% raw %}
 Cerramos el Bloque 5 comprobando lo que todo el bloque promete: que tu ERP se puede **reconstruir desde GitHub**. Un repositorio del que nunca se ha restaurado nada no es una copia de seguridad, es una esperanza. Mejor descubrir ahora, con tiempo, que falta algo, que el día 90.
 
 | Apartado | Qué aporta al proyecto |
@@ -22,7 +15,7 @@ Cerramos el Bloque 5 comprobando lo que todo el bloque promete: que tu ERP se pu
 Lo ideal es restaurar en un **trial nuevo**. Si todavía no quieres gastar el actual, hay un ensayo parcial que no pone en riesgo nada: restaurar en un **paquete nuevo** del mismo sistema no es posible con los mismos nombres (los objetos ya existen), pero sí puedes comprobar que el repositorio está completo y que el proceso funciona:
 
 1. **Comprobación del repositorio:** clona `erp-obras-reformas-sap` en tu equipo y revisa que en `src/` está **todo** lo de la lista de abajo.
-2. **Restauración real:** cuando abras el segundo trial, sigue el anexo [Restaurar](RESTAURAR.html) y mide cuánto tardas.
+2. **Restauración real:** cuando abras el segundo trial, sigue el anexo [Restaurar](./RESTAURAR.md) y mide cuánto tardas.
 
 Lista de lo que debe estar en `src/`:
 
@@ -47,7 +40,4 @@ Tras la restauración: `ZCL_GOR_COMPROBAR_CDS` dice «0 errores», todos los tes
 
 ---
 
-**Siguiente:** [6. Ampliaciones del proyecto](bloque_B6.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/5_4_proyecto.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [6.1. Seguridad: autorizaciones y roles](./6_1_seguridad.md)

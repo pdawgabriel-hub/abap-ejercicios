@@ -1,12 +1,5 @@
----
-title: "4.2. Service Definition y Service Binding"
-parent: "4. Servicios y app Fiori"
-nav_order: 2
----
-
 # 4.2. Service Definition y Service Binding
 
-{% raw %}
 Las proyecciones dicen **qué** se expone; falta decir **por dónde**. Un servicio OData se publica con dos objetos:
 
 - **Service Definition**: qué entidades forman el servicio y con qué nombre.
@@ -51,7 +44,7 @@ Para ver el servicio en bruto, abre la URL del servicio (en el editor del bindin
 
 ## Preparación del entorno de trabajo
 
-Las Service Definitions y Bindings van en `ZGOR_SRV`. Los nombres siguen el [Anexo B](B_nombres.html): `ZUI_GOR_<ÁREA>` y `ZUI_GOR_<ÁREA>_O4`.
+Las Service Definitions y Bindings van en `ZGOR_SRV`. Los nombres siguen el [Anexo B](./B_nombres.md): `ZUI_GOR_<ÁREA>` y `ZUI_GOR_<ÁREA>_O4`.
 
 ## Ejercicios
 
@@ -71,7 +64,4 @@ Las Service Definitions y Bindings van en `ZGOR_SRV`. Los nombres siguen el [Ane
 
 ---
 
-**Siguiente:** [4.3. Metadata Extensions y la interfaz](4_3_metadataExtensions.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/4_2_servicio.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [4.3. Metadata Extensions y la interfaz](./4_3_metadataExtensions.md)

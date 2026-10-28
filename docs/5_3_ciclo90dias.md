@@ -1,12 +1,5 @@
----
-title: "5.3. El ciclo de 90 días"
-parent: "5. Calidad, Git y ciclo de 90 días"
-nav_order: 3
----
-
 # 5.3. El ciclo de 90 días
 
-{% raw %}
 El trial de SAP BTP dura **90 días desde el registro**. Al terminar, se elimina la cuenta con todo lo que contiene. Además, hay que **iniciar sesión al menos cada 30 días**: si no, se puede cerrar antes. Después se puede abrir un trial nuevo y empezar de cero. La página de SAP no dice cuánto dura la **instancia ABAP** dentro del trial: **consúltalo en el cockpit** (en la instancia del servicio ABAP) y apúntalo.
 
 Con estas reglas, el sistema SAP es **desechable**. Lo que no se puede perder es el repositorio.
@@ -18,7 +11,7 @@ Con estas reglas, el sistema SAP es **desechable**. Lo que no se puede perder es
 | Código: tablas, vistas, BDEF, clases, servicios | GitHub, con abapGit (5.2) | *Pull* |
 | Datos de prueba | `ZCL_GOR_DATOS_DEMO` (2.5), que está en GitHub con el código | Ejecutarla |
 | Diseño, decisiones, capturas | `docs/` del repositorio | Ya están |
-| Usuario, *bindings* publicados, configuración del cockpit | **En ningún sitio** | Repetir a mano: apúntalo en el anexo [Restaurar](RESTAURAR.html) |
+| Usuario, *bindings* publicados, configuración del cockpit | **En ningún sitio** | Repetir a mano: apúntalo en el anexo [Restaurar](./RESTAURAR.md) |
 
 Por eso los datos de demo se crean con una clase y no a mano: así forman parte del código.
 
@@ -31,7 +24,7 @@ Por eso los datos de demo se crean con una clase y no a mano: así forman parte 
 | ~60 | Revisa que todo está subido; ensayo de restauración si no lo has hecho (5.4) |
 | ~75 | **Copia final**: tests en verde, ATC y *push* de todo. Comprueba en GitHub el último commit |
 | 90 | Caducidad |
-| 90+ | Trial nuevo y [restauración](RESTAURAR.html) |
+| 90+ | Trial nuevo y [restauración](./RESTAURAR.md) |
 
 ```bash
 python3 herramientas/generar_recordatorios.py 2026-12-01 > trial.ics
@@ -41,7 +34,7 @@ Importa `trial.ics` en tu calendario. El fichero está en `.gitignore`: no se su
 
 ## Planificar los ciclos
 
-En 90 días caben, con margen, los Bloques 2 a 5 si trabajas con regularidad. Una forma de repartirlo (ajústala en el [Anexo D](D_planificacion.html)):
+En 90 días caben, con margen, los Bloques 2 a 5 si trabajas con regularidad. Una forma de repartirlo (ajústala en el [Anexo D](./D_planificacion.md)):
 
 - **Antes del trial:** el Bloque 1 casi entero se puede escribir y razonar sin sistema; pruébalo en cuanto abras el trial.
 - **Primer trial:** Bloques 1 a 5, con un ensayo de restauración hacia el día 60.
@@ -56,7 +49,4 @@ En 90 días caben, con margen, los Bloques 2 a 5 si trabajas con regularidad. Un
 
 ---
 
-**Siguiente:** [5.4. Proyecto: ensayo de restauración](5_4_proyecto.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/5_3_ciclo90dias.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [5.4. Proyecto: ensayo de restauración](./5_4_proyecto.md)

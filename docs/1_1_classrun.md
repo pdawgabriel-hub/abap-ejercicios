@@ -1,17 +1,10 @@
----
-title: "1.1. Tu primer programa: clases ejecutables"
-parent: "1. Fundamentos del lenguaje"
-nav_order: 1
----
-
 # 1.1. Tu primer programa: clases ejecutables
 
-{% raw %}
 > **Bloque 1 · Fundamentos del lenguaje: las reglas de negocio en ABAP.** Empezamos el **ERP de Obras y Reformas**, el port a SAP de `gestion_bd`. Antes de crear tablas o apps, en este bloque escribiremos en ABAP puro **las reglas de negocio** del informe técnico: cómo se calcula un presupuesto, cuándo está pagada una obra o qué validaciones hay que pasar. Todo irá a una clase, `ZCL_GOR_REGLAS`, con tests automáticos que comprueban cada fórmula. Terminaremos con una simulación que calcula en memoria los indicadores de una obra completa. En el Bloque 3, el comportamiento RAP **reutilizará esa misma clase**.
 
 En esta primera unidad preparamos el terreno: los paquetes del proyecto y una clase que se ejecuta desde Eclipse y escribe en la consola.
 
-> **Dos proyectos.** La teoría usa como ejemplo el **taller RuedaLibre** ([0.5](0_5_taller.html)); los ejercicios construyen **tu ERP**. Puedes probar los ejemplos en tu paquete `ZEJ`, pero lo que entregas es lo de `ZGOR`.
+> **Dos proyectos.** La teoría usa como ejemplo el **taller RuedaLibre** ([0.5](./0_5_taller.md)); los ejercicios construyen **tu ERP**. Puedes probar los ejemplos en tu paquete `ZEJ`, pero lo que entregas es lo de `ZGOR`.
 
 ## Clases ejecutables
 
@@ -65,7 +58,7 @@ En ABAP todo objeto (clase, tabla, vista…) pertenece a un **paquete**. El proy
 | `ZGOR_SRV` | Proyecciones, servicios y anotaciones de la interfaz | Bloque 4 |
 | `ZGOR_TEST` | Clases de consola, datos de demo y el escenario de pruebas | 1.1 |
 
-Cuando enlacemos `ZGOR` con GitHub ([5.2](5_2_abapgit.html)), abapGit guardará cada subpaquete en su propia carpeta de `src/` del repositorio `erp-obras-reformas-sap`.
+Cuando enlacemos `ZGOR` con GitHub ([5.2](./5_2_abapgit.md)), abapGit guardará cada subpaquete en su propia carpeta de `src/` del repositorio `erp-obras-reformas-sap`.
 
 > **El trial es un sistema compartido.** Todos los usuarios del trial crean sus objetos en el mismo sistema, bajo el paquete `ZLOCAL`, y **dos objetos no pueden llamarse igual**. Si otra persona ya creó un paquete `ZGOR`, el tuyo no se podrá crear con ese nombre. Por eso, el primer ejercicio es comprobarlo.
 
@@ -83,7 +76,7 @@ La consola de esta unidad presenta las entidades que vamos a construir. Son las 
 
 ## Preparación del entorno de trabajo
 
-Necesitas Eclipse con ADT conectado a tu trial, como se explica en [0.1. Instalación y preparación del entorno](00_instalacionEntorno.html). En esta unidad creas los paquetes de `ZGOR`; a partir de aquí, todo el proyecto vive en ellos.
+Necesitas Eclipse con ADT conectado a tu trial, como se explica en [0.1. Instalación y preparación del entorno](./00_instalacionEntorno.md). En esta unidad creas los paquetes de `ZGOR`; a partir de aquí, todo el proyecto vive en ellos.
 
 Al terminar, el proyecto tendrá esta forma:
 
@@ -119,13 +112,10 @@ ZLOCAL
 6. **Lee los errores.** Quita el punto final de una de las líneas de `out->write` y activa. Fíjate en el mensaje de la pestaña *Problems* y en la línea que señala: a veces no es la línea del error, sino la siguiente. Vuelve a poner el punto. Haz lo mismo cambiando `out->write` por `out->writ`. Escribe en un comentario, encima de `main`, cómo es cada uno de los dos mensajes.
 7. **Investiga.** Con el cursor sobre `write`, pulsa **F2**. ¿Qué parámetros acepta el método? ¿Hay alguno opcional? Anótalo en un comentario: en 1.2 escribiremos con él estructuras completas, no solo textos.
 
-> **Si el ejercicio 1 encuentra objetos de otra persona**, no crees nada todavía. Elige un prefijo de 4 letras que no exista (compruébalo igual que en el ejercicio 1) y avisa antes de seguir: los apuntes se adaptarán a ese prefijo. Lo mismo vale para `ZEJ`, el paquete de pruebas de [0.1](00_instalacionEntorno.html).
+> **Si el ejercicio 1 encuentra objetos de otra persona**, no crees nada todavía. Elige un prefijo de 4 letras que no exista (compruébalo igual que en el ejercicio 1) y avisa antes de seguir: los apuntes se adaptarán a ese prefijo. Lo mismo vale para `ZEJ`, el paquete de pruebas de [0.1](./00_instalacionEntorno.md).
 
 En esta unidad no hay comprobación automática: el resultado se ve en la consola. A partir de 1.2, cada unidad trae su test.
 
 ---
 
-**Siguiente:** [1.2. Variables, tipos de datos y plantillas de texto](1_2_tipos.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/1_1_classrun.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [1.2. Variables, tipos de datos y plantillas de texto](./1_2_tipos.md)

@@ -1,12 +1,5 @@
----
-title: "6.2. Moneda y Fiori Launchpad"
-parent: "6. Ampliaciones del proyecto"
-nav_order: 2
----
-
 # 6.2. Moneda y Fiori Launchpad
 
-{% raw %}
 > **Zona menos verificada.** La forma de anotar importes con moneda en vistas con decimales (`abap.dec`) y los pasos para publicar apps en el Launchpad dependen de la versión del sistema y de los servicios disponibles en el trial. Úsala como guía de qué buscar y contrasta con la documentación oficial.
 
 Dos detalles de acabado: que los importes se vean **como dinero** (con su símbolo y su formato) y que las apps tengan un **menú** de entrada, como el menú «Gestión de Obras» de Odoo (§4 del informe).
@@ -54,7 +47,4 @@ En el trial, el paso 1 necesita una suscripción a *Business Application Studio*
 
 ---
 
-**Siguiente:** [6.3. Documentos imprimibles](6_3_documentosPdf.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/6_2_monedaLaunchpad.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [6.3. Documentos imprimibles](./6_3_documentosPdf.md)

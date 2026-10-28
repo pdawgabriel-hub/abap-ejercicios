@@ -1,15 +1,8 @@
----
-title: "2.1. Tablas persistentes en ADT"
-parent: "2. Modelo de datos con CDS"
-nav_order: 1
----
-
 # 2.1. Tablas persistentes en ADT
 
-{% raw %}
 > **Bloque 2 · Modelo de datos con CDS.** En el Bloque 1 escribiste las reglas del ERP en memoria. Ahora les das un sitio donde vivir: **las tablas** de todas las entidades y, encima de ellas, **las vistas CDS**, que son el modelo de datos sobre el que se construye RAP. Al final del bloque tendrás la base de datos cargada con obras de prueba y una vista que calcula, al leer, la ficha financiera de cada obra. Debe dar los mismos números que tu simulación de 1.9.
 
-En 1.5 creaste `zgor_cli` y `zgor_obra`. En esta unidad crearás **las demás tablas de negocio**, partiendo del diseño que hiciste en [1.9](1_9_proyecto.html). Las tablas satélite (observaciones, incidencias y adjuntos) esperan a [3.6](3_6_composiciones.html), cuando sepas cómo se comportan los hijos en RAP.
+En 1.5 creaste `zgor_cli` y `zgor_obra`. En esta unidad crearás **las demás tablas de negocio**, partiendo del diseño que hiciste en [1.9](./1_9_proyecto.md). Las tablas satélite (observaciones, incidencias y adjuntos) esperan a [3.6](./3_6_composiciones.md), cuando sepas cómo se comportan los hijos en RAP.
 
 ## El patrón de todas las tablas
 
@@ -75,11 +68,11 @@ define table ztl_prs_par {
 
 ## ¿Y los valores por defecto?
 
-En el taller, el impuesto vale 21 si no se indica otro y un presupuesto empieza en `borrador`. Las tablas de ABAP no tienen valores por defecto: los pondrá RAP al crear el registro, con una *determination* ([3.3](3_3_determinations.html)). En las tablas, solo el tipo.
+En el taller, el impuesto vale 21 si no se indica otro y un presupuesto empieza en `borrador`. Las tablas de ABAP no tienen valores por defecto: los pondrá RAP al crear el registro, con una *determination* ([3.3](./3_3_determinations.md)). En las tablas, solo el tipo.
 
 ## ¿Y las claves foráneas?
 
-Las tablas no declaran claves foráneas: `titular_uuid` es una columna más. La relación se declara en las **vistas CDS**, con una *association* ([2.3](2_3_associations.html)), y lo que en Odoo es `ondelete='restrict'` o `'cascade'` lo controlará el comportamiento RAP. Es la forma habitual en ABAP Cloud: el modelo vive en CDS, no en la base de datos.
+Las tablas no declaran claves foráneas: `titular_uuid` es una columna más. La relación se declara en las **vistas CDS**, con una *association* ([2.3](./2_3_associations.md)), y lo que en Odoo es `ondelete='restrict'` o `'cascade'` lo controlará el comportamiento RAP. Es la forma habitual en ABAP Cloud: el modelo vive en CDS, no en la base de datos.
 
 ## Preparación del entorno de trabajo
 
@@ -134,11 +127,8 @@ Todas las tablas llevan las anotaciones del principio, `key client`, su clave UU
 4. **Comprueba los nombres.** Pulsa **Ctrl+Shift+A** y escribe `zgor_`: deben salir las 16. En el Bloque 3, cada tabla tendrá una gemela para los borradores (*draft*) con `_d` al final, y el nombre completo sigue sin poder pasar de 16 caracteres. ¿Por qué crees que la tabla de faltas se llama `zgor_falta` y no `zgor_trab_falta`?
 5. **Investiga.** En el Data Preview de `zgor_presu` (todavía vacía) pulsa **Add filter** y mira qué operadores ofrece para `fecha` y para `estado`. Anota cuál usarías para ver los presupuestos de 2026.
 
-En esta unidad no hay test: el sistema comprueba la sintaxis al activar. Los datos llegan en [2.5](2_5_proyecto.html).
+En esta unidad no hay test: el sistema comprueba la sintaxis al activar. Los datos llegan en [2.5](./2_5_proyecto.md).
 
 ---
 
-**Siguiente:** [2.2. CDS View Entities](2_2_cds.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/2_1_tablas.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [2.2. CDS View Entities](./2_2_cds.md)

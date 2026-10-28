@@ -1,12 +1,5 @@
----
-title: "7.2. El README del portfolio"
-parent: "7. Cierre del proyecto"
-nav_order: 2
----
-
 # 7.2. El README del portfolio
 
-{% raw %}
 Quien mire tu repositorio dedicará al README menos de un minuto. Tiene que entender en ese minuto **qué es**, **qué demuestra** y **que funciona**. Todo lo demás (el diseño, las decisiones, el detalle) va enlazado.
 
 ## Qué debe contar, en este orden
@@ -41,7 +34,4 @@ Quien mire tu repositorio dedicará al README menos de un minuto. Tiene que ente
 
 ---
 
-**Siguiente:** [7.3. Explicarlo en 5 minutos](7_3_explicacion.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/7_2_readme.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [7.3. Explicarlo en 5 minutos](./7_3_explicacion.md)

@@ -1,13 +1,6 @@
----
-title: "5.2. abapGit: tu código en GitHub"
-parent: "5. Calidad, Git y ciclo de 90 días"
-nav_order: 2
----
-
 # 5.2. abapGit: tu código en GitHub
 
-{% raw %}
-El código ABAP vive **en el sistema**, no en ficheros de tu disco. **abapGit** lo convierte en ficheros (lo *serializa*) y lo sincroniza con un repositorio Git. Es la forma de tener tu proyecto en GitHub como portfolio y, sobre todo, de **restaurarlo** cuando caduque el trial ([5.3](5_3_ciclo90dias.html)).
+El código ABAP vive **en el sistema**, no en ficheros de tu disco. **abapGit** lo convierte en ficheros (lo *serializa*) y lo sincroniza con un repositorio Git. Es la forma de tener tu proyecto en GitHub como portfolio y, sobre todo, de **restaurarlo** cuando caduque el trial ([5.3](./5_3_ciclo90dias.md)).
 
 ## Dos repositorios, dos paquetes
 
@@ -38,7 +31,7 @@ abapGit genera él mismo `src/` y `.abapgit.xml`. **No los escribas ni los edite
 
 1. Activa todos los objetos (clic derecho en `ZGOR` → *Activate*, o **Ctrl+Shift+F3**).
 2. Ejecuta los tests de `ZGOR`: todos en verde.
-3. Pasa el ATC ([5.1](5_1_atc.html)).
+3. Pasa el ATC ([5.1](./5_1_atc.md)).
 4. *Stage and Push*, con un mensaje que diga **qué** has hecho: «Validations de los partes externos», no «cambios».
 5. Comprueba en GitHub que el commit está.
 
@@ -61,7 +54,4 @@ Si cambias un objeto en el sistema **y** su fichero en GitHub, abapGit mostrará
 
 ---
 
-**Siguiente:** [5.3. El ciclo de 90 días](5_3_ciclo90dias.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/5_2_abapgit.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [5.3. El ciclo de 90 días](./5_3_ciclo90dias.md)

@@ -1,15 +1,8 @@
----
-title: "0.4. Guía técnica del ERP de Obras y Reformas"
-parent: "0. Introducción y entorno"
-nav_order: 4
----
-
 # 0.4. Guía técnica del ERP de Obras y Reformas
 
-{% raw %}
 El **ERP de Obras y Reformas** es tu proyecto: la reimplementación en SAP (ABAP Cloud y RAP) del módulo `gestion_bd` de Odoo 18 para empresas de construcción y reformas. Esta guía describe **lo que vas a construir**: su modelo de datos, sus objetos de negocio y todas sus funcionalidades, con la unidad de los apuntes donde se construye cada una.
 
-La referencia funcional es el *Informe Técnico — Módulo `gestion_bd`* (septiembre de 2026), que puedes guardar en `docs/odoo/informe-tecnico.md` del repositorio del proyecto (ver la nota de [1.9](1_9_proyecto.html) sobre qué partes quitar antes de publicarlo). En los apuntes, «§11.2» es su sección 11.2.
+La referencia funcional es el *Informe Técnico — Módulo `gestion_bd`* (septiembre de 2026), que puedes guardar en `docs/odoo/informe-tecnico.md` del repositorio del proyecto (ver la nota de [1.9](./1_9_proyecto.md) sobre qué partes quitar antes de publicarlo). En los apuntes, «§11.2» es su sección 11.2.
 
 ## 1. Visión general
 
@@ -39,11 +32,11 @@ Cada obra tiene, desde que se crea, una única **ficha de gastos** que resume su
 
 ## 2. Modelo de datos
 
-[![Modelo relacional del ERP](materiales/diagramas/erp_modelo.svg)](materiales/diagramas/erp_modelo.svg)
+[![Modelo relacional del ERP](images/erp_modelo.svg)](images/erp_modelo.svg)
 
 *Pulsa la imagen para verla a tamaño completo.* En azul, las tablas raíz de un objeto de negocio; en verde, sus hijas. Las líneas unen cada referencia (FK) con la clave (PK) de la tabla a la que apunta, con su cardinalidad.
 
-Todas las tablas siguen el mismo patrón ([1.5](1_5_abapSql.html)): `client`, una clave UUID (`<entidad>_uuid`), el código visible cuando la entidad lo tiene (`<entidad>_id`, por ejemplo `OBR0001`) y cinco campos de administración (quién y cuándo creó y modificó) que rellena RAP. Los importes son `abap.dec(15,2)`; la moneda es siempre el euro.
+Todas las tablas siguen el mismo patrón ([1.5](./1_5_abapSql.md)): `client`, una clave UUID (`<entidad>_uuid`), el código visible cuando la entidad lo tiene (`<entidad>_id`, por ejemplo `OBR0001`) y cinco campos de administración (quién y cuándo creó y modificó) que rellena RAP. Los importes son `abap.dec(15,2)`; la moneda es siempre el euro.
 
 ### Las entidades
 
@@ -244,11 +237,8 @@ Búsqueda por lo que la gente recuerda (§11.5, punto 10): «Juan Pérez» encue
 | `post_init_hook` | `ZCL_GOR_DATOS_DEMO` |
 | `TransactionCase` | ABAP Unit |
 
-La traducción completa, regla a regla, está en el [Anexo E](E_reglas.html).
+La traducción completa, regla a regla, está en el [Anexo E](./E_reglas.md).
 
 ---
 
-**Siguiente:** [0.5. Guía técnica del taller RuedaLibre](0_5_taller.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/0_4_erp.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [0.5. Guía técnica del taller RuedaLibre](./0_5_taller.md)

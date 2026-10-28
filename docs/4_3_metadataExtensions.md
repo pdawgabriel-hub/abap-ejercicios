@@ -1,12 +1,5 @@
----
-title: "4.3. Metadata Extensions y la interfaz"
-parent: "4. Servicios y app Fiori"
-nav_order: 3
----
-
 # 4.3. Metadata Extensions y la interfaz
 
-{% raw %}
 Fiori Elements no se programa: se **anota**. Qué columnas tiene la lista, qué filtros, qué secciones la página de detalle, qué botones… todo se declara con anotaciones `@UI` sobre la proyección. Para no mezclarlas con el modelo, van en un fichero aparte: la **metadata extension**. En esta unidad vemos las de la orden del taller, y tú harás las de tu ERP, reproduciendo las vistas de Odoo de §4 del informe: listas con sus columnas, formularios con pestañas, la franja de KPI de la obra y el semáforo de salud.
 
 ## Qué controla cada anotación
@@ -155,7 +148,4 @@ Una metadata extension por proyección, en `ZGOR_SRV`, más las de las vistas de
 
 ---
 
-**Siguiente:** [4.4. Comprobar y depurar](4_4_depurar.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/4_3_metadataExtensions.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [4.4. Comprobar y depurar](./4_4_depurar.md)

@@ -1,12 +1,5 @@
----
-title: "2.5. Proyecto: el ERP con datos"
-parent: "2. Modelo de datos con CDS"
-nav_order: 5
----
-
 # 2.5. Proyecto: el ERP con datos
 
-{% raw %}
 Cerramos el Bloque 2 llenando la base de datos. En Odoo, el `post_init_hook` de `hooks.py` genera al instalar un conjunto de datos de ejemplo coherente (§6 del informe). Aquí haremos lo mismo con una clase de consola, `ZCL_GOR_DATOS_DEMO`, con una diferencia: en vez de datos aleatorios, crearemos **cuatro obras pensadas para probar casos concretos**. La primera es exactamente la del escenario de §12.7. Después comprobaremos que la ficha financiera que calcula `ZI_GorObraFinanzas` coincide, céntimo a céntimo, con la que calculó la simulación de 1.9.
 
 | Apartado | Qué aporta al proyecto |
@@ -30,7 +23,7 @@ Cerramos el Bloque 2 llenando la base de datos. En Odoo, el `post_init_hook` de 
 
 Además: el cliente `CLI0005` (Construcciones Ebro SL, una empresa sin apellidos) con un presupuesto `PREP0006` **sin obra**, que usaremos en 3.5 para vincularlo; dos faltas de trabajadores, y una ficha de gastos por obra. En el Bloque 3, la ficha la creará RAP automáticamente; aquí la insertamos a mano.
 
-**El modelo: los datos de demo del taller.** El taller tiene su propia clase, `ZCL_TL_DATOS_DEMO`, que carga el caso `ORD0001` de [0.5](0_5_taller.html) y otras órdenes. Su estructura te sirve de modelo. Cada grupo de datos va en un método, y como unos datos apuntan a otros (la orden al titular, el tramo a la jornada), la clase guarda en una tabla *hashed* el UUID que generó para cada código:
+**El modelo: los datos de demo del taller.** El taller tiene su propia clase, `ZCL_TL_DATOS_DEMO`, que carga el caso `ORD0001` de [0.5](./0_5_taller.md) y otras órdenes. Su estructura te sirve de modelo. Cada grupo de datos va en un método, y como unos datos apuntan a otros (la orden al titular, el tramo a la jornada), la clase guarda en una tabla *hashed* el UUID que generó para cada código:
 
 ```abap
 CLASS zcl_tl_datos_demo DEFINITION PUBLIC FINAL CREATE PUBLIC.
@@ -175,11 +168,8 @@ Puedes ejecutar `ZCL_GOR_DATOS_DEMO` tantas veces como quieras: lo primero que h
 
 ## Comprueba tu solución automáticamente
 
-`ZCL_GOR_COMPROBAR_CDS` (ejercicio 8) debe terminar con **«0 errores»**: 4 obras × 10 campos, más los acumulados de los 4 trabajadores y los participantes de `OBR0001`. No es un test de ABAP Unit, porque lee los datos reales de la base de datos. En [3.8](3_8_proyecto.html) escribiremos el escenario como test de verdad, con las tablas sustituidas por dobles.
+`ZCL_GOR_COMPROBAR_CDS` (ejercicio 8) debe terminar con **«0 errores»**: 4 obras × 10 campos, más los acumulados de los 4 trabajadores y los participantes de `OBR0001`. No es un test de ABAP Unit, porque lee los datos reales de la base de datos. En [3.8](./3_8_proyecto.md) escribiremos el escenario como test de verdad, con las tablas sustituidas por dobles.
 
 ---
 
-**Siguiente:** [3. Comportamiento con RAP](bloque_B3.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/2_5_proyecto.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [3.1. Behavior Definition managed](./3_1_behaviorDefinition.md)

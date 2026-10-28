@@ -1,12 +1,5 @@
----
-title: "A. ABAP clásico: lo mínimo"
-parent: "Anexos"
-nav_order: 1
----
-
 # A. ABAP clásico: lo mínimo
 
-{% raw %}
 En ABAP Cloud no se usa, pero al ver código antiguo en un sistema real conviene reconocerlo.
 
 | Clásico | En ABAP Cloud |
@@ -24,10 +17,6 @@ En ABAP Cloud no se usa, pero al ver código antiguo en un sistema real conviene
 
 1. Lee un report clásico y traduce mentalmente cada sentencia a su equivalente de la tabla.
 
-
 ---
 
-**Siguiente:** [B. Convenciones de nombres](B_nombres.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/A_clasico.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [B. Convenciones de nombres](./B_nombres.md)

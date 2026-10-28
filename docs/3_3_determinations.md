@@ -1,12 +1,5 @@
----
-title: "3.3. Determinations"
-parent: "3. Comportamiento con RAP"
-nav_order: 3
----
-
 # 3.3. Determinations
 
-{% raw %}
 Una *determination* es lógica que **rellena o recalcula campos** cuando ocurre algo: al crear un registro, al cambiar un campo o al guardar. Cubre tres cosas de Odoo: los valores por defecto (`default=`), los `@api.onchange` y los `compute` con `store=True`. En esta unidad las vemos con el presupuesto y la orden del taller, y tú harás que tu ERP calcule solo todo lo que **guarda**: los totales del presupuesto y del parte, la tarifa congelada, los datos copiados del cliente… y que cada obra nazca con su ficha de gastos.
 
 ## Cuándo se ejecuta
@@ -243,11 +236,8 @@ Se amplían tus BDEF de 3.1 y tus clases de 3.2. Tras añadir cada determination
 
 ## Comprueba tu solución automáticamente (opcional)
 
-Pega [3_3_ltcl_determinations.abap](materiales/tests/3_3_ltcl_determinations.abap) en la pestaña **Test Classes** de `zbp_i_gorpresupuesto` y ejecuta con **Ctrl+Shift+F10**: **3 tests en verde**. Estos tests usan EML sobre **dobles** de las tablas: no tocan tus datos de demo. Cómo funciona se explica en [3.8](3_8_proyecto.html).
+Pega [3_3_ltcl_determinations.abap](materiales/tests/3_3_ltcl_determinations.abap) en la pestaña **Test Classes** de `zbp_i_gorpresupuesto` y ejecuta con **Ctrl+Shift+F10**: **3 tests en verde**. Estos tests usan EML sobre **dobles** de las tablas: no tocan tus datos de demo. Cómo funciona se explica en [3.8](./3_8_proyecto.md).
 
 ---
 
-**Siguiente:** [3.4. Validations](3_4_validations.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_3_determinations.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [3.4. Validations](./3_4_validations.md)

@@ -1,12 +1,5 @@
----
-title: "2.2. CDS View Entities"
-parent: "2. Modelo de datos con CDS"
-nav_order: 2
----
-
 # 2.2. CDS View Entities
 
-{% raw %}
 Las tablas guardan los datos, pero RAP no trabaja directamente con ellas: trabaja con **vistas CDS** (*Core Data Services*). Una vista CDS es una definición declarativa, parecida a un `CREATE VIEW` de SQL, que además lleva **anotaciones** (metadatos para el framework y para Fiori) y **associations** (relaciones navegables). En esta unidad creamos una vista por tabla: la capa *interface* del ERP, con prefijo `ZI_`.
 
 ## Las capas de vistas
@@ -54,7 +47,7 @@ define view entity ZI_TlTitular
 - **`define view entity`** es el tipo moderno de vista CDS. Hay otro antiguo (`define view` con `@AbapCatalog.sqlViewName`) que verás en código viejo; en ABAP Cloud se usa siempre `view entity`.
 - **Alias en *CamelCase***: la columna `razon_social` se expone como `RazonSocial`. Los nombres de la vista son los que verán el comportamiento RAP, el servicio OData y Fiori. En el taller, los UUID terminan en `UUID` y los códigos visibles, en `Ref`.
 - **`@Semantics...`** en los campos de administración indica a RAP qué es cada uno, para que los rellene solo al crear y al modificar. Sin estas anotaciones, se quedarían vacíos.
-- **`@AccessControl.authorizationCheck: #NOT_REQUIRED`**: de momento, sin control de acceso. En [6.1](6_1_seguridad.html) lo cambiaremos.
+- **`@AccessControl.authorizationCheck: #NOT_REQUIRED`**: de momento, sin control de acceso. En [6.1](./6_1_seguridad.md) lo cambiaremos.
 - **`@Metadata.ignorePropagatedAnnotations: true`**: no hereda anotaciones de las tablas de debajo, para que la vista diga exactamente lo que declaramos.
 
 ## Crear una vista
@@ -113,7 +106,4 @@ ZGOR_CDS
 
 ---
 
-**Siguiente:** [2.3. Associations y composiciones](2_3_associations.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/2_2_cds.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [2.3. Associations y composiciones](./2_3_associations.md)

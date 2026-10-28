@@ -1,12 +1,5 @@
----
-title: "E. Reglas de negocio"
-parent: "Anexos"
-nav_order: 5
----
-
 # E. Reglas de negocio
 
-{% raw %}
 Resumen de las reglas de §11 del informe técnico de `gestion_bd` y de **dónde** las implementa tu ERP. Sirve para comprobar, al final, que no se ha quedado ninguna fuera.
 
 ## Fórmulas (§11.2)
@@ -81,7 +74,4 @@ Resumen de las reglas de §11 del informe técnico de `gestion_bd` y de **dónde
 
 ---
 
-**Siguiente:** [F. El mismo flujo en VS Code](F_vscode.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/E_reglas.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [F. El mismo flujo en VS Code](./F_vscode.md)

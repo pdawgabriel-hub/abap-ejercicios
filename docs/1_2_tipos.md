@@ -1,13 +1,6 @@
----
-title: "1.2. Variables, tipos de datos y plantillas de texto"
-parent: "1. Fundamentos del lenguaje"
-nav_order: 2
----
-
 # 1.2. Variables, tipos de datos y plantillas de texto
 
-{% raw %}
-Empezamos a escribir reglas de negocio. En el taller, las primeras son las del presupuesto ([0.5](0_5_taller.html)): el importe de cada partida, la cuota del impuesto y el importe final. En esta unidad las programamos con los tipos de ABAP, y tú harás lo mismo con las fórmulas del presupuesto de tu ERP (§11.2 del informe técnico).
+Empezamos a escribir reglas de negocio. En el taller, las primeras son las del presupuesto ([0.5](./0_5_taller.md)): el importe de cada partida, la cuota del impuesto y el importe final. En esta unidad las programamos con los tipos de ABAP, y tú harás lo mismo con las fórmulas del presupuesto de tu ERP (§11.2 del informe técnico).
 
 ## Tipos básicos
 
@@ -171,12 +164,12 @@ Cómo se lee la firma de un método:
 
 - `IMPORTING` son los parámetros de entrada; `RETURNING VALUE(...)`, el valor que devuelve. Se llama así: `zcl_tl_calculos=>importe_partida( iv_cantidad = 4 iv_precio_unitario = 45 )`.
 - Dentro de la propia clase, un método estático se llama sin el nombre de la clase: `ajustar_centimos( ... )`.
-- Los prefijos son una convención: `iv_` para los parámetros de entrada, `rv_` para el valor devuelto, `lv_` para las variables locales y `ls_` para las estructuras locales (ver el [Anexo B](B_nombres.html)).
+- Los prefijos son una convención: `iv_` para los parámetros de entrada, `rv_` para el valor devuelto, `lv_` para las variables locales y `ls_` para las estructuras locales (ver el [Anexo B](./B_nombres.md)).
 - `RETURN` sale del método. Como `rv_jornadas` empieza en 0, si falta una fecha se devuelve 0.
 
 ## Preparación del entorno de trabajo
 
-Seguimos en los paquetes de [1.1](1_1_classrun.html). Al terminar, tu proyecto tendrá esta forma:
+Seguimos en los paquetes de [1.1](./1_1_classrun.md). Al terminar, tu proyecto tendrá esta forma:
 
 ```
 ZGOR
@@ -234,13 +227,10 @@ ZGOR
 
 ## Comprueba tu solución automáticamente (opcional)
 
-Abre `ZCL_GOR_REGLAS`, ve a la pestaña inferior **Test Classes** y pega el contenido de [1_2_ltcl_presupuesto.abap](materiales/tests/1_2_ltcl_presupuesto.abap). Ejecútalo con **Ctrl+Shift+F10** (*Run As → ABAP Unit Test*). Si tu solución es correcta, salen **7 tests en verde**. Si alguno sale en rojo, el mensaje dice qué valor esperaba y cuál ha salido. En [1.8](1_8_abapUnit.html) aprenderás a escribirlos tú.
+Abre `ZCL_GOR_REGLAS`, ve a la pestaña inferior **Test Classes** y pega el contenido de [1_2_ltcl_presupuesto.abap](materiales/tests/1_2_ltcl_presupuesto.abap). Ejecútalo con **Ctrl+Shift+F10** (*Run As → ABAP Unit Test*). Si tu solución es correcta, salen **7 tests en verde**. Si alguno sale en rojo, el mensaje dice qué valor esperaba y cuál ha salido. En [1.8](./1_8_abapUnit.md) aprenderás a escribirlos tú.
 
 Cada unidad del bloque añade otra clase de test **a continuación** de las anteriores, en la misma pestaña: no borres las de unidades previas.
 
 ---
 
-**Siguiente:** [1.3. Control de flujo y funciones de cadena](1_3_flujo.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/1_2_tipos.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [1.3. Control de flujo y funciones de cadena](./1_3_flujo.md)

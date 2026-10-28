@@ -1,12 +1,5 @@
----
-title: "7.3. Explicarlo en 5 minutos"
-parent: "7. Cierre del proyecto"
-nav_order: 3
----
-
 # 7.3. Explicarlo en 5 minutos
 
-{% raw %}
 En una entrevista o en tu primer proyecto con SAP te preguntarán qué has hecho. Tener preparada una explicación de cinco minutos, con una pequeña demo, marca la diferencia. Esta unidad es un guion para prepararla.
 
 ## El guion
@@ -23,7 +16,7 @@ En una entrevista o en tu primer proyecto con SAP te preguntarán qué has hecho
 
 Prepara una respuesta corta para cada una:
 
-- ¿Por qué RAP y no ABAP clásico? ¿Qué sabes del clásico? (Anexo [A](A_clasico.html))
+- ¿Por qué RAP y no ABAP clásico? ¿Qué sabes del clásico? (Anexo [A](./A_clasico.md))
 - ¿Qué es un *draft* y para qué sirve?
 - ¿Qué diferencia hay entre una *determination* y una *validation*?
 - ¿Cómo pruebas que esto funciona?
@@ -38,7 +31,4 @@ Prepara una respuesta corta para cada una:
 
 ---
 
-**Siguiente:** [Anexos](bloque_A.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/7_3_explicacion.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [A. ABAP clásico: lo mínimo](./A_clasico.md)

@@ -1,12 +1,6 @@
----
-title: "Plan: proyecto guiado ZGOR"
-nav_exclude: true
----
-
-{% raw %}
 # Plan de reorganización: los apuntes como proyecto guiado (ZGOR) · v2
 
-> **Cambios en la v2 (28/10/2026), ya aplicados en los apuntes.** (1) La teoría vuelve a explicarse con un **proyecto de ejemplo**, el taller RuedaLibre ([0.5](0_5_taller.html)), con **otros nombres** a propósito; los ejercicios especifican el objeto del ERP (campos, datos y resultado esperado) pero **sin código**, y los tests lo comprueban. Sustituye al patrón «guiado + réplica» de la v1. (2) Se resuelven las dudas de diseño del apartado 6. (3) Los derivados que cambian al editar un registro se **guardan** con *determinations*; solo los que dependen de otros BO se calculan en CDS (apartado 3.3).
+> **Cambios en la v2 (28/10/2026), ya aplicados en los apuntes.** (1) La teoría vuelve a explicarse con un **proyecto de ejemplo**, el taller RuedaLibre ([0.5](./0_5_taller.md)), con **otros nombres** a propósito; los ejercicios especifican el objeto del ERP (campos, datos y resultado esperado) pero **sin código**, y los tests lo comprueban. Sustituye al patrón «guiado + réplica» de la v1. (2) Se resuelven las dudas de diseño del apartado 6. (3) Los derivados que cambian al editar un registro se **guardan** con *determinations*; solo los que dependen de otros BO se calculan en CDS (apartado 3.3).
 
 **Objetivo:** que los ejercicios de los apuntes construyan, unidad a unidad, el **ERP de Obras y Reformas**: el port del módulo `gestion_bd` (Odoo 18) a RAP / ABAP Cloud, en el paquete `ZGOR`. Así, al terminar el Bloque 5 la aplicación funciona y al terminar el Bloque 7 el repositorio `erp-obras-reformas-sap` está listo como portfolio. El modelo es el de un recurso educativo abierto de FP: cada unidad explica con código completo de un proyecto de ejemplo, los ejercicios son pasos concretos y acumulativos sobre el ERP, y cada bloque se cierra con una unidad de **Proyecto** que integra lo visto.
 
@@ -184,8 +178,7 @@ El contenido actual de 7.1 (mapa de entidades) pasa a 1.9 y al apartado 3.2 de e
 
 | Fichero | Cambio |
 |---|---|
-| `docs/index.md` | Tabla de bloques con lo que se tiene al final de cada uno  y lista numerada de unidades |
-| `docs/bloque_B*.md` | Cita de contexto del bloque y lista de unidades con el «Qué aporta» |
+| `docs/README.md` | Índice: tabla de bloques con horas y lista numerada de unidades por bloque |
 | `docs/1_*.md` a `docs/6_*.md` | Teoría con objetos `ZGOR` en lugar de `ZTL`; ejercicios según el apartado 4 |
 | `docs/7_*.md` | Nuevo Bloque 7 de cierre (apartado 4) |
 | `docs/E_reglas.md` | Nuevo anexo con las reglas de negocio |
@@ -226,7 +219,6 @@ En `erp-obras-reformas-sap` conviene guardar el informe técnico en `docs/odoo/i
 
 ## 8. Orden de ejecución
 
-Hecho en la v2 (28/10/2026): todas las unidades de los bloques 0 a 7, los anexos (B a F y Restaurar), `index.md`, las portadas de bloque y 13 ficheros de test en `materiales/tests/`. Se han eliminado `ejercicios/`, el `RESTAURAR.md` de la raíz y las antiguas unidades 7.1 a 7.4.
+Hecho en la v2 (28/10/2026): todas las unidades de los bloques 0 a 7, los anexos (B a F y Restaurar), el índice `README.md` y 13 ficheros de test en `materiales/tests/`. Se han eliminado `ejercicios/`, el `RESTAURAR.md` de la raíz y las antiguas unidades 7.1 a 7.4.
 
 Pendiente: compilar todo contra un sistema real y corregir lo que falle (empezando por el Bloque 1 y los tests de RAP de 3.3 a 3.8, los menos verificados); probar VS Code para completar el anexo F.
-{% endraw %}

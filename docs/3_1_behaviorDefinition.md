@@ -1,19 +1,12 @@
----
-title: "3.1. Behavior Definition managed"
-parent: "3. Comportamiento con RAP"
-nav_order: 1
----
-
 # 3.1. Behavior Definition managed
 
-{% raw %}
 > **Bloque 3 · Comportamiento con RAP.** Las vistas del Bloque 2 **leen** datos. Ahora les damos **comportamiento**: crear, modificar y borrar, con los valores por defecto, los cálculos, las validaciones y las acciones de Odoo. Es lo que en `gestion_bd` hacen los `create()`, `@api.onchange`, `@api.constrains` y los botones. Al final del bloque, el escenario de §12.7 completo se ejecutará como test automático contra los objetos de negocio reales, y en el Bloque 4 solo quedará ponerles una interfaz.
 
 En esta unidad vemos cómo se declara qué se puede hacer con cada objeto de negocio, su **Behavior Definition** (BDEF), con el titular y el presupuesto del taller. Tú escribirás las diez del ERP.
 
 ## Qué es una Behavior Definition
 
-RAP (*ABAP RESTful Application Programming Model*) organiza la aplicación en **objetos de negocio** (BO): una raíz con sus hijos, como los diez árboles que montaste en [2.3](2_3_associations.html). La BDEF de cada BO es un fichero declarativo que dice:
+RAP (*ABAP RESTful Application Programming Model*) organiza la aplicación en **objetos de negocio** (BO): una raíz con sus hijos, como los diez árboles que montaste en [2.3](./2_3_associations.md). La BDEF de cada BO es un fichero declarativo que dice:
 
 - qué **operaciones** admite cada entidad (crear, modificar, borrar, acciones propias);
 - qué **campos** son de solo lectura u obligatorios;
@@ -91,7 +84,7 @@ etag master LocalLastChangedAt
 - `persistent table` y `draft table`: dónde se guardan los datos y los borradores.
 - `lock master`: el bloqueo se hace sobre la raíz (con sus hijos).
 - `total etag LastChangedAt` y `etag master LocalLastChangedAt`: los campos con los que RAP detecta si otro usuario ha cambiado el registro desde que lo leíste. Son los campos de administración de 2.2.
-- `authorization master ( global )`: los permisos se comprueban por tipo de operación («¿puede este usuario crear titulares?»), como los grupos y el `ir.model.access.csv` de Odoo (§5). De momento lo permitiremos todo; en [6.1](6_1_seguridad.html), los roles.
+- `authorization master ( global )`: los permisos se comprueban por tipo de operación («¿puede este usuario crear titulares?»), como los grupos y el `ir.model.access.csv` de Odoo (§5). De momento lo permitiremos todo; en [6.1](./6_1_seguridad.md), los roles.
 
 **Dentro de las llaves:**
 
@@ -176,7 +169,7 @@ etag master LocalLastChangedAt
 1. Clic derecho en la vista raíz → **New Behavior Definition**. En tu ERP, paquete `ZGOR_BUS`; tipo **Managed**. Eclipse genera un esqueleto con las entidades del BO.
 2. Sustituye el contenido por el tuyo y guarda (todavía no actives).
 3. Pon el cursor sobre el nombre de la tabla de borradores (`ztl_tit_d` en el taller) y pulsa **Ctrl+1** → *Create draft table*. Eclipse la crea con todos los campos de la vista más un bloque de administración del borrador (`"%admin"`). Activa la tabla.
-4. La BDEF seguirá marcando un error: falta su clase de implementación. Se crea en [3.2](3_2_implementacion.html).
+4. La BDEF seguirá marcando un error: falta su clase de implementación. Se crea en [3.2](./3_2_implementacion.md).
 
 ## Preparación del entorno de trabajo
 
@@ -208,7 +201,4 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
 
 ---
 
-**Siguiente:** [3.2. La clase de implementación](3_2_implementacion.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_1_behaviorDefinition.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [3.2. La clase de implementación](./3_2_implementacion.md)

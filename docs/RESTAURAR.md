@@ -1,12 +1,5 @@
----
-title: "Restaurar en un trial nuevo"
-parent: "Anexos"
-nav_order: 7
----
-
 # Restaurar en un trial nuevo
 
-{% raw %}
 El sistema SAP es desechable; los repositorios son la copia de seguridad (5.3). Cuando caduque el trial, o lo vayas a perder, sigue estos pasos. Apunta al final lo que hayas tenido que hacer distinto.
 
 ## Antes de que caduque (día ~75)
@@ -43,6 +36,3 @@ Si el *pull* da errores, copia el mensaje exacto y consúltalo antes de borrar n
 | (añade aquí lo que encuentres) | |
 
 ---
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/RESTAURAR.md){: .fs-2 }
-{% endraw %}

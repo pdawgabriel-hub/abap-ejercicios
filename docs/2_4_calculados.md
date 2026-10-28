@@ -1,12 +1,5 @@
----
-title: "2.4. Campos calculados y Data Preview"
-parent: "2. Modelo de datos con CDS"
-nav_order: 4
----
-
 # 2.4. Campos calculados y Data Preview
 
-{% raw %}
 En Odoo, la obra tiene once campos `compute`: total, horas, coste de mano de obra, gastos, beneficio, pendiente de cobro, margen, porcentaje cobrado, estado de pago, salud… Y para que estuvieran siempre al día hacía falta una cadena de `@api.depends` (§11.3) que, cuando fallaba, dejaba números atrasados (dos de los tests de §7 son regresiones de eso). En esta unidad vemos cómo calcular indicadores **al leer**, con vistas CDS de agregados, usando el resumen de la orden del taller. Tú harás lo mismo con la ficha financiera de la obra. No hay nada que recalcular, porque no hay nada guardado.
 
 ## Expresiones en una vista
@@ -158,7 +151,7 @@ Compara cada `case` con su método de `ZCL_TL_CALCULOS` (1.3):
 
 ## Preparación del entorno de trabajo
 
-Las vistas nuevas van en `ZGOR_CDS`. Para comprobarlas necesitas datos: los de 1.5 sirven para clientes y obras; el resto se comprueba con los datos completos de [2.5](2_5_proyecto.html). Al terminar:
+Las vistas nuevas van en `ZGOR_CDS`. Para comprobarlas necesitas datos: los de 1.5 sirven para clientes y obras; el resto se comprueba con los datos completos de [2.5](./2_5_proyecto.md). Al terminar:
 
 ```
 ZGOR_CDS
@@ -205,11 +198,8 @@ ZGOR_CDS
 
 ## Comprueba tu solución
 
-Tus vistas se comprueban con datos en [2.5](2_5_proyecto.html), con la clase `ZCL_GOR_COMPROBAR_CDS`.
+Tus vistas se comprueban con datos en [2.5](./2_5_proyecto.md), con la clase `ZCL_GOR_COMPROBAR_CDS`.
 
 ---
 
-**Siguiente:** [2.5. Proyecto: el ERP con datos](2_5_proyecto.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/2_4_calculados.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [2.5. Proyecto: el ERP con datos](./2_5_proyecto.md)

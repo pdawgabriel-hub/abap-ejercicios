@@ -1,13 +1,6 @@
----
-title: "3.4. Validations"
-parent: "3. Comportamiento con RAP"
-nav_order: 4
----
-
 # 3.4. Validations
 
-{% raw %}
-Una *validation* comprueba que los datos son correctos **antes de guardar** y, si no lo son, impide el guardado con un mensaje. Es el `@api.constrains` de Odoo. En esta unidad las vemos con el presupuesto del taller, y tú implementarás **todas** las reglas de §11.4 del informe. Para las que no dependen de otra entidad ya tienes tus métodos `validar_*` de [1.7](1_7_excepciones.html): cada *validation* solo tiene que llamarlos y convertir su excepción en un mensaje de RAP.
+Una *validation* comprueba que los datos son correctos **antes de guardar** y, si no lo son, impide el guardado con un mensaje. Es el `@api.constrains` de Odoo. En esta unidad las vemos con el presupuesto del taller, y tú implementarás **todas** las reglas de §11.4 del informe. Para las que no dependen de otra entidad ya tienes tus métodos `validar_*` de [1.7](./1_7_excepciones.md): cada *validation* solo tiene que llamarlos y convertir su excepción en un mensaje de RAP.
 
 ## Declaración
 
@@ -113,7 +106,7 @@ Algunas reglas miran otra entidad. En el taller: «el titular de un presupuesto 
 Algunas reglas **no son validations**:
 
 - **Unicidad** de un dato (el documento de identidad de un titular, por ejemplo): se comprueba con un `SELECT` sobre la tabla («¿hay otro titular con este documento y distinto UUID?»), dentro de una validation.
-- **«No se borra una orden con abonos»** no es una comprobación al guardar, sino al **borrar**. Va en [3.5](3_5_actions.html).
+- **«No se borra una orden con abonos»** no es una comprobación al guardar, sino al **borrar**. Va en [3.5](./3_5_actions.md).
 
 ## Mensajes con clase de mensajes
 
@@ -156,7 +149,4 @@ Pega [3_4_ltcl_validations.abap](materiales/tests/3_4_ltcl_validations.abap) en 
 
 ---
 
-**Siguiente:** [3.5. Actions](3_5_actions.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_4_validations.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [3.5. Actions](./3_5_actions.md)

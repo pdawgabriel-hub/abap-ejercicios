@@ -1,12 +1,5 @@
----
-title: "6.4. Migración de datos desde Odoo"
-parent: "6. Ampliaciones del proyecto"
-nav_order: 4
----
-
 # 6.4. Migración de datos desde Odoo
 
-{% raw %}
 Una reimplementación no está terminada hasta que los datos del sistema antiguo están en el nuevo. En ABAP Environment no hay herramientas clásicas de carga (LSMW); hay dos caminos:
 
 | Camino | Cómo | Ventaja | Inconveniente |
@@ -46,7 +39,4 @@ Con la clase generada, los datos entran tal cual: sin códigos nuevos, sin total
 
 ---
 
-**Siguiente:** [6.5. Dashboard y calendario](6_5_dashboard.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/6_4_migracion.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [6.5. Dashboard y calendario](./6_5_dashboard.md)

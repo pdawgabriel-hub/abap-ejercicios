@@ -1,12 +1,5 @@
----
-title: "2.3. Associations y composiciones"
-parent: "2. Modelo de datos con CDS"
-nav_order: 3
----
-
 # 2.3. Associations y composiciones
 
-{% raw %}
 Las vistas de 2.2 están sueltas: en el taller, `ZI_TlOrden` tiene un `TitularUUID`, pero no sabe que ese UUID es un titular. En esta unidad vemos cómo se declaran las relaciones (los `Many2one`, `One2many` y `Many2many` de Odoo) y tú declararás **todas las del ERP**. Al terminar, tu modelo CDS tendrá la forma definitiva de los objetos de negocio del Bloque 3: diez **raíces**, cada una con sus **hijos**.
 
 ## Association: una relación navegable
@@ -163,7 +156,4 @@ Solo lectura: ZI_GorObraTrab, ZI_GorObraProv, ZI_GorObraEsp   ← nuevas
 
 ---
 
-**Siguiente:** [2.4. Campos calculados y Data Preview](2_4_calculados.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/2_3_associations.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [2.4. Campos calculados y Data Preview](./2_4_calculados.md)

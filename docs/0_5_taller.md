@@ -1,15 +1,8 @@
----
-title: "0.5. Guía técnica del taller RuedaLibre"
-parent: "0. Introducción y entorno"
-nav_order: 5
----
-
 # 0.5. Guía técnica del taller RuedaLibre
 
-{% raw %}
 El taller mecánico RuedaLibre es el **proyecto de ejemplo** de estos apuntes: toda la teoría se explica con él, con el código completo. Esta guía lo describe entero, como el informe técnico describe `gestion_bd`: qué hace, cómo se guardan sus datos y qué reglas sigue. Cuando en una unidad aparezca una pieza del taller, aquí puedes ver dónde encaja.
 
-Sus objetos usan el prefijo `ZTL` y se prueban en el paquete `ZEJ`. Lo que entregas es el ERP ([0.4](0_4_erp.html)): el taller es solo el modelo.
+Sus objetos usan el prefijo `ZTL` y se prueban en el paquete `ZEJ`. Lo que entregas es el ERP ([0.4](./0_4_erp.md)): el taller es solo el modelo.
 
 ## 1. Visión general
 
@@ -30,11 +23,11 @@ Titular → Presupuesto (partidas + impuesto) → Orden de reparación
 
 ## 2. Modelo de datos
 
-[![Modelo relacional del taller](materiales/diagramas/taller_modelo.svg)](materiales/diagramas/taller_modelo.svg)
+[![Modelo relacional del taller](images/taller_modelo.svg)](images/taller_modelo.svg)
 
 *Pulsa la imagen para verla a tamaño completo.* Cada caja es una tabla: en azul, las raíces de un objeto de negocio; en verde, sus hijas. Las líneas unen cada referencia (FK) con la clave (PK) de la tabla a la que apunta.
 
-Todas las tablas siguen el mismo patrón ([1.5](1_5_abapSql.html)): `client`, una clave UUID, un código visible cuando la entidad lo tiene (`TIT0001`) y cinco campos de administración que rellena RAP.
+Todas las tablas siguen el mismo patrón ([1.5](./1_5_abapSql.md)): `client`, una clave UUID, un código visible cuando la entidad lo tiene (`TIT0001`) y cinco campos de administración que rellena RAP.
 
 ### Las entidades
 
@@ -159,7 +152,4 @@ Es el modelo del escenario de §12.7 del informe, que reproducirás con tu ERP.
 
 ---
 
-**Siguiente:** [1. Fundamentos del lenguaje](bloque_B1.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/0_5_taller.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [1.1. Tu primer programa: clases ejecutables](./1_1_classrun.md)

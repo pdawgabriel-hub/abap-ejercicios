@@ -1,12 +1,5 @@
----
-title: "4.4. Comprobar y depurar"
-parent: "4. Servicios y app Fiori"
-nav_order: 4
----
-
 # 4.4. Comprobar y depurar
 
-{% raw %}
 Con las apps funcionando aparecen errores nuevos: un botón que no hace nada, un total que no se actualiza, una columna que no sale. En una app RAP hay cinco capas (tabla, vista, comportamiento, proyección y anotaciones) y el primer paso para arreglar algo es saber **en cuál** está el problema. En esta unidad vemos cómo localizarlo y cómo usar el **depurador** de Eclipse.
 
 ## ¿En qué capa está el error?
@@ -50,7 +43,4 @@ Antes de cambiar algo para corregir un error de la app, **escribe un test que lo
 
 ---
 
-**Siguiente:** [4.5. Proyecto: las tres apps](4_5_proyecto.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/4_4_depurar.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [4.5. Proyecto: las tres apps](./4_5_proyecto.md)

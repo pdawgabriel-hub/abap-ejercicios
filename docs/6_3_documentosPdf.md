@@ -1,12 +1,5 @@
----
-title: "6.3. Documentos imprimibles"
-parent: "6. Ampliaciones del proyecto"
-nav_order: 3
----
-
 # 6.3. Documentos imprimibles
 
-{% raw %}
 > **Zona menos verificada.** El servicio de formularios PDF (*Forms Service by Adobe*) puede no estar disponible en el trial, y la API XCO para hojas de cálculo que se usa como alternativa no se ha probado contra un sistema real. Comprueba la disponibilidad antes de planificar esta unidad; es opcional para el portfolio.
 
 `gestion_bd` imprime tres documentos (§8 del informe): el **presupuesto** para el cliente, el **parte de trabajo** y el **seguimiento de gastos** de la obra. En SAP hay dos caminos.
@@ -75,7 +68,4 @@ Los nombres de los métodos de XCO son largos y encadenados; si alguno no existe
 
 ---
 
-**Siguiente:** [6.4. Migración de datos desde Odoo](6_4_migracion.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/6_3_documentosPdf.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [6.4. Migración de datos desde Odoo](./6_4_migracion.md)

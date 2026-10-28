@@ -2,7 +2,7 @@
 """Genera los diagramas relacionales (SVG) del ERP y del taller para los apuntes.
 
 Uso:  python3 herramientas/generar_diagramas.py
-Escribe docs/materiales/diagramas/erp_modelo.svg y taller_modelo.svg.
+Escribe docs/images/erp_modelo.svg y taller_modelo.svg.
 
 Cada modelo es una lista de tablas (columna de la rejilla, posicion vertical y
 campos) y una lista de relaciones hijo -> padre. Las lineas van por los pasillos
@@ -342,12 +342,12 @@ def taller():
 
 def main():
     raiz = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-    destino = os.path.join(raiz, "docs", "materiales", "diagramas")
+    destino = os.path.join(raiz, "docs", "images")
     os.makedirs(destino, exist_ok=True)
     for nombre, svg in (("erp_modelo.svg", erp()), ("taller_modelo.svg", taller())):
         with open(os.path.join(destino, nombre), "w", encoding="utf-8") as f:
             f.write(svg)
-        print("escrito", os.path.join("docs", "materiales", "diagramas", nombre))
+        print("escrito", os.path.join("docs", "images", nombre))
 
 
 if __name__ == "__main__":

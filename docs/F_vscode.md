@@ -1,12 +1,5 @@
----
-title: "F. El mismo flujo en VS Code"
-parent: "Anexos"
-nav_order: 6
----
-
 # F. El mismo flujo en VS Code
 
-{% raw %}
 > **Pendiente de probar.** Este anexo resume lo publicado sobre la extensión oficial de SAP para VS Code y lo que **hay que comprobar** en el trial antes de usarla para el proyecto. Los apuntes siguen hechos para Eclipse con ADT.
 
 ## Qué es
@@ -50,7 +43,4 @@ Para el proyecto, **Eclipse** sigue siendo la opción segura: es la herramienta 
 
 ---
 
-**Siguiente:** [Restaurar en un trial nuevo](RESTAURAR.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/F_vscode.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [Restaurar en un trial nuevo](./RESTAURAR.md)

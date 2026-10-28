@@ -1,12 +1,5 @@
----
-title: "3.7. Numeración"
-parent: "3. Comportamiento con RAP"
-nav_order: 7
----
-
 # 3.7. Numeración
 
-{% raw %}
 En Odoo, cada `create()` toma el siguiente número de su secuencia `ir.sequence` y forma el código: `CLI0001`, `OBR0001`… (§10 del informe). La empresa se refiere a todo por esos códigos (§11.5, punto 8). En esta unidad vemos cómo lo hace el taller con sus titulares (`TIT0001`), y tú harás que los ocho objetos con código de tu ERP lo reciban **al guardar**.
 
 ## Estrategias de numeración en RAP
@@ -108,7 +101,4 @@ Pega [3_7_ltcl_codigos.abap](materiales/tests/3_7_ltcl_codigos.abap) en la pesta
 
 ---
 
-**Siguiente:** [3.8. Proyecto: el escenario completo como test](3_8_proyecto.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_7_numeracion.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [3.8. Proyecto: el escenario completo como test](./3_8_proyecto.md)

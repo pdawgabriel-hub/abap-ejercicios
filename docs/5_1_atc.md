@@ -1,12 +1,5 @@
----
-title: "5.1. ATC y calidad de código"
-parent: "5. Calidad, Git y ciclo de 90 días"
-nav_order: 1
----
-
 # 5.1. ATC y calidad de código
 
-{% raw %}
 > **Bloque 5 · Calidad, Git y ciclo de 90 días.** Tu ERP funciona y tiene apps. Este bloque es para que **dure**: que el código pase el control de calidad de SAP, que esté en GitHub y que puedas reconstruirlo entero en un trial nuevo cuando caduque el actual. Termina con un ensayo de restauración: si sale bien, el sistema SAP es desechable y tu repositorio es el proyecto.
 
 **ATC** (*ABAP Test Cockpit*) es el analizador estático de SAP: revisa el código sin ejecutarlo y avisa de errores, malas prácticas y problemas de rendimiento. En ABAP Cloud, además, comprueba que solo usas **objetos liberados**. Es lo que en un proyecto de Python harían `pylint` o `ruff`. En una empresa, el ATC suele ser obligatorio antes de liberar una orden de transporte.
@@ -58,7 +51,4 @@ Sino con una sola consulta, uniendo las tablas:
 
 ---
 
-**Siguiente:** [5.2. abapGit: tu código en GitHub](5_2_abapgit.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/5_1_atc.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [5.2. abapGit: tu código en GitHub](./5_2_abapgit.md)

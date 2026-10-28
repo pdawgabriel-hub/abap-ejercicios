@@ -1,12 +1,5 @@
----
-title: "1.5. Tablas de base de datos y ABAP SQL"
-parent: "1. Fundamentos del lenguaje"
-nav_order: 5
----
-
 # 1.5. Tablas de base de datos y ABAP SQL
 
-{% raw %}
 Hasta ahora todo vivía en memoria y desaparecía al terminar la ejecución. En esta unidad creamos tablas de base de datos y aprendemos a leer y escribir en ellas con **ABAP SQL**. El ejemplo son las dos primeras tablas del taller, titulares y órdenes; tú crearás las dos primeras del ERP, clientes y obras. Serán definitivas: en el Bloque 2 crearás el resto con el mismo patrón y, encima de todas, el modelo CDS.
 
 ## Tablas en ABAP Cloud
@@ -151,7 +144,7 @@ Cada fila necesita un UUID. Lo genera una clase liberada:
     ENDTRY.
 ```
 
-El método puede lanzar una excepción, y ABAP obliga a tratarla con `TRY ... CATCH`. Lo explicamos en [1.7](1_7_excepciones.html); de momento, usa este patrón.
+El método puede lanzar una excepción, y ABAP obliga a tratarla con `TRY ... CATCH`. Lo explicamos en [1.7](./1_7_excepciones.md); de momento, usa este patrón.
 
 > **ABAP Cloud solo deja usar objetos liberados.** Puedes leer y escribir tus propias tablas, pero no las tablas estándar de SAP. Para datos estándar se usan las vistas CDS liberadas. Si intentas usar algo no liberado, el editor lo marca como error.
 
@@ -208,7 +201,4 @@ En esta unidad no hay test automático: los datos de base de datos se comprueban
 
 ---
 
-**Siguiente:** [1.6. Clases y objetos (ABAP OO)](1_6_oo.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/1_5_abapSql.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [1.6. Clases y objetos (ABAP OO)](./1_6_oo.md)

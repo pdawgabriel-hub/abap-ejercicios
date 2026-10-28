@@ -1,12 +1,5 @@
----
-title: "4.5. Proyecto: las tres apps"
-parent: "4. Servicios y app Fiori"
-nav_order: 5
----
-
 # 4.5. Proyecto: las tres apps
 
-{% raw %}
 Cerramos el Bloque 4 usando el ERP **como lo usaría la oficina de una empresa de reformas**: sin EML ni Data Preview, solo con las tres apps. Repetirás a mano el escenario de §12.7 del informe, de la creación de la obra al último cobro, y guardarás capturas de cada paso para el README del portfolio.
 
 | Apartado | Qué aporta al proyecto |
@@ -53,11 +46,8 @@ Las tres apps de 4.2 publicadas y con sus anotaciones de 4.3. En el repositorio 
 
 - Los 13 pasos dan lo esperado y tienes sus capturas.
 - Clic derecho en `ZGOR` → **Run As → ABAP Unit Test**: todos en verde.
-- Haz *push* con abapGit de lo que tengas (o espera a [5.2](5_2_abapgit.html)).
+- Haz *push* con abapGit de lo que tengas (o espera a [5.2](./5_2_abapgit.md)).
 
 ---
 
-**Siguiente:** [5. Calidad, Git y ciclo de 90 días](bloque_B5.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/4_5_proyecto.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [5.1. ATC y calidad de código](./5_1_atc.md)

@@ -1,12 +1,5 @@
----
-title: "3.5. Actions"
-parent: "3. Comportamiento con RAP"
-nav_order: 5
----
-
 # 3.5. Actions
 
-{% raw %}
 Una *action* es una operación de negocio con nombre propio, más allá de crear, modificar y borrar: en Fiori aparece como un **botón**. Es el equivalente de los métodos `action_*` de Odoo. En esta unidad las vemos con el taller: **aceptar** un presupuesto (que cambia el importe de la orden), **vincularlo** a una orden y dos reglas que se aplican **al borrar**: una orden con abonos no se puede borrar, y una orden sin abonos se lleva consigo sus jornadas, albaranes y facturas. Tú harás las acciones del ERP: aprobar y desaprobar (§11.5, punto 1), vincular (el asistente de §3.15), marcar un parte como pagado, y las reglas de borrado de la obra (§11.5, punto 12).
 
 ## Declarar una acción
@@ -213,7 +206,4 @@ Tu entidad abstracta va en `ZGOR_CDS`. Lo demás amplía tus BDEF y clases de co
 
 ---
 
-**Siguiente:** [3.6. Composiciones: hijos y tablas satélite](3_6_composiciones.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_5_actions.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [3.6. Composiciones: hijos y tablas satélite](./3_6_composiciones.md)

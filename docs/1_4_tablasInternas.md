@@ -1,12 +1,5 @@
----
-title: "1.4. Tablas internas"
-parent: "1. Fundamentos del lenguaje"
-nav_order: 4
----
-
 # 1.4. Tablas internas
 
-{% raw %}
 Casi todo lo que calcula un sistema de gestión es una **suma sobre una lista**. En el taller, el neto del presupuesto es la suma de sus partidas; el importe de la orden, la suma de sus presupuestos aceptados; la mano de obra, la suma de los tramos de sus jornadas. En ABAP, las listas en memoria son **tablas internas**. En esta unidad aprendemos a trabajar con ellas, y tú añadirás a `ZCL_GOR_REGLAS` todas las reglas de §11.2 que trabajan con listas y la búsqueda por palabras de §11.5 (punto 10).
 
 ## Qué es una tabla interna
@@ -162,7 +155,7 @@ Las dos formas modernas de construir una tabla o un valor a partir de otra tabla
 
 ## Preparación del entorno de trabajo
 
-Seguimos con `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y `ZCL_GOR_TIPOS_DEMO` de [1.2](1_2_tipos.html) y [1.3](1_3_flujo.html).
+Seguimos con `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y `ZCL_GOR_TIPOS_DEMO` de [1.2](./1_2_tipos.md) y [1.3](./1_3_flujo.md).
 
 ## Ejercicios
 
@@ -203,7 +196,4 @@ Pega [1_4_ltcl_sumas.abap](materiales/tests/1_4_ltcl_sumas.abap) en la pestaña 
 
 ---
 
-**Siguiente:** [1.5. Tablas de base de datos y ABAP SQL](1_5_abapSql.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/1_4_tablasInternas.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [1.5. Tablas de base de datos y ABAP SQL](./1_5_abapSql.md)

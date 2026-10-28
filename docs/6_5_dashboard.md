@@ -1,12 +1,5 @@
----
-title: "6.5. Dashboard y calendario"
-parent: "6. Ampliaciones del proyecto"
-nav_order: 5
----
-
 # 6.5. Dashboard y calendario
 
-{% raw %}
 > **Zona menos verificada.** Las vistas CDS de esta unidad son estables. Lo que cambia según el sistema es **cómo mostrarlas**: los tipos de app con gráficos (*Analytical List Page*, *Overview Page*) se generan con *Business Application Studio*, que puede no estar disponible en el trial. Con la vista previa del *binding* siempre tendrás listas ordenadas y con colores.
 
 En Odoo, el «Análisis Financiero» es un componente OWL que llama a un método Python, `get_dashboard_data`, que lee movimientos y agrega en memoria (§3.14 del informe). En SAP se hace al revés: los agregados son **vistas CDS**, como las de 2.4, y la interfaz solo las muestra. El calendario unificado (§3.13) es otra vista que une varias tablas.
@@ -101,7 +94,4 @@ Los bloques del dashboard de Odoo (§3.14) son la especificación:
 
 ---
 
-**Siguiente:** [7. Cierre del proyecto](bloque_B7.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/6_5_dashboard.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [7.1. Comprobación final](./7_1_comprobacion.md)

@@ -1,13 +1,6 @@
----
-title: "1.7. Excepciones"
-parent: "1. Fundamentos del lenguaje"
-nav_order: 7
----
-
 # 1.7. Excepciones
 
-{% raw %}
-Las fórmulas ya están; faltan las **validaciones**: lo que el sistema no debe aceptar nunca. En el taller, un tramo de 12 horas o un albarán de 0 € ([0.5](0_5_taller.html)). En Odoo, cada `@api.constrains` lanza un `ValidationError`; en ABAP se hace igual: se **lanza una excepción**. En esta unidad vemos cómo, con la excepción del taller, y tú crearás la de tu ERP y los métodos que comprueban las reglas de §11.4. En el Bloque 3, las *validations* de RAP llamarán a esos mismos métodos y convertirán la excepción en el mensaje que ve el usuario.
+Las fórmulas ya están; faltan las **validaciones**: lo que el sistema no debe aceptar nunca. En el taller, un tramo de 12 horas o un albarán de 0 € ([0.5](./0_5_taller.md)). En Odoo, cada `@api.constrains` lanza un `ValidationError`; en ABAP se hace igual: se **lanza una excepción**. En esta unidad vemos cómo, con la excepción del taller, y tú crearás la de tu ERP y los métodos que comprueban las reglas de §11.4. En el Bloque 3, las *validations* de RAP llamarán a esos mismos métodos y convertirán la excepción en el mensaje que ve el usuario.
 
 ## Capturar una excepción: `TRY ... CATCH`
 
@@ -161,7 +154,4 @@ ZGOR_BUS
 
 ---
 
-**Siguiente:** [1.8. Pruebas con ABAP Unit](1_8_abapUnit.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/1_7_excepciones.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [1.8. Pruebas con ABAP Unit](./1_8_abapUnit.md)

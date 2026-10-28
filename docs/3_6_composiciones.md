@@ -1,12 +1,5 @@
----
-title: "3.6. Composiciones: hijos y tablas satélite"
-parent: "3. Comportamiento con RAP"
-nav_order: 6
----
-
 # 3.6. Composiciones: hijos y tablas satélite
 
-{% raw %}
 Casi todos los modelos de `gestion_bd` tienen, además de sus campos, tres listas que se repiten (§2 del informe): **observaciones** (notas de seguimiento), **incidencias** (problemas) y **archivos adjuntos**. Las tres guardan automáticamente quién y cuándo, y se muestran de la más nueva a la más antigua. El taller tiene lo mismo con otros nombres: **notas**, **avisos** y **fotos**. En esta unidad vemos el patrón con las del presupuesto del taller, y tú las añadirás a todos los objetos de negocio de tu ERP. Son 21 tablas, pero todas siguen el mismo patrón, así que lo importante es hacer bien la primera.
 
 ## Una estructura común
@@ -155,7 +148,4 @@ Tus estructuras y tablas van en `ZGOR_DDIC`, las vistas en `ZGOR_CDS`, y el comp
 
 ---
 
-**Siguiente:** [3.7. Numeración](3_7_numeracion.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/3_6_composiciones.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [3.7. Numeración](./3_7_numeracion.md)

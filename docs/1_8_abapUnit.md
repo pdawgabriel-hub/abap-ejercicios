@@ -1,13 +1,6 @@
----
-title: "1.8. Pruebas con ABAP Unit"
-parent: "1. Fundamentos del lenguaje"
-nav_order: 8
----
-
 # 1.8. Pruebas con ABAP Unit
 
-{% raw %}
-Desde 1.2 has pegado tests sin escribirlos. En esta unidad aprendemos a **escribirlos**. El ejemplo es el test del caso de la `ORD0001` del taller ([0.5](0_5_taller.html)); tú escribirás la prueba más importante de tu proyecto: el **escenario de §12.7** del informe técnico, la tabla de pasos que cualquier reimplementación del ERP debe superar. En el Odoo original, `tests/test_financiero.py` protege la lógica financiera (§7); en tu ERP lo hará la clase `ltcl_escenario`. Antes, en el taller y en el ERP, hace falta un último método de cálculo que reúna en una sola llamada todos los indicadores.
+Desde 1.2 has pegado tests sin escribirlos. En esta unidad aprendemos a **escribirlos**. El ejemplo es el test del caso de la `ORD0001` del taller ([0.5](./0_5_taller.md)); tú escribirás la prueba más importante de tu proyecto: el **escenario de §12.7** del informe técnico, la tabla de pasos que cualquier reimplementación del ERP debe superar. En el Odoo original, `tests/test_financiero.py` protege la lógica financiera (§7); en tu ERP lo hará la clase `ltcl_escenario`. Antes, en el taller y en el ERP, hace falta un último método de cálculo que reúna en una sola llamada todos los indicadores.
 
 ## Una clase de test
 
@@ -150,7 +143,4 @@ Cuando tu `ltcl_escenario` esté en verde, compáralo con [1_8_ltcl_escenario.ab
 
 ---
 
-**Siguiente:** [1.9. Proyecto: simulación de una obra](1_9_proyecto.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/1_8_abapUnit.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [1.9. Proyecto: simulación de una obra](./1_9_proyecto.md)

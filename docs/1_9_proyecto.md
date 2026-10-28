@@ -1,12 +1,5 @@
----
-title: "1.9. Proyecto: simulación de una obra"
-parent: "1. Fundamentos del lenguaje"
-nav_order: 9
----
-
 # 1.9. Proyecto: simulación de una obra
 
-{% raw %}
 Cerramos el Bloque 1 con dos entregas. La primera es una **simulación**: una clase que recorre en memoria la vida completa de una obra (presupuesto, aprobación, partes, costes externos, cobros) e imprime su ficha financiera después de cada paso. El modelo es la simulación del taller, que verás a continuación. La segunda es el **diseño de las tablas** de todo el ERP, que construiremos en el Bloque 2.
 
 Es un proyecto de integración: no aparece ningún concepto nuevo de importancia, sino que se combina lo de todo el bloque.
@@ -24,7 +17,7 @@ Es un proyecto de integración: no aparece ningún concepto nuevo de importancia
 
 ## El diseño de la simulación
 
-La simulación no guarda nada en la base de datos: usa objetos y los métodos de la clase de reglas. La parte nueva es su **estructura**. En vez de escribir todo en `main`, se reparte en métodos privados, uno por paso del negocio. Así es la del taller, que recorre el caso `ORD0001` ([0.5](0_5_taller.html)):
+La simulación no guarda nada en la base de datos: usa objetos y los métodos de la clase de reglas. La parte nueva es su **estructura**. En vez de escribir todo en `main`, se reparte en métodos privados, uno por paso del negocio. Así es la del taller, que recorre el caso `ORD0001` ([0.5](./0_5_taller.md)):
 
 ```abap
 CLASS zcl_tl_simulacion DEFINITION PUBLIC FINAL CREATE PUBLIC.
@@ -164,7 +157,7 @@ erp-obras-reformas-sap/
 6. **Una línea imposible.** En `trabajar`, después de las dos líneas buenas, intenta añadir una de 25 h. La simulación debe escribir el mensaje del error y seguir: el coste del parte sigue siendo 320.
 7. **Quién trabajó.** Añade al final de `main` un listado de los participantes de la obra (`participantes`) y de sus horas (`horas_por_trabajador`).
 8. **Una obra con pérdidas.** Añade un segundo recorrido con otra obra: presupuesto de 1 línea de 2000 € con IVA 10, aprobado; 60 h de un trabajador a 20 €/h; un proveedor de 1500 €; un cobro de 2200 €. Antes de ejecutar, calcula a mano qué ficha esperas (estado de pago, salud y beneficio) y apúntalo en un comentario. Después comprueba. Para no mezclar estados, vacía los atributos con `CLEAR` antes de empezar la segunda obra.
-9. **El diseño de tablas.** Crea `docs/diseno.md` en `erp-obras-reformas-sap` con una sección por tabla. Usa como modelo `zgor_cli` y `zgor_obra` de 1.5 y la tabla de tipos de la sección «El diseño de las tablas». Para cada una: nombre (como mucho 16 caracteres, sin tildes; ver el [Anexo B](B_nombres.html)), columnas con tipo, clave y relaciones, y en qué caso de «qué se guarda» cae cada campo calculado de Odoo. Las entidades son las diez raíces del informe (Clientes, Trabajadores, Proveedores, Especialistas, Presupuestos, Obras, Ingresos y los tres tipos de parte) más sus tablas hijas: líneas de presupuesto y de parte, faltas, la ficha de gastos y las dos relaciones N:M informativas de los presupuestos. Las tablas satélite (observaciones, incidencias y adjuntos) basta con describirlas una vez, porque todas tienen la misma forma (§2 del informe).
+9. **El diseño de tablas.** Crea `docs/diseno.md` en `erp-obras-reformas-sap` con una sección por tabla. Usa como modelo `zgor_cli` y `zgor_obra` de 1.5 y la tabla de tipos de la sección «El diseño de las tablas». Para cada una: nombre (como mucho 16 caracteres, sin tildes; ver el [Anexo B](./B_nombres.md)), columnas con tipo, clave y relaciones, y en qué caso de «qué se guarda» cae cada campo calculado de Odoo. Las entidades son las diez raíces del informe (Clientes, Trabajadores, Proveedores, Especialistas, Presupuestos, Obras, Ingresos y los tres tipos de parte) más sus tablas hijas: líneas de presupuesto y de parte, faltas, la ficha de gastos y las dos relaciones N:M informativas de los presupuestos. Las tablas satélite (observaciones, incidencias y adjuntos) basta con describirlas una vez, porque todas tienen la misma forma (§2 del informe).
 10. **Copia del informe.** Guarda el informe técnico de Odoo en `docs/odoo/informe-tecnico.md` del mismo repositorio: los apuntes citan sus secciones. **El repositorio es público**: antes de subirlo, quita todo lo que identifique a la empresa o a sus clientes (nombre, dominio, base de datos, proveedores contratados, importes y fechas de facturación). En la práctica, la sección 13 (infraestructura y despliegue) entera y cualquier nombre propio del resto. Las secciones que citan los apuntes (3 a 12) no los necesitan. Haz commit y push de los dos ficheros.
 
 ## Comprueba tu solución
@@ -173,11 +166,8 @@ No hay test automático de la simulación, porque es una salida por consola. Par
 
 - Las fichas de los pasos 7 y 8 deben coincidir con [1_8_ltcl_escenario.abap](materiales/tests/1_8_ltcl_escenario.abap).
 - Clic derecho en `ZGOR` → **Run As → ABAP Unit Test**: todos los tests del bloque en verde. Son 34 en `ZCL_GOR_REGLAS`, 3 en `ZCL_GOR_PRESUPUESTO` y 3 en `ZCL_GOR_PARTE_TRABAJO`: **40 en total**.
-- Del diseño, lo importante es que cada campo calculado tenga claro su caso. En [2.1](2_1_tablas.html) verás la versión definitiva: anota las diferencias con la tuya y por qué.
+- Del diseño, lo importante es que cada campo calculado tenga claro su caso. En [2.1](./2_1_tablas.md) verás la versión definitiva: anota las diferencias con la tuya y por qué.
 
 ---
 
-**Siguiente:** [2. Modelo de datos con CDS](bloque_B2.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/1_9_proyecto.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [2.1. Tablas persistentes en ADT](./2_1_tablas.md)

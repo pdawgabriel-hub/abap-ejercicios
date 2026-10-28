@@ -1,12 +1,5 @@
----
-title: "0.3. Los dos proyectos"
-parent: "0. Introducción y entorno"
-nav_order: 3
----
-
 # 0.3. Los dos proyectos
 
-{% raw %}
 Estos apuntes trabajan con **dos proyectos a la vez**, con papeles distintos:
 
 | | Taller RuedaLibre | ERP de Obras y Reformas |
@@ -17,7 +10,7 @@ Estos apuntes trabajan con **dos proyectos a la vez**, con papeles distintos:
 | Paquete | `ZEJ` (pruebas) | `ZGOR` |
 | Prefijo | `ZTL`, `ztl_`, `ZI_Tl` | `ZGOR`, `zgor_`, `ZI_Gor` |
 | Repositorio | `abap-ejercicios` | `erp-obras-reformas-sap` |
-| Guía técnica | [0.5](0_5_taller.html) | [0.4](0_4_erp.html) |
+| Guía técnica | [0.5](./0_5_taller.md) | [0.4](./0_4_erp.md) |
 
 ## Por qué dos
 
@@ -62,7 +55,7 @@ Los dos diagramas, uno junto a otro. En cada guía técnica están a tamaño com
 
 | Taller RuedaLibre | ERP de Obras y Reformas |
 |---|---|
-| [![Modelo del taller](materiales/diagramas/taller_modelo.svg)](materiales/diagramas/taller_modelo.svg) | [![Modelo del ERP](materiales/diagramas/erp_modelo.svg)](materiales/diagramas/erp_modelo.svg) |
+| [![Modelo del taller](images/taller_modelo.svg)](images/taller_modelo.svg) | [![Modelo del ERP](images/erp_modelo.svg)](images/erp_modelo.svg) |
 
 Los diagramas se generan con `herramientas/generar_diagramas.py`. Si cambias el modelo, cambia el script y vuelve a ejecutarlo.
 
@@ -70,12 +63,9 @@ Los diagramas se generan con `herramientas/generar_diagramas.py`. Si cambias el 
 
 1. Lee la teoría: el código del taller, con la explicación de cada pieza.
 2. Si quieres, pruébalo en tu paquete `ZEJ`.
-3. Haz los ejercicios: construye la pieza equivalente de tu ERP en `ZGOR`, con la especificación del ejercicio y la guía técnica [0.4](0_4_erp.html).
+3. Haz los ejercicios: construye la pieza equivalente de tu ERP en `ZGOR`, con la especificación del ejercicio y la guía técnica [0.4](./0_4_erp.md).
 4. Ejecuta el test de la unidad. Si falla, el mensaje te dice qué valor esperaba.
 
 ---
 
-**Siguiente:** [0.4. Guía técnica del ERP de Obras y Reformas](0_4_erp.html)
-
-[Mejorar esta página](https://github.com/pdawgabriel-hub/abap-ejercicios/edit/main/docs/0_3_dosProyectos.md){: .fs-2 }
-{% endraw %}
+**Siguiente:** [0.4. Guía técnica del ERP de Obras y Reformas](./0_4_erp.md)
