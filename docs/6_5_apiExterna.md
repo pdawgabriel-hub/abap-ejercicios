@@ -37,12 +37,13 @@ GET https://date.nager.at/api/v3/PublicHolidays/2026/ES
 ```abap
 CLASS zcl_tl_festivos DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PUBLIC SECTION.
+    " Un festivo tal como viene en el JSON (solo los campos que interesan)
     TYPES tt_textos TYPE STANDARD TABLE OF string WITH EMPTY KEY.
     TYPES: BEGIN OF ty_festivo,
              date       TYPE string,
              local_name TYPE string,
              global     TYPE abap_bool,
-             counties   TYPE tt_textos,
+             counties   TYPE tt_textos,           " lista de comunidades: tabla de textos
            END OF ty_festivo.
     TYPES tt_festivos TYPE STANDARD TABLE OF ty_festivo WITH EMPTY KEY.
 
@@ -55,19 +56,23 @@ ENDCLASS.
 
 CLASS zcl_tl_festivos IMPLEMENTATION.
   METHOD del_anio.
+    " 1. A donde se llama: un destino creado a partir de la URL
     DATA(lo_destino) = cl_http_destination_provider=>create_by_url(
                          |https://date.nager.at/api/v3/PublicHolidays/{ iv_anio }/ES| ).
     DATA(lo_cliente) = cl_web_http_client_manager=>create_by_http_destination( lo_destino ).
 
+    " 2. La peticion GET y lo que devuelve: codigo de estado y cuerpo (el JSON)
     DATA(lo_respuesta) = lo_cliente->execute( if_web_http_client=>get ).
     DATA(lv_estado) = lo_respuesta->get_status( )-code.
     DATA(lv_json) = lo_respuesta->get_text( ).
-    lo_cliente->close( ).
+    lo_cliente->close( ).                            " cerrar siempre la conexion
 
+    " 3. Si no es 200 (OK), algo ha ido mal: avisar a quien llama
     IF lv_estado <> 200.
       RAISE EXCEPTION NEW zcx_tl_aviso( iv_mensaje = |La API de festivos ha respondido { lv_estado }| ).
     ENDIF.
 
+    " 4. Del texto JSON a la tabla interna de festivos
     /ui2/cl_json=>deserialize( EXPORTING json        = lv_json
                                          pretty_name = /ui2/cl_json=>pretty_mode-camel_case
                                CHANGING  data        = rt_festivos ).
@@ -87,8 +92,10 @@ Llamar a Internet desde una *validation* que se ejecuta en cada guardado sería 
 La validation de la jornada, con un **aviso** que no bloquea el guardado:
 
 ```abap
+      " Se consulta la copia local, no la API
       SELECT SINGLE nombre FROM ztl_festivo WHERE fecha = @ls_jornada-Dia INTO @DATA(lv_festivo).
-      IF sy-subrc = 0.
+      IF sy-subrc = 0.                                 " es festivo
+        " Solo reported (no failed): severidad aviso, la jornada se guarda igual
         APPEND VALUE #( %tky        = ls_jornada-%tky
                         %state_area = 'FESTIVO'
                         %msg        = new_message_with_text(
@@ -110,10 +117,18 @@ La clase de la API va en `ZGOR_BUS`; la tabla de festivos, en `ZGOR_DDIC`; la cl
 
 ## Ejercicios
 
-1. **La clase de la API.** Crea `ZCL_GOR_FESTIVOS` con un método estático que devuelva los festivos de un año en España. Ejecútala desde una clase de consola para 2026 y escribe cuántos festivos hay y los tres primeros.
+1. **La clase de la API.**
+    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → ABAP Class**. Nombre `ZCL_GOR_FESTIVOS`, descripción `Festivos desde una API externa`.
+    - **Firma:** `CLASS-METHODS festivos IMPORTING iv_anio TYPE i RETURNING VALUE(rt_festivos) TYPE tt_festivos RAISING cx_static_check.`, con `tt_festivos` una tabla de `fecha` (`d`) y `nombre` (`string`) declarada en la sección pública.
+    - **Qué hace:** como `ZCL_TL_FESTIVOS`: crea el cliente HTTP, pide el JSON del año para `ES` y lo convierte con `/ui2/cl_json=>deserialize`.
+    - **Comprueba:** desde `ZCL_GOR_EML_DEMO` (o una clase de consola nueva), llama con 2026 y escribe cuántos festivos hay y los tres primeros. El primero debe ser el 1 de enero.
 2. **Los de tu comunidad.** Añade un parámetro con el código de la comunidad (por ejemplo `ES-MD`) y devuelve solo los festivos nacionales (`global`) y los de esa comunidad. Compara cuántos salen para dos comunidades distintas.
 3. **La caché.** Crea la tabla `zgor_festivo` (`fecha` dats como clave junto a `client`, y `nombre` char(80)) y una clase de consola `ZCL_GOR_CARGA_FESTIVOS` que la vacíe y la rellene con los festivos del año y la comunidad que indiques. Ejecútala.
-4. **El aviso.** Añade a tu parte de trabajo una validation `avisarFestivo` (`create; field Fecha`) que, si la fecha es festivo según `zgor_festivo`, añada un **aviso** (no un error) con el nombre del festivo. Pruébalo con EML: el parte se guarda y `REPORTED` trae el aviso.
+4. **El aviso.**
+    - **Dónde:** BDEF `ZI_GorParteTrabajo`, entidad `ParteTrabajo`; clase local `lhc_parte_trabajo` (o el nombre que te generó Eclipse).
+    - **En la BDEF:** `validation avisarFestivo on save { create; field Fecha; }`, y en `Prepare`.
+    - **Qué hace:** si la fecha está en `zgor_festivo`, añade a `reported` un mensaje con severidad `if_abap_behv_message=>severity-warning` y el nombre del festivo. **No** añade nada a `failed`: es un aviso, no un error.
+    - **Comprueba:** en `ZCL_GOR_EML_DEMO`, crea un parte para `OBR0001` con fecha 25/12/2026 y guarda: `FAILED` vacío, el parte existe (`SELECT COUNT( * )`) y `REPORTED` trae «Navidad» (o el nombre que dé la API).
 5. **En el calendario.** Añade a `ZI_GorCalendario` (6.4) una sexta rama con los festivos de `zgor_festivo`.
 6. **Investiga.** ¿Qué pasa en tu validation si un año no has cargado los festivos? ¿Y si la API cambia el formato de su JSON? Anota en `diseno.md` cómo lo detectarías y qué harías.
 

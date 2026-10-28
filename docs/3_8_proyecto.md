@@ -24,13 +24,15 @@ Un test no debe depender de los datos que haya en el sistema ni dejar basura. En
 Así se monta en el taller el test del resumen de la orden `ORD0001` ([0.5](./0_5_taller.md)):
 
 ```abap
+" Clase de test: solo existe en la pestana Test Classes
 CLASS ltcl_resumen DEFINITION FINAL FOR TESTING
   DURATION SHORT RISK LEVEL HARMLESS.
   PRIVATE SECTION.
+    " El entorno de dobles: uno para toda la clase (CLASS-DATA)
     CLASS-DATA go_cds TYPE REF TO if_cds_test_environment.
-    CLASS-METHODS class_setup.
-    CLASS-METHODS class_teardown.
-    METHODS setup.
+    CLASS-METHODS class_setup.                       " una vez, al empezar
+    CLASS-METHODS class_teardown.                    " una vez, al terminar
+    METHODS setup.                                   " antes de cada test
     METHODS paso_5_primer_abono FOR TESTING RAISING cx_static_check.
 ENDCLASS.
 
@@ -42,7 +44,7 @@ CLASS ltcl_resumen IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD class_teardown.
-    go_cds->destroy( ).
+    go_cds->destroy( ).                              " quitar los dobles
   ENDMETHOD.
 
   METHOD setup.
@@ -50,6 +52,7 @@ CLASS ltcl_resumen IMPLEMENTATION.
   ENDMETHOD.
 
   METHOD paso_5_primer_abono.
+    " Preparar: los datos minimos del caso, en las copias de las tablas
     DATA(lv_orden) = cl_system_uuid=>create_uuid_x16_static( ).
     DATA lt_ordenes TYPE STANDARD TABLE OF ztl_orden WITH EMPTY KEY.
     lt_ordenes = VALUE #( ( orden_uuid = lv_orden orden_ref = 'ORD0001' ) ).
@@ -60,8 +63,10 @@ CLASS ltcl_resumen IMPLEMENTATION.
     go_cds->insert_test_data( i_data = lt_prs ).
     " ... tramos (160), albaran (180), factura (60) y abono (300)
 
+    " Ejecutar: leer la vista como lo haria la app
     SELECT SINGLE FROM zi_tlordenresumen FIELDS Rendimiento, SaldoPendiente, Semaforo
       WHERE OrdenUUID = @lv_orden INTO @DATA(ls_resumen).
+    " Comprobar: los valores esperados de ORD0001 tras el primer abono
     cl_abap_unit_assert=>assert_equals( act = ls_resumen-Rendimiento    exp = CONV ztl_prs-importe( -100 ) ).
     cl_abap_unit_assert=>assert_equals( act = ls_resumen-SaldoPendiente exp = CONV ztl_prs-importe( 305 ) ).
     cl_abap_unit_assert=>assert_equals( act = ls_resumen-Semaforo       exp = CONV zi_tlordenresumen-Semaforo( 'rojo' ) ).
@@ -90,7 +95,7 @@ El paso 10 (buscar «Juan Pérez») se prueba en la app, en 4.3; el 11b ya lo pr
 
 La clase va en `ZGOR_TEST`. Al terminar, el Bloque 3 está completo:
 
-```
+```text
 ZGOR
 ├── ZGOR_DDIC   37 tablas + sus tablas de borradores
 ├── ZGOR_CDS    vistas interface, de cálculo y de participantes; ZA_GorVincularObra
@@ -100,8 +105,13 @@ ZGOR
 
 ## Ejercicios
 
-1. **La clase.** Crea en `ZGOR_TEST` la clase `ZCL_GOR_ESCENARIO`, sin métodos (descripción `Escenario de pruebas del informe, seccion 12.7`).
-2. **El comportamiento.** Escribe en su pestaña *Test Classes* la clase `ltcl_comportamiento`, con dobles de las tablas de clientes, trabajadores, proveedores, especialistas, presupuestos (con sus hijos), obras (con su gasto), ingresos y partes, y un método de test por grupo de pasos:
+1. **La clase.**
+    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_ESCENARIO`, descripción `Escenario de pruebas del informe, seccion 12.7`.
+    - **Qué contiene:** nada en la parte global: es solo el sitio donde viven los tests. Todo irá en su pestaña **Test Classes**.
+    - **Comprueba:** activa sin errores.
+2. **El comportamiento.**
+    - **Dónde:** pestaña *Test Classes* de `ZCL_GOR_ESCENARIO`, clase local `ltcl_comportamiento` (`FOR TESTING RISK LEVEL HARMLESS DURATION SHORT`), como la del taller.
+    - **Qué contiene:** un `class_setup` que crea el entorno de dobles con `cl_osql_test_environment=>create( )` para las tablas de clientes, trabajadores, proveedores, especialistas, presupuestos (con sus hijos), obras (con su gasto), ingresos y partes (y sus tablas de borradores), y un método de test por grupo de pasos:
 
     | Método | Qué hace | Qué comprueba |
     |---|---|---|
@@ -113,10 +123,14 @@ ZGOR
     | `paso_13_otro_cliente` | Presupuesto e ingreso de otro cliente en la obra | Los dos devuelven `FAILED` |
 
     Los datos maestros (clientes y trabajadores) insértalos directamente en los dobles en `setup`, como en 3.4; lo que prueba cada paso, créalo con EML.
-3. **Las finanzas.** Escribe `ltcl_finanzas`, con un entorno CDS sobre `ZI_GorObraFinanzas` como el del taller, y un método por paso: `paso_06_gastos` (gastos 670, sin ingresos, `pendiente`), `paso_07_primer_cobro` y `paso_08_obra_cobrada`, con todos los valores de las filas 7 y 8 de §12.7. Los datos (obra, presupuesto aprobado, líneas de parte, partes externos e ingresos) se insertan en las tablas dobladas.
+    - **Comprueba:** **Ctrl+Shift+F10** con la clase abierta: **6 tests en verde**. Si uno falla, el mensaje de `cl_abap_unit_assert` dice qué valor esperaba y cuál ha salido.
+3. **Las finanzas.**
+    - **Dónde:** la misma pestaña, una segunda clase local `ltcl_finanzas`.
+    - **Qué contiene:** un entorno CDS sobre `ZI_GorObraFinanzas` como el del taller, y un método por paso: `paso_06_gastos` (gastos 670, sin ingresos, `pendiente`), `paso_07_primer_cobro` y `paso_08_obra_cobrada`, con todos los valores de las filas 7 y 8 de §12.7. Los datos (obra, presupuesto aprobado, líneas de parte, partes externos e ingresos) se insertan en las tablas dobladas.
+    - **Comprueba:** **Ctrl+Shift+F10**: **9 tests en verde** entre las dos clases.
 4. **Que falle por el motivo correcto.** Cambia temporalmente en tu `ZI_GorObraFinanzas` el `BeneficioReal` a `total − gastos` (el error de Odoo que cuenta §11.5, punto 2). Ejecuta: debe fallar `paso_07_primer_cobro`, y el mensaje debe decir que el beneficio es 540 en vez de −170. Deshazlo.
 5. **Todo el proyecto.** Clic derecho en `ZGOR` → **Run As → ABAP Unit Test**. Anota cuántos tests tienes en total y cuánto tardan.
-6. **Investiga.** Ejecuta los tests con cobertura. ¿Qué métodos de tus clases de comportamiento no recorre ningún test? Elige uno y escribe el test que falta.
+6. **Investiga.** Ejecuta los tests con cobertura (clic derecho en `ZGOR` → **Coverage As → ABAP Unit Test**). ¿Qué métodos de tus clases de comportamiento no recorre ningún test? Elige uno y escribe el test que falta.
 
 ## Comprueba tu solución automáticamente
 

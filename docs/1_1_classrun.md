@@ -87,7 +87,7 @@ Necesitas Eclipse con ADT conectado a tu trial, como se explica en [0.1. Prepara
 
 Al terminar, el proyecto tendrá esta forma:
 
-```
+```text
 ZLOCAL
 └── ZGOR
     ├── ZGOR_DDIC
@@ -113,7 +113,7 @@ ZLOCAL
     - **Qué hace:** es una clase ejecutable, como la del taller (implementa `if_oo_adt_classrun`). Su `main` escribe dos líneas.
     - **Comprueba:** guarda (**Ctrl+S**), activa (**Ctrl+F3**) y ejecuta (**F9**). En la pestaña *Console* debe salir exactamente:
 
-    ```
+    ```text
     ERP de Obras y Reformas
     Port a SAP del modulo gestion_bd de Odoo
     ```

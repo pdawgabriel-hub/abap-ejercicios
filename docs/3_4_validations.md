@@ -6,7 +6,7 @@ Una *validation* comprueba que los datos son correctos **antes de guardar** y, s
 
 Una validation se declara en la BDEF, dentro de la entidad a la que pertenece, y se añade a la acción `Prepare`:
 
-```sql
+```bdef
 define behavior for ZI_TlPresupuesto alias Presupuesto
 ...
 {

@@ -4,7 +4,8 @@ Una *action* es una operación de negocio con nombre propio, más allá de crear
 
 ## Declarar una acción
 
-```sql
+```bdef
+  // Dos botones; si estan activos lo decide el codigo, presupuesto a presupuesto
   action ( features : instance ) aceptar         result [1] $self;
   action ( features : instance ) volverABorrador result [1] $self;
 ```
@@ -16,12 +17,14 @@ Una *action* es una operación de negocio con nombre propio, más allá de crear
 
 ```abap
   METHOD aceptar.
+    " 1. Cambiar la situacion de cada presupuesto recibido
     MODIFY ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto
         UPDATE FIELDS ( Situacion )
         WITH VALUE #( FOR k IN keys ( %tky      = k-%tky
                                       Situacion = zif_tl_tipos=>situacion_presupuesto-aceptado ) ).
 
+    " 2. Devolver la instancia ya cambiada (result [1] $self): Fiori pinta el estado nuevo
     READ ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto ALL FIELDS WITH CORRESPONDING #( keys )
       RESULT DATA(lt_presupuestos).
@@ -33,20 +36,23 @@ No hay nada más que hacer: el importe de la orden se calcula en `ZI_TlOrdenImpo
 
 ## Feature control: activar y desactivar botones
 
-```sql
+```bdef
 define behavior for ZI_TlPresupuesto alias Presupuesto
 ...
 {
   ...
+  // features : instance -> RAP llamara a get_instance_features
   action ( features : instance ) aceptar result [1] $self;
 ```
 
 ```abap
   METHOD get_instance_features.
+    " Leer lo que decide el estado de los botones
     READ ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto FIELDS ( Situacion OrdenUUID ) WITH CORRESPONDING #( keys )
       RESULT DATA(lt_presupuestos).
 
+    " Una fila por presupuesto, con el estado (enabled/disabled) de cada accion
     result = VALUE #( FOR p IN lt_presupuestos
       LET lv_aceptado = xsdbool( p-Situacion = zif_tl_tipos=>situacion_presupuesto-aceptado ) IN
       ( %tky                    = p-%tky
@@ -54,6 +60,7 @@ define behavior for ZI_TlPresupuesto alias Presupuesto
                                           THEN if_abap_behv=>fc-o-disabled ELSE if_abap_behv=>fc-o-enabled )
         %action-volverABorrador = COND #( WHEN lv_aceptado = abap_true
                                           THEN if_abap_behv=>fc-o-enabled ELSE if_abap_behv=>fc-o-disabled )
+        " Vincular solo si todavia no tiene orden
         %action-vincularAOrden  = COND #( WHEN p-OrdenUUID IS INITIAL
                                           THEN if_abap_behv=>fc-o-enabled ELSE if_abap_behv=>fc-o-disabled ) ) ).
   ENDMETHOD.
@@ -67,15 +74,17 @@ En el taller, un presupuesto que se hizo antes de abrir la orden se vincula desp
 
 El parámetro es una **entidad abstracta**: una estructura CDS que no lee ninguna tabla.
 
-```sql
+```cds
 @EndUserText.label: 'Taller - Orden a la que vincular'
+// abstract: no lee ninguna tabla, solo define los campos del parametro
 define abstract entity ZA_TlVincularOrden
 {
-  OrdenRef : abap.char(8);
+  OrdenRef : abap.char(8);          // lo que teclea el usuario: ORD0001
 }
 ```
 
-```sql
+```bdef
+  // parameter: la accion pide datos al usuario (Fiori abre un dialogo)
   action ( features : instance ) vincularAOrden parameter ZA_TlVincularOrden result [1] $self;
 ```
 
@@ -87,11 +96,13 @@ define abstract entity ZA_TlVincularOrden
 
     LOOP AT keys INTO DATA(ls_key).
       DATA(ls_presu) = VALUE #( lt_presupuestos[ PresupuestoUUID = ls_key-PresupuestoUUID ] OPTIONAL ).
+      " Buscar la orden por el codigo que llega en el parametro
       SELECT SINGLE FROM ztl_orden
         FIELDS orden_uuid, titular_uuid
         WHERE orden_ref = @ls_key-%param-OrdenRef
         INTO @DATA(ls_orden).
 
+      " No existe, o es de otro titular: marcar como fallida y explicar por que
       IF sy-subrc <> 0 OR ls_orden-titular_uuid <> ls_presu-TitularUUID.
         APPEND VALUE #( %tky = ls_key-%tky ) TO failed-presupuesto.
         APPEND VALUE #( %tky = ls_key-%tky
@@ -99,9 +110,10 @@ define abstract entity ZA_TlVincularOrden
                                  severity = if_abap_behv_message=>severity-error
                                  text     = |La orden { ls_key-%param-OrdenRef } no existe o es de otro titular| ) )
                TO reported-presupuesto.
-        CONTINUE.
+        CONTINUE.                                     " siguiente presupuesto
       ENDIF.
 
+      " Todo bien: enlazar el presupuesto con la orden
       MODIFY ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
         ENTITY Presupuesto
           UPDATE FIELDS ( OrdenUUID ) WITH VALUE #( ( %tky = ls_key-%tky OrdenUUID = ls_orden-orden_uuid ) ).
@@ -122,7 +134,8 @@ define abstract entity ZA_TlVincularOrden
 
 **Una orden con abonos no se puede borrar.** Se declara en el `delete`:
 
-```sql
+```bdef
+  // Boton desactivable (features) y comprobacion previa al borrado (precheck)
   delete ( features : instance, precheck );
 ```
 
@@ -131,11 +144,13 @@ define abstract entity ZA_TlVincularOrden
 
 ```abap
   METHOD precheck_delete.
+    " Que ordenes de las que se quieren borrar tienen abonos (una sola consulta)
     SELECT DISTINCT orden_uuid FROM ztl_abo
       FOR ALL ENTRIES IN @keys WHERE orden_uuid = @keys-OrdenUUID
       INTO TABLE @DATA(lt_con_abonos).
 
     LOOP AT keys INTO DATA(ls_key).
+      " Sin abonos: se puede borrar, siguiente
       CHECK line_exists( lt_con_abonos[ orden_uuid = ls_key-OrdenUUID ] ).
       APPEND VALUE #( %tky = ls_key-%tky ) TO failed-orden.
       APPEND VALUE #( %tky = ls_key-%tky
@@ -149,11 +164,13 @@ define abstract entity ZA_TlVincularOrden
 
 **Una orden sin abonos se borra con lo que solo existe por ella.** La hoja de costes se borra sola, porque es su hija. Pero las jornadas, albaranes y facturas son **otros BO** que apuntan a la orden, y los presupuestos hay que conservarlos desvinculados. Para eso hay un **guardado adicional**: código que se ejecuta al guardar, después de que RAP escriba la orden.
 
-```sql
+```bdef
+// with additional save: despues de que RAP guarde, se ejecuta nuestro save_modified
 managed with additional save implementation in class zbp_i_tlorden unique;
 ```
 
 ```abap
+" lsc = local saver class: interviene en el momento de guardar
 CLASS lsc_zi_tlorden DEFINITION INHERITING FROM cl_abap_behavior_saver.
   PROTECTED SECTION.
     METHODS save_modified REDEFINITION.
@@ -161,8 +178,9 @@ ENDCLASS.
 
 CLASS lsc_zi_tlorden IMPLEMENTATION.
   METHOD save_modified.
-    DATA lv_sin_orden TYPE sysuuid_x16.
+    DATA lv_sin_orden TYPE sysuuid_x16.               " UUID vacio
 
+    " delete-orden: las ordenes que se acaban de borrar
     LOOP AT delete-orden INTO DATA(ls_orden).
       " Jornadas con sus tramos (primero los tramos)
       DELETE FROM ztl_jor_tra WHERE jornada_uuid IN ( SELECT jornada_uuid FROM ztl_jor
@@ -191,12 +209,61 @@ Tu entidad abstracta va en `ZGOR_CDS`. Lo demás amplía tus BDEF y clases de co
 
 ## Ejercicios
 
-1. **Aprobar y desaprobar.** Añade a tu presupuesto las acciones `aprobar` y `desaprobar` (cambian `Estado` a `aprobado` o `no_aprobado` y devuelven la propia instancia), con *feature control*: `aprobar` solo activa si no está aprobado, y `desaprobar` al revés. Con EML (`EXECUTE aprobar` y *commit*), aprueba `PREP0005` (el de `OBR0004`). En el Data Preview de `ZI_GorObraFinanzas`, `OBR0004` debe pasar de total 0 a **1210**. Desapruébalo y vuelve a 0.
-2. **Vincular.** Crea la entidad abstracta `ZA_GorVincularObra`, con un campo `ObraId` (`abap.char(8)`), y la acción `vincularAObra` en el presupuesto, con ese parámetro. Reglas (§3.15): solo para presupuestos **sin obra** (*feature control*), y la obra debe existir y, si tiene cliente, ser del cliente del presupuesto; si no, error con mensaje. Con EML, vincula `PREP0006` (de `CLI0005`, sin obra) a `OBR0001`: debe fallar, porque es de Juan. Crea una obra para `CLI0005` y vincúlalo a ella: ahora sí. Después, inténtalo otra vez: el *feature control* lo impide.
-3. **Borrar obras.** Una obra con ingresos no se borra (§3.5, `_unlink_sin_ingresos`): pon en la obra `delete ( features : instance, precheck )`, con el botón desactivado y el *precheck* rechazando el borrado si tiene ingresos. Con EML, intenta borrar `OBR0001`: debe fallar (paso 11 de §12.7).
-4. **El guardado adicional.** Al borrar una obra sin ingresos (§3.5, `unlink`): se borran sus partes de trabajo con sus líneas y sus partes de especialista y de proveedor, y sus presupuestos se quedan **sin obra**. Su ficha de gastos se borra sola, por la composición. Pruébalo con el paso 11b de §12.7: crea con EML una obra con un presupuesto aprobado y un parte de trabajo de 8 h de `TRB0002`, **sin ingresos**, y bórrala. Comprueba que han desaparecido su ficha de gastos y el parte, que el presupuesto sigue sin obra y que `ZI_GorTrabAcum` de `TRB0002` ha vuelto a sus 8 h de antes.
-5. **Más restricciones al borrar.** Odoo no deja borrar (§11.6, `RESTRICT`): un cliente con presupuestos, un trabajador con líneas de parte, ni un proveedor o especialista con partes. Implementa un `precheck` para cada uno.
-6. **Marcar como pagado.** Añade a los partes de especialista y de proveedor la acción `marcarPagado` (pone `EstadoPago` a `pagado`), activa solo si el parte está `pendiente`.
+Como en 3.3, las firmas se crean con **Ctrl+1** → *Add missing method* sobre el nombre de cada pieza en la BDEF. Para que las reconozcas, son estas:
+
+```abap
+" Una accion que devuelve la propia instancia (result [1] $self)
+METHODS aprobar FOR MODIFY
+  IMPORTING keys FOR ACTION Presupuesto~aprobar RESULT result.
+
+" Feature control: un metodo para todas las acciones y operaciones con ( features : instance )
+METHODS get_instance_features FOR INSTANCE FEATURES
+  IMPORTING keys REQUEST requested_features FOR Presupuesto RESULT result.
+
+" Precheck: se ejecuta antes de borrar, y puede rechazarlo
+METHODS precheck_delete FOR PRECHECK
+  IMPORTING keys FOR DELETE Obra.
+```
+
+1. **Aprobar y desaprobar.**
+    - **Dónde:** BDEF `ZI_GorPresupuesto`, entidad `Presupuesto`; clase `zbp_i_gorpresupuesto`, clase local `lhc_presupuesto`.
+    - **En la BDEF:** `action ( features : instance ) aprobar result [1] $self;` y lo mismo para `desaprobar`. Añade también los dos *side effects* que dejaste pendientes en el ejercicio 5 de 3.3.
+    - **Qué hace:** `aprobar` cambia `Estado` a `aprobado` y `desaprobar` a `no_aprobado`, y las dos devuelven en `result` la instancia leída después del cambio, como `aceptar` del taller. En `get_instance_features`, `aprobar` solo está activa si el presupuesto **no** está aprobado, y `desaprobar` al revés.
+    - **Comprueba:** en `ZCL_GOR_EML_DEMO`, bloque `" 3.5 Aprobar`: lee el UUID de `PREP0005` (el de `OBR0004`) con `SELECT SINGLE`, ejecuta `MODIFY ENTITIES ... EXECUTE aprobar` y `COMMIT ENTITIES`, y escribe `Total` de `zi_gorobrafinanzas` para `OBR0004`: pasa de 0 a **1210**. Ejecuta `desaprobar` y vuelve a 0. Si intentas `aprobar` dos veces seguidas, la segunda debe aparecer en `FAILED`.
+
+2. **Vincular a una obra.**
+    - **Dónde:** una *Data Definition* nueva en `ZGOR_CDS`, `ZA_GorVincularObra` (plantilla *Define Abstract Entity*, descripción `Obra a la que vincular`); y la BDEF y la clase del presupuesto.
+    - **Qué contiene:** la entidad abstracta, con un solo campo, `ObraId : abap.char(8);`. En la BDEF, `action ( features : instance ) vincularAObra parameter ZA_GorVincularObra result [1] $self;`.
+    - **Qué hace** (§3.15): busca la obra por su código (`%param-ObraId`); si no existe, o si tiene cliente y no es el del presupuesto, error en `failed` y `reported` con mensaje. Si todo está bien, pone `ObraUUID`. En `get_instance_features`, la acción solo está activa para presupuestos **sin obra**.
+    - **Comprueba:** en `ZCL_GOR_EML_DEMO`, bloque `" 3.5 Vincular`:
+        1. vincula `PREP0006` (de `CLI0005`, sin obra) a `OBR0001`: debe fallar con tu mensaje, porque es de Juan;
+        2. crea con EML una obra para `CLI0005` y vincúlalo a ella: `FAILED` vacío y `SELECT SINGLE ObraUUID FROM zgor_presu` ya tiene valor;
+        3. inténtalo otra vez: el *feature control* lo impide y aparece en `FAILED`.
+
+3. **Borrar obras.**
+    - **Dónde:** BDEF `ZI_GorObra`, entidad `Obra`; clase `zbp_i_gorobra`, clase local `lhc_obra`.
+    - **En la BDEF:** cambia `delete;` por `delete ( features : instance, precheck );`.
+    - **Qué hace** (§3.5, `_unlink_sin_ingresos`): en `get_instance_features`, `%delete` desactivado si la obra tiene ingresos (cuéntalos con `SELECT COUNT( * ) FROM zgor_ing`); en `precheck_delete`, la misma comprobación, con el mensaje «No se puede borrar una obra con ingresos».
+    - **Comprueba:** en `ZCL_GOR_EML_DEMO`, intenta borrar `OBR0001` con `MODIFY ... DELETE` y guarda: debe escribir el mensaje, y `SELECT COUNT( * ) FROM zgor_obra WHERE obra_id = 'OBR0001'` sigue dando 1 (paso 11 de §12.7).
+
+4. **El guardado adicional.**
+    - **Dónde:** la BDEF `ZI_GorObra` y la clase `zbp_i_gorobra`, pestaña *Local Types*.
+    - **En la BDEF:** la primera línea pasa a `managed with additional save implementation in class zbp_i_gorobra unique;`. Con **Ctrl+1** sobre ella, Eclipse crea la clase `lsc_zi_gorobra` con el método `save_modified`.
+    - **Qué hace** (§3.5, `unlink`): para cada obra de `delete-obra`, borra sus partes de trabajo con sus líneas y sus partes de especialista y de proveedor (`DELETE FROM` sobre las tablas), y deja sus presupuestos **sin obra** (`UPDATE zgor_presu SET obra_uuid = ...`). La ficha de gastos no hay que borrarla: se borra sola por la composición.
+    - **Comprueba** (paso 11b de §12.7): en `ZCL_GOR_EML_DEMO`, crea con EML una obra con un presupuesto aprobado y un parte de trabajo de 8 h de `TRB0002`, **sin ingresos**, y bórrala. Con `SELECT COUNT( * )`: 0 fichas de gastos y 0 partes de esa obra, y el presupuesto sigue existiendo, sin obra. `ZI_GorTrabAcum` de `TRB0002` vuelve a sus 8 h de antes.
+
+5. **Más restricciones al borrar.**
+    - **Dónde:** las BDEF y clases del cliente, el trabajador, el proveedor y el especialista.
+    - **En la BDEF:** `delete ( precheck );` en cada raíz.
+    - **Qué hace** (§11.6, `RESTRICT`): rechaza el borrado de un cliente con presupuestos, de un trabajador con líneas de parte y de un proveedor o especialista con partes, cada uno con su mensaje.
+    - **Comprueba:** en `ZCL_GOR_EML_DEMO`, intenta borrar `CLI0001`, `TRB0001`, `PROV0001` y `ESP0001`: cuatro mensajes, y los cuatro siguen en la base de datos.
+
+6. **Marcar como pagado.**
+    - **Dónde:** las BDEF y clases de `ZI_GorParteEsp` y `ZI_GorParteProv`.
+    - **En la BDEF:** `action ( features : instance ) marcarPagado result [1] $self;`.
+    - **Qué hace:** pone `EstadoPago` a `pagado`; solo está activa si el parte está `pendiente`.
+    - **Comprueba:** crea con EML un parte de proveedor pendiente, ejecuta `marcarPagado`, guarda y léelo: `pagado`. Ejecútala otra vez: aparece en `FAILED`.
+
 7. **Investiga.** ¿Qué pasa si quitas `( features : instance )` de tu `aprobar` pero dejas `%action-aprobar` en `get_instance_features`? Activa y lee el error. Anota la relación entre las dos piezas.
 
 ## Comprueba tu solución automáticamente (opcional)

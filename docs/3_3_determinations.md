@@ -11,7 +11,7 @@ Una *determination* es lógica que **rellena o recalcula campos** cuando ocurre 
 
 Los disparadores van entre llaves:
 
-```sql
+```bdef
   determination valoresIniciales  on modify { create; }
   determination copiarTitular     on modify { field TitularUUID; }
   determination recalcularPorTipo on modify { field Impuesto; }
@@ -56,21 +56,25 @@ Todas siguen tres pasos: **leer** las instancias afectadas, **calcular** y **esc
 
 ```abap
   METHOD copiarTitular.
+    " 1. Leer de NUESTRO BO (local mode) que titular tiene cada presupuesto
     READ ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto FIELDS ( TitularUUID ) WITH CORRESPONDING #( keys )
       RESULT DATA(lt_presupuestos).
-    DELETE lt_presupuestos WHERE TitularUUID IS INITIAL.
+    DELETE lt_presupuestos WHERE TitularUUID IS INITIAL.   " sin titular, nada que copiar
     CHECK lt_presupuestos IS NOT INITIAL.
 
+    " 2. Leer del OTRO BO (sin local mode) los datos de esos titulares
     READ ENTITIES OF zi_tltitular
       ENTITY Titular FIELDS ( RazonSocial DocumentoId )
       WITH VALUE #( FOR ls IN lt_presupuestos ( TitularUUID = ls-TitularUUID ) )
       RESULT DATA(lt_titulares).
 
+    " 3. Escribir la copia en cada presupuesto
     MODIFY ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto
         UPDATE FIELDS ( TitularNombre TitularDocumento )
         WITH VALUE #( FOR ls IN lt_presupuestos
+                      " t: el titular de este presupuesto (fila vacia si no se encuentra)
                       LET t = VALUE #( lt_titulares[ TitularUUID = ls-TitularUUID ] OPTIONAL ) IN
                       ( %tky             = ls-%tky
                         TitularNombre    = t-RazonSocial
@@ -87,27 +91,33 @@ Todas siguen tres pasos: **leer** las instancias afectadas, **calcular** y **esc
 
 Los importes del presupuesto dependen de sus partidas y de su impuesto. Para no escribir el cálculo dos veces, va en una **acción interna** de la raíz, que solo puede llamar el propio BO:
 
-```sql
+```bdef
+  // Solo la puede llamar el propio BO (no sale como boton)
   internal action recalcularImportes;
+  // Si cambia el impuesto, recalcular
   determination recalcularPorTipo on modify { field Impuesto; }
   ...
-  " en la entidad Partida:
+  // en la entidad Partida:
   determination calcularPartida on modify { create; field Cantidad, PrecioUnitario; }
 ```
 
 ```abap
   METHOD recalcularImportes.
+    " Una sola lectura para dos cosas: las cabeceras y, por la composicion, sus partidas
     READ ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto FIELDS ( Impuesto ) WITH CORRESPONDING #( keys )
         RESULT DATA(lt_presupuestos)
       ENTITY Presupuesto BY \_Partidas FIELDS ( Cantidad PrecioUnitario ) WITH CORRESPONDING #( keys )
         RESULT DATA(lt_partidas).
 
+    " Tabla con el tipo exacto que espera el UPDATE de la entidad Presupuesto
     DATA lt_update TYPE TABLE FOR UPDATE zi_tlpresupuesto\\Presupuesto.
     LOOP AT lt_presupuestos INTO DATA(ls_presu).
+      " Las partidas de este presupuesto, en el formato de la clase de reglas
       DATA(lt_calculo) = VALUE zif_tl_tipos=>tt_partidas(
         FOR p IN lt_partidas WHERE ( PresupuestoUUID = ls_presu-PresupuestoUUID )
         ( cantidad = p-Cantidad precio_unitario = p-PrecioUnitario ) ).
+      " Las formulas son las del Bloque 1: no se repiten, se llaman
       DATA(lv_neto) = zcl_tl_calculos=>neto_presupuesto( lt_calculo ).
       APPEND VALUE #( %tky    = ls_presu-%tky
                       Neto    = lv_neto
@@ -117,6 +127,7 @@ Los importes del presupuesto dependen de sus partidas y de su impuesto. Para no 
         TO lt_update.
     ENDLOOP.
 
+    " Escribir todas las cabeceras de una vez
     MODIFY ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto UPDATE FIELDS ( Neto Cuota Importe ) WITH lt_update.
   ENDMETHOD.
@@ -128,6 +139,7 @@ La partida calcula su importe y pide a su cabecera que se recalcule:
 
 ```abap
   METHOD calcularPartida.
+    " 1. El importe de cada partida cambiada
     READ ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Partida FIELDS ( Cantidad PrecioUnitario ) WITH CORRESPONDING #( keys )
       RESULT DATA(lt_partidas).
@@ -141,12 +153,14 @@ La partida calcula su importe y pide a su cabecera que se recalcule:
                                            iv_cantidad        = p-Cantidad
                                            iv_precio_unitario = CONV #( p-PrecioUnitario ) ) ) ).
 
+    " 2. Sus presupuestos (navegando al padre), cada uno una sola vez
     READ ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Partida BY \_Presupuesto FIELDS ( PresupuestoUUID ) WITH CORRESPONDING #( keys )
       RESULT DATA(lt_cabeceras).
     SORT lt_cabeceras BY PresupuestoUUID.
     DELETE ADJACENT DUPLICATES FROM lt_cabeceras COMPARING PresupuestoUUID.
 
+    " 3. Pedir a cada cabecera que se recalcule
     MODIFY ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto EXECUTE recalcularImportes FROM CORRESPONDING #( lt_cabeceras ).
   ENDMETHOD.
@@ -156,8 +170,10 @@ La partida calcula su importe y pide a su cabecera que se recalcule:
 
 **¿Y si se borra una partida?** El borrado no es un cambio de `Cantidad` ni de `PrecioUnitario`, así que `calcularPartida` no se dispara. Para que los importes queden bien al guardar, la acción `Prepare` (que Fiori ejecuta justo antes de guardar un borrador) recalcula siempre:
 
-```sql
+```bdef
+  // Al guardar, recalcular siempre (cubre el borrado de partidas)
   determination importesAlGuardar on save { create; update; }
+  // Prepare se ejecuta antes de activar un borrador: aqui se le dice que la incluya
   draft determine action Prepare { determination ( always ) importesAlGuardar; }
 ```
 
@@ -169,11 +185,12 @@ Las *determinations* recalculan en el servidor, pero Fiori **no se entera**. Cua
 
 Los ***side effects*** le dicen a Fiori qué más tiene que volver a leer. Se declaran en la BDEF, en cada entidad:
 
-```sql
+```bdef
 define behavior for ZI_TlPresupuesto alias Presupuesto
 ...
 {
   ...
+  // Que mas tiene que volver a leer Fiori despues de cada cambio
   side effects
   {
     field Impuesto affects field Cuota, field Importe;
@@ -187,6 +204,7 @@ define behavior for ZI_TlPartida alias Partida
   ...
   side effects
   {
+    // Cambiar una partida refresca su importe y los de su cabecera
     field Cantidad, PrecioUnitario affects field ImportePartida,
                                            field _Presupuesto.Neto,
                                            field _Presupuesto.Cuota,
@@ -208,16 +226,19 @@ Es la otra mitad de un `@api.onchange` de Odoo: allí, el formulario pinta solo 
 
 La orden del taller debe nacer con su hoja de costes. Lo hace una determination de la orden que crea el hijo a través de la composición:
 
-```sql
+```bdef
+  // Al crear la orden, crear tambien su hoja de costes
   determination crearHojaCostes on modify { create; }
 ```
 
 ```abap
   METHOD crearHojaCostes.
+    " Las hojas que ya tengan estas ordenes (normalmente ninguna)
     READ ENTITIES OF zi_tlorden IN LOCAL MODE
       ENTITY Orden BY \_HojaCostes FIELDS ( HojaUUID ) WITH CORRESPONDING #( keys )
       RESULT DATA(lt_hojas).
 
+    " Tipo de la tabla para crear hijos por la composicion _HojaCostes
     DATA lt_crear TYPE TABLE FOR CREATE zi_tlorden\\Orden\_HojaCostes.
     LOOP AT keys INTO DATA(ls_key).
       " Nunca dos hojas para la misma orden
@@ -227,7 +248,7 @@ La orden del taller debe nacer con su hoja de costes. Lo hace una determination 
                                            %is_draft = ls_key-%is_draft
                                            Garantia  = abap_false ) ) ) TO lt_crear.
     ENDLOOP.
-    CHECK lt_crear IS NOT INITIAL.
+    CHECK lt_crear IS NOT INITIAL.                    " nada que crear
 
     MODIFY ENTITIES OF zi_tlorden IN LOCAL MODE
       ENTITY Orden CREATE BY \_HojaCostes FIELDS ( Garantia ) WITH lt_crear.
@@ -242,20 +263,49 @@ Se amplían tus BDEF de 3.1 y tus clases de 3.2. Tras añadir cada determination
 
 ## Ejercicios
 
-1. **El presupuesto.** Añade a tu BDEF del presupuesto y a su clase:
+Para crear los métodos no hace falta escribir la firma a mano: después de declarar una pieza en la BDEF, pon el cursor sobre su nombre y pulsa **Ctrl+1** → *Add missing method*. Eclipse la añade a la clase local de esa entidad con la firma correcta. Las firmas son de dos tipos:
 
-    | Pieza | Disparador | Qué hace (informe) |
-    |---|---|---|
-    | `valoresPorDefecto` | `create` | `Iva` 21, `Estado` `no_aprobado` y `Fecha` de hoy, si están vacíos (§3.6) |
-    | `copiarCliente` | `field ClienteUUID` | Copia en `NombreCliente` el nombre completo del cliente (usa tu `nombre_completo`) y su `Nif`, `Direccion` y `Telf` (§3.6, `_onchange_cliente_id`) |
-    | acción interna `recalcularTotales` | — | `BaseImponible`, `CuotaIva` y `Total` desde las líneas, con tus `base_imponible`, `cuota_iva` y `total_presupuesto` |
-    | `recalcularPorIva` | `field Iva` | Ejecuta `recalcularTotales` |
-    | `totalesAlGuardar` + `Prepare` | `on save { create; update; }` | Ejecuta `recalcularTotales`; en `Prepare` con `( always )` |
-    | `calcularLinea` (en `Linea`) | `create; field Uds, Precio` | `TotalLinea` con tu `total_linea`, y ejecuta `recalcularTotales` en su presupuesto |
+```abap
+" Una determination: se ejecuta sola cuando se cumple su disparador
+METHODS valoresPorDefecto FOR DETERMINE ON MODIFY
+  IMPORTING keys FOR Presupuesto~valoresPorDefecto.
 
-2. **Pruébalo con EML.** En `ZCL_GOR_EML_DEMO`, crea un presupuesto **sin IVA ni estado** para Elena con una línea de 10 × 100 y guarda. En el Data Preview debe tener IVA 21, estado `no_aprobado`, fecha de hoy, los datos de Elena copiados, `TotalLinea` 1000 y `Total` 1210 (paso 2 de §12.7).
-3. **La obra y su gasto.** Añade a la obra `crearGasto` (`on modify { create; }`): crea su ficha de gastos si no la tiene (§11.5, punto 5). Crea una obra con EML y comprueba en el Data Preview de `ZI_GorGasto` que tiene **una** ficha. Repite la creación de la misma obra en el mismo programa: ¿se duplica?
-4. **El resto.** Añade estas determinations:
+" Una accion (tambien las internas): se ejecuta cuando alguien la llama con EXECUTE
+METHODS recalcularTotales FOR MODIFY
+  IMPORTING keys FOR ACTION Presupuesto~recalcularTotales.
+```
+
+Las de `on save` son iguales, pero con `FOR DETERMINE ON SAVE`.
+
+1. **El presupuesto.**
+    - **Dónde:** BDEF `ZI_GorPresupuesto`; clase `zbp_i_gorpresupuesto`, clases locales `lhc_presupuesto` y `lhc_linea`.
+    - **En la BDEF:** seis piezas, cada una con un comentario `//` que diga qué hace:
+
+        | Pieza | Entidad | Declaración | Qué hace (informe) |
+        |---|---|---|---|
+        | `valoresPorDefecto` | `Presupuesto` | `determination valoresPorDefecto on modify { create; }` | `Iva` 21, `Estado` `no_aprobado` y `Fecha` de hoy, si están vacíos (§3.6) |
+        | `copiarCliente` | `Presupuesto` | `determination copiarCliente on modify { field ClienteUUID; }` | Copia en `NombreCliente` el nombre completo del cliente (usa tu `nombre_completo`) y su `Nif`, `Direccion` y `Telf` (§3.6, `_onchange_cliente_id`) |
+        | `recalcularTotales` | `Presupuesto` | `internal action recalcularTotales;` | `BaseImponible`, `CuotaIva` y `Total` desde las líneas, con tus `base_imponible`, `cuota_iva` y `total_presupuesto` |
+        | `recalcularPorIva` | `Presupuesto` | `determination recalcularPorIva on modify { field Iva; }` | Ejecuta `recalcularTotales` |
+        | `totalesAlGuardar` | `Presupuesto` | `determination totalesAlGuardar on save { create; update; }`, y en `Prepare` con `determination ( always ) totalesAlGuardar;` | Ejecuta `recalcularTotales` |
+        | `calcularLinea` | `Linea` | `determination calcularLinea on modify { create; field Uds, Precio; }` | `TotalLinea` con tu `total_linea`, y ejecuta `recalcularTotales` en su presupuesto |
+
+    - **Firmas:** con **Ctrl+1** sobre cada nombre, como se explica arriba.
+    - **Qué hace cada método:** los tres pasos del taller: leer con `READ ENTITIES ... IN LOCAL MODE`, calcular con tu `zcl_gor_reglas` y escribir con `MODIFY ENTITIES ... IN LOCAL MODE`. `copiarCliente` lee el cliente de **otro** BO (`zi_gorcliente`), sin `IN LOCAL MODE`, como `copiarTitular`.
+    - **Comprueba:** activa la BDEF y la clase sin errores. El comportamiento se prueba en el ejercicio 2.
+
+2. **Pruébalo con EML.**
+    - **Dónde:** `ZCL_GOR_EML_DEMO`, bloque `" 3.3 Valores por defecto y totales`.
+    - **Qué hace:** crea, como en el ejercicio 6 de 3.2, un presupuesto **sin IVA ni estado** para Elena con una línea de 10 × 100, y guarda. Después léelo con `SELECT SINGLE FROM zi_gorpresupuesto FIELDS Iva, Estado, Fecha, NombreCliente, Telf, BaseImponible, Total WHERE ...` y escríbelo.
+    - **Comprueba:** IVA 21, estado `no_aprobado`, fecha de hoy, `Elena Vidal Soler` y su teléfono copiados, base 1000 y total **1210** (paso 2 de §12.7). Si el total sale 0, revisa que `calcularLinea` llama a `recalcularTotales` del presupuesto (con `EXECUTE` sobre `ENTITY Presupuesto`), y no solo calcula la línea.
+
+3. **La obra y su gasto.**
+    - **Dónde:** BDEF `ZI_GorObra`, entidad `Obra`; clase `zbp_i_gorobra`, clase local `lhc_obra`.
+    - **En la BDEF:** `determination crearGasto on modify { create; }`.
+    - **Qué hace:** crea la ficha de gastos de la obra si no la tiene (§11.5, punto 5), con `MODIFY ENTITIES ... IN LOCAL MODE ENTITY Obra CREATE BY \_Gasto`, como `crearHojaCostes` del taller. Antes de crearla, lee con `READ ENTITIES ... BY \_Gasto` si ya existe.
+    - **Comprueba:** en `ZCL_GOR_EML_DEMO`, crea una obra con EML y guarda. `SELECT COUNT( * ) FROM zi_gorgasto WHERE ObraUUID = ...` debe dar **1**. Modifica la descripción de la misma obra y guarda: sigue dando 1, porque el disparador es solo `create`.
+
+4. **El resto.** Añade estas determinations, cada una en la BDEF y la clase local de su entidad, con **Ctrl+1** para la firma:
 
     | BO / entidad | Determination | Disparador | Qué hace (informe) |
     |---|---|---|---|
@@ -271,9 +321,23 @@ Se amplían tus BDEF de 3.1 y tus clases de 3.2. Tras añadir cada determination
     | Línea de parte | `calcularSubtotal` | `create; field Horas, CosteHora` | `CosteSubtotal` con tu `coste_subtotal`, y recalcula su parte |
     | Partes de especialista y de proveedor | `valoresPorDefecto` | `create` | `Fecha` de hoy y `EstadoPago` `pendiente` |
 
-5. **Los *side effects*.** Declara en tu BDEF del presupuesto los *side effects* necesarios para que, en la app, al cambiar las unidades o el precio de una línea se refresquen su total y la base, la cuota y el total del presupuesto; al cambiar el IVA, la cuota y el total; y al ejecutar `aprobar` o `desaprobar`, el propio presupuesto. Haz lo mismo en el parte de trabajo: al cambiar las horas, el coste/hora o el trabajador de una línea, sus totales. Lo comprobarás en la app en 4.6.
-6. **La tarifa congelada.** Con EML: crea un parte de trabajo para `OBR0001` con una línea de 8 h de `TRB0001` (20 €/h) y guarda. Cambia la tarifa de `TRB0001` a 25 y guarda. Vuelve a leer la línea: `CosteHora` sigue en 20 y `CosteSubtotal` en 160 (paso 5 de §12.7). Deja la tarifa otra vez en 20.
+    Para comprobar las de la falta y el proveedor, añade un bloque `" 3.3 El resto` a `ZCL_GOR_EML_DEMO`: crea una falta de `TRB0001` del 01/12/2026 al 05/12/2026 y un proveedor con base 100 e IVA 21, guarda y lee con `SELECT`: **5** días y total **121**. Las del ingreso y el parte se prueban en los ejercicios siguientes y en 3.8.
+
+5. **Los *side effects*.**
+    - **Dónde:** BDEF `ZI_GorPresupuesto` y BDEF `ZI_GorParteTrabajo`, un bloque `side effects { ... }` dentro de las llaves de cada entidad, como en el taller.
+    - **Qué contiene:**
+        - en `Linea`: `field Uds, Precio affects field TotalLinea, field _Presupuesto.BaseImponible, field _Presupuesto.CuotaIva, field _Presupuesto.Total;`
+        - en `Presupuesto`: `field Iva affects field CuotaIva, field Total;`, y `action aprobar affects $self;` y `action desaprobar affects $self;` (las acciones las crearás en 3.5: añade estas dos líneas entonces);
+        - en la línea del parte de trabajo: `field Horas, CosteHora, TrabajadorUUID affects field CosteHora, field CosteSubtotal, field _Parte.HorasTotales, field _Parte.CosteTotal;`
+    - **Comprueba:** activa sin errores. El efecto solo se ve en la app: lo comprobarás en 4.6, cambiando unidades en una línea y viendo que el total de la cabecera cambia sin recargar.
+
+6. **La tarifa congelada.**
+    - **Dónde:** `ZCL_GOR_EML_DEMO`, bloque `" 3.3 Tarifa congelada`.
+    - **Qué hace:** crea un parte de trabajo para `OBR0001` con una línea de 8 h de `TRB0001` (20 €/h) y guarda. Cambia con `MODIFY ... UPDATE` la tarifa de `TRB0001` a 25 y guarda. Lee la línea con `SELECT SINGLE ... CosteHora, CosteSubtotal`. Al final, deja la tarifa otra vez en 20.
+    - **Comprueba:** `CosteHora` sigue en **20** y `CosteSubtotal` en **160** (paso 5 de §12.7): la línea guardó la tarifa del momento y no le afecta el cambio posterior.
+
 7. **De nuevo la ficha.** Ejecuta `ZCL_GOR_COMPROBAR_CDS` (2.5): el parte del ejercicio 6 suma 160 € a `OBR0001`, así que fallarán sus gastos y su beneficio. ¿Coinciden los nuevos valores con lo que esperas? Vuelve a ejecutar `ZCL_GOR_DATOS_DEMO` para dejar los datos como estaban.
+
 8. **Investiga.** Prueba a añadir `delete` al disparador de `calcularLinea` y activa. Si tu sistema lo acepta, comprueba con EML que borrar una línea recalcula el total sin esperar a guardar. Si no, anota el mensaje. En los dos casos, explica en un comentario de la BDEF por qué existe `totalesAlGuardar`.
 
 ## Comprueba tu solución automáticamente (opcional)

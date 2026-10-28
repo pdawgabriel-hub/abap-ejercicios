@@ -6,7 +6,7 @@ En Odoo, la obra tiene once campos `compute`: total, horas, coste de mano de obr
 
 Una vista CDS puede devolver, además de columnas, **expresiones**:
 
-```sql
+```cds
       // Une dos textos con 1 espacio entre ellos
       concat_with_space( nombre, apellidos, 1 )               as NombreCompleto,
       // La fecha se guarda AAAAMMDD: pasada a texto, los 4 primeros son el anio
@@ -36,7 +36,7 @@ Un campo como `NombreCompleto` no hace falta guardarlo para poder buscar por él
 
 Para calcular el importe de una orden hay que sumar sus presupuestos aceptados. En CDS, una suma es una vista con `group by`:
 
-```sql
+```cds
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Taller - Importe de la orden'
 define view entity ZI_TlOrdenImporte
@@ -57,7 +57,7 @@ Aceptar un presupuesto cambia el resultado de esta vista en la siguiente lectura
 
 La mano de obra une los tramos con su jornada, para saber de qué orden es cada tramo:
 
-```sql
+```cds
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Taller - Mano de obra de la orden'
 define view entity ZI_TlOrdenManoObra
@@ -73,11 +73,13 @@ define view entity ZI_TlOrdenManoObra
 group by Jornada.orden_uuid
 ```
 
+Como el tramo no guarda de qué orden es, la vista lo une primero con su jornada (`inner join`) y después agrupa por la orden de la jornada. Así, una sola vista devuelve **dos sumas** por orden: las horas y los euros de mano de obra. Usamos `inner join` porque un tramo siempre tiene jornada; en la siguiente vista veremos qué pasa cuando no se puede asegurar que haya fila al otro lado.
+
 ## Juntar las sumas: `left outer join` y `coalesce`
 
 Una orden sin jornadas no tiene fila en `ZI_TlOrdenManoObra`. Si se une con `inner join`, esa orden **desaparece**; con `left outer join` aparece, pero con la mano de obra a **nulo**. `coalesce( ..., 0 )` lo convierte en 0:
 
-```sql
+```cds
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Taller - Sumas de la orden'
 define view entity ZI_TlOrdenSumas
@@ -106,7 +108,7 @@ Todos los importes de las tablas tienen 2 decimales, así que sus sumas también
 
 La última vista toma las sumas y calcula los indicadores. Como una vista no puede usar en un campo el alias de otro campo de **la misma** vista, se apila sobre la anterior:
 
-```sql
+```cds
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Taller - Resumen de la orden'
 define view entity ZI_TlOrdenResumen
@@ -173,7 +175,7 @@ Compara cada `case` con su método de `ZCL_TL_CALCULOS` (1.3):
 
 Las vistas nuevas van en `ZGOR_CDS`. Para comprobarlas necesitas datos: los de 1.5 sirven para clientes y obras; el resto se comprueba con los datos completos de [2.5](./2_5_proyecto.md). Al terminar:
 
-```
+```text
 ZGOR_CDS
 ├── (las vistas de 2.2 y 2.3)
 ├── ZI_GorObraTotal, ZI_GorObraMoo, ZI_GorObraCosteProv,

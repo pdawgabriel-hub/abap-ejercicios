@@ -11,32 +11,34 @@ La capa *interface* (`ZI_`) es el modelo completo. Una app no necesita todo: qui
 
 ## La proyección de la orden
 
-```sql
+```cds
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Taller - Ordenes de reparacion'
-@Metadata.allowExtensions: true
-@Search.searchable: true
+@Metadata.allowExtensions: true          // las anotaciones de UI, en otro fichero (4.3)
+@Search.searchable: true                 // la app tendra caja de busqueda
 define root view entity ZC_TlOrden
-  provider contract transactional_query
-  as projection on ZI_TlOrden
+  provider contract transactional_query  // para una app transaccional
+  as projection on ZI_TlOrden            // se apoya en la vista interface
 {
   key OrdenUUID,
-      @Search.defaultSearchElement: true
+      @Search.defaultSearchElement: true   // la caja de busqueda mira aqui...
       OrdenRef,
       @Search.defaultSearchElement: true
-      @Search.fuzzinessThreshold: 0.8
+      @Search.fuzzinessThreshold: 0.8      // ...y aqui, admitiendo erratas
       Matricula,
       Averia,
+      // Mostrar el nombre en lugar del UUID, y una lista para elegirlo
       @ObjectModel.text.element: [ 'TitularNombre' ]
       @Consumption.valueHelpDefinition: [ { entity: { name: 'ZC_TlTitular', element: 'TitularUUID' } } ]
       TitularUUID,
-      _Titular.RazonSocial as TitularNombre,
-      LocalLastChangedAt,
+      _Titular.RazonSocial as TitularNombre,   // dato del titular, solo lectura
+      LocalLastChangedAt,                      // el etag: obligatorio para RAP
 
       /* Associations */
+      // Los hijos, hacia SUS proyecciones
       _HojaCostes : redirected to composition child ZC_TlHojaCostes,
       _Fotos      : redirected to composition child ZC_TlOrdenFoto,
-      _Resumen,
+      _Resumen,                               // solo lectura (2.4)
       _Titular
 }
 ```
@@ -53,11 +55,12 @@ Los campos de administración no hace falta exponerlos todos, pero sí el *etag*
 
 ## La BDEF de proyección
 
-```sql
+```bdef
+// Proyeccion: elige que partes del comportamiento de debajo usa la app
 projection;
 strict ( 2 );
-use draft;
-use side effects;
+use draft;                       // la app trabaja con borradores
+use side effects;                // y publica los side effects de 3.3
 
 define behavior for ZC_TlOrden alias Orden
 {
@@ -65,19 +68,20 @@ define behavior for ZC_TlOrden alias Orden
   use update;
   use delete;
 
+  // Las acciones del borrador, una a una
   use action Edit;
   use action Activate;
   use action Discard;
   use action Resume;
   use action Prepare;
 
-  use association _HojaCostes { with draft; }
+  use association _HojaCostes { with draft; }      // sin create: la crea la orden
   use association _Fotos { create; with draft; }
 }
 
 define behavior for ZC_TlHojaCostes alias HojaCostes
 {
-  use update;
+  use update;                    // se modifica, pero no se crea ni se borra
   use association _Orden { with draft; }
 }
 
@@ -103,9 +107,23 @@ Las proyecciones de tu ERP van en `ZGOR_SRV`. Necesitas también la proyección 
 
 ## Ejercicios
 
-1. **La obra.** Crea `ZC_GorObra` (raíz) y `ZC_GorGasto` (hija), con búsqueda por `ObraId` y `Descripcion` y, en la obra, el nombre del cliente como texto de `ClienteUUID` (con su ayuda de búsqueda a `ZC_GorCliente`). Expón las associations de la obra a `ZI_GorObraFinanzas` y a los participantes. Crea su BDEF de proyección: la ficha de gastos se modifica pero no se crea ni se borra (§3.7).
-2. **El presupuesto.** Crea `ZC_GorPresupuesto` y las proyecciones de sus hijos (líneas, proveedores, especialistas, observaciones, incidencias y archivos), con el nombre del cliente como texto. En la BDEF de proyección usa `aprobar`, `desaprobar` y `vincularAObra` (la de 3.5).
-3. **El resto.** Crea las proyecciones de las otras ocho raíces con sus hijos, con este criterio:
+1. **La obra.**
+    - **Dónde:** en `ZGOR_SRV`, clic derecho → **New → Other ABAP Repository Object** → *Data Definition*. Dos vistas: `ZC_GorObra` (descripción `Obra - proyeccion`, plantilla *Define Projection View*, sobre `ZI_GorObra`) y `ZC_GorGasto` (`Ficha de gastos - proyeccion`, sobre `ZI_GorGasto`).
+    - **Qué contienen:** como `ZC_TlOrden`:
+        - en la obra, `define root view entity ZC_GorObra provider contract transactional_query as projection on ZI_GorObra`, con `@Search.searchable: true`;
+        - `@Search.defaultSearchElement: true` en `ObraId` y `Descripcion`;
+        - el campo `_Cliente.NombreCompleto as ClienteNombre`, y en `ClienteUUID` las anotaciones `@ObjectModel.text.element: [ 'ClienteNombre' ]` y `@Consumption.valueHelpDefinition` a `ZC_GorCliente`;
+        - las associations a `_Finanzas` y `_Trabajadores` expuestas, y `_Gasto : redirected to composition child ZC_GorGasto`;
+        - en el gasto, `_Obra : redirected to parent ZC_GorObra`.
+    - **La BDEF de proyección:** clic derecho en `ZC_GorObra` → **New Behavior Definition** (tipo *Projection*). Contiene `projection; strict ( 2 ); use draft;` y, en la obra, `use create; use update; use delete;`, las `use action` de borrador y `use association _Gasto { with draft; }`; en el gasto, solo `use update;` (la ficha se modifica pero no se crea ni se borra, §3.7).
+    - **Comprueba:** activa todo. En `ZCL_GOR_SQL_DEMO`, `SELECT FROM zc_gorobra FIELDS ObraId, ClienteNombre` devuelve las cuatro obras de 2.5, cada una con el nombre completo de su cliente.
+
+2. **El presupuesto.**
+    - **Dónde:** `ZGOR_SRV`: `ZC_GorPresupuesto` y una proyección por hijo (`ZC_GorPresuLin`, `ZC_GorPresuProv`, `ZC_GorPresuEsp`, `ZC_GorPresuObs`, `ZC_GorPresuInc`, `ZC_GorPresuArc`), y su BDEF de proyección.
+    - **Qué contienen:** la raíz, como la obra, con el nombre del cliente como texto de `ClienteUUID`; cada hijo con su `redirected to parent`. En la BDEF, además de las operaciones y las `use association`, `use action aprobar;`, `use action desaprobar;` y `use action vincularAObra;`.
+    - **Comprueba:** activa todo. `SELECT FROM zc_gorpresupuesto FIELDS PresupuestoId, ClienteNombre, Total` devuelve los seis presupuestos de 2.5.
+
+3. **El resto.** Crea las proyecciones de las otras ocho raíces con sus hijos, y sus BDEF de proyección, con los mismos pasos y este criterio:
 
     | BO | Buscar por (§4 del informe: *Search*) | Textos de UUID | Acciones |
     |---|---|---|---|
@@ -117,8 +135,14 @@ Las proyecciones de tu ERP van en `ZGOR_SRV`. Necesitas también la proyección 
     | Parte de trabajo | descripción | obra; en la línea, trabajador | — |
     | Partes de especialista y de proveedor | descripción, documento | obra, especialista o proveedor | `marcarPagado` |
 
-4. **Una de solo lectura.** Crea `ZC_GorObraFinanzas` como proyección de `ZI_GorObraFinanzas` (sin `provider contract` ni BDEF: es solo para leer). La usará el servicio financiero.
-5. **Investiga.** Quita `use delete;` de tu proyección de la obra y activa. ¿Se puede seguir borrando una obra con EML sobre `ZI_GorObra`? ¿Y sobre `ZC_GorObra`? Vuelve a ponerlo y anota la diferencia.
+    **Comprueba:** clic derecho en `ZGOR_SRV` → **Activate**, sin errores.
+
+4. **Una de solo lectura.**
+    - **Dónde:** `ZGOR_SRV`, `ZC_GorObraFinanzas` (descripción `Ficha financiera - proyeccion`).
+    - **Qué contiene:** `define view entity ZC_GorObraFinanzas as projection on ZI_GorObraFinanzas` con todos sus campos, **sin** `provider contract` ni BDEF: es solo para leer. La usará el servicio financiero.
+    - **Comprueba:** `SELECT FROM zc_gorobrafinanzas FIELDS COUNT( * )` da 4.
+
+5. **Investiga.** Quita `use delete;` de tu proyección de la obra y activa. ¿Se puede seguir borrando una obra con EML sobre `ZI_GorObra`? ¿Y sobre `ZC_GorObra`? Vuelve a ponerlo y anota la diferencia en un comentario `//` de la BDEF de proyección.
 
 ---
 

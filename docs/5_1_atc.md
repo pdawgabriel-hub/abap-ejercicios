@@ -30,11 +30,14 @@ Un hallazgo típico es un **`SELECT` dentro de un bucle**: una consulta a la bas
 Sino con una sola consulta, uniendo las tablas:
 
 ```abap
+    " Una sola consulta: cada orden con la razon social de su titular
     SELECT FROM ztl_orden AS o
       INNER JOIN ztl_tit AS t ON t~titular_uuid = o~titular_uuid
       FIELDS o~orden_ref, t~razon_social
       INTO TABLE @DATA(lt_ordenes_con_titular).
 ```
+
+Con el `INNER JOIN`, la base de datos hace todo el trabajo en **una sola** petición y devuelve cada orden ya con la razón social de su titular. Fíjate en la tilde `~`: en ABAP SQL separa el alias de la tabla de la columna (`o~orden_ref`), igual que el punto en el SQL de MySQL. Si leemos una vista CDS con la association `_Titular`, ni siquiera hace falta el join: basta la ruta `\_Titular-RazonSocial` de 2.3.
 
 ## Hallazgos que vas a ver en tu ERP
 
@@ -43,11 +46,24 @@ Sino con una sola consulta, uniendo las tablas:
 
 ## Ejercicios
 
-1. **Primer ATC.** Pásalo por el paquete `ZGOR` entero. Apunta cuántos hallazgos hay de cada prioridad.
-2. **Prioridad 1 y 2.** Corrige todos los de prioridad 1 y 2, excepto los que decidas justificar. Para cada uno que justifiques, escribe en `diseno.md` qué es y por qué se queda.
-3. **Un `SELECT` en bucle.** Escribe a propósito, en `ZCL_GOR_SQL_DEMO`, un bucle sobre las obras que lea el nombre de su cliente con un `SELECT SINGLE` por vuelta. Pasa el ATC, mira el aviso y corrígelo con un `JOIN`.
-4. **Los tests también cuentan.** Lanza el ATC sobre `ZCL_GOR_ESCENARIO`. ¿Comprueba también el código de los tests?
-5. **Investiga.** Busca qué es la variante de comprobaciones `ABAP_CLOUD_DEVELOPMENT_DEFAULT` y anota qué grupos de comprobaciones incluye.
+1. **Primer ATC.**
+    - **Dónde:** clic derecho en el paquete `ZGOR` → **Run As → ABAP Test Cockpit**.
+    - **Qué haces:** espera a que termine y abre la vista **ATC Problems**.
+    - **Comprueba:** apunta en `diseno.md` cuántos hallazgos hay de cada prioridad (1, 2 y 3). Es tu punto de partida.
+
+2. **Prioridad 1 y 2.**
+    - **Dónde:** cada hallazgo de **ATC Problems**: doble clic lleva a la línea, y **Ctrl+1** ofrece a veces la corrección.
+    - **Qué haces:** corrige todos los de prioridad 1 y 2, excepto los que decidas justificar. Para cada uno que justifiques, escribe en `diseno.md` qué es y por qué se queda.
+    - **Comprueba:** vuelve a pasar el ATC: 0 de prioridad 1, y los de prioridad 2 que queden, todos en tu lista.
+
+3. **Un `SELECT` en bucle.**
+    - **Dónde:** `ZCL_GOR_SQL_DEMO`, bloque `" 5.1 SELECT en bucle`.
+    - **Qué haces:** escribe a propósito un `LOOP AT` sobre las obras que lea el nombre de su cliente con un `SELECT SINGLE` por vuelta. Pasa el ATC solo a esa clase (clic derecho en la clase → **Run As → ABAP Test Cockpit**).
+    - **Comprueba:** aparece el aviso del `SELECT` en bucle. Corrígelo con un `INNER JOIN` (o con la ruta `\_Cliente-Nombre` de 2.3), vuelve a pasar el ATC y el aviso desaparece. La consola debe escribir lo mismo antes y después.
+
+4. **Los tests también cuentan.** Lanza el ATC sobre `ZCL_GOR_ESCENARIO`. ¿Comprueba también el código de la pestaña *Test Classes*? Anótalo.
+
+5. **Investiga.** Con **Run As → ABAP Test Cockpit With…** verás el nombre de la variante que se usa. Busca qué es la variante `ABAP_CLOUD_DEVELOPMENT_DEFAULT` y anota qué grupos de comprobaciones incluye.
 
 ---
 

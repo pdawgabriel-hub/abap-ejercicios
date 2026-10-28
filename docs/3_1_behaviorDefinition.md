@@ -27,34 +27,42 @@ Todos los BO, del taller y del ERP, serán *draft*. Cada tabla tendrá su gemela
 
 ## La BDEF del titular
 
-```sql
+```bdef
+// Cabecera: RAP hace el CRUD (managed); nuestra logica, en esta clase
 managed implementation in class zbp_i_tltitular unique;
-strict ( 2 );
-with draft;
+strict ( 2 );                        // comprobaciones estrictas
+with draft;                          // el BO trabaja con borradores
 
+// La entidad: la vista raiz y su nombre corto (alias) para EML
 define behavior for ZI_TlTitular alias Titular
-persistent table ztl_tit
-draft table ztl_tit_d
-lock master
-total etag LastChangedAt
-authorization master ( global )
+persistent table ztl_tit             // donde se guarda
+draft table ztl_tit_d                // donde se guardan los borradores
+lock master                          // se bloquea a partir de la raiz
+total etag LastChangedAt             // detectar cambios de otros usuarios
+authorization master ( global )      // permisos por tipo de operacion (6.1)
 etag master LocalLastChangedAt
 {
+  // Operaciones permitidas
   create;
   update;
   delete;
 
+  // RAP genera el UUID al crear; nadie lo puede cambiar
   field ( numbering : managed, readonly ) TitularUUID;
+  // Solo los escribe la logica del BO: codigo (3.7) y administracion
   field ( readonly ) TitularRef,
                      CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
+  // Fiori los marca con asterisco (la validation de verdad, en 3.4)
   field ( mandatory ) RazonSocial, Contacto;
 
+  // Las acciones del borrador: editar, guardar, descartar, retomar, preparar
   draft action Edit;
   draft action Activate optimized;
   draft action Discard;
   draft action Resume;
   draft determine action Prepare;
 
+  // Campo de la vista (izquierda) = columna de la tabla (derecha)
   mapping for ztl_tit corresponding
   {
     TitularUUID        = titular_uuid;
@@ -99,7 +107,8 @@ etag master LocalLastChangedAt
 
 Así es la BDEF del presupuesto del taller con sus partidas. Las dos entidades van en **el mismo fichero**, porque forman un solo BO:
 
-```sql
+```bdef
+// Un solo BO con dos entidades: el presupuesto (raiz) y sus partidas (hijas)
 managed implementation in class zbp_i_tlpresupuesto unique;
 strict ( 2 );
 with draft;
@@ -121,6 +130,7 @@ etag master LocalLastChangedAt
                      CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
   field ( mandatory ) TitularUUID, Impuesto;
 
+  // Las partidas se crean A TRAVES del presupuesto, tambien en borrador
   association _Partidas { create; with draft; }
 
   draft action Edit;
@@ -136,6 +146,7 @@ etag master LocalLastChangedAt
   }
 }
 
+// La hija: bloqueo y permisos los decide su presupuesto
 define behavior for ZI_TlPartida alias Partida
 persistent table ztl_prs_par
 draft table ztl_prs_par_d
@@ -143,6 +154,7 @@ lock dependent by _Presupuesto
 authorization dependent by _Presupuesto
 etag master LocalLastChangedAt
 {
+  // Sin create: una partida solo nace dentro de un presupuesto
   update;
   delete;
 
@@ -150,7 +162,7 @@ etag master LocalLastChangedAt
   field ( readonly ) PresupuestoUUID, ImportePartida,
                      CreatedBy, CreatedAt, LastChangedBy, LastChangedAt, LocalLastChangedAt;
 
-  association _Presupuesto { with draft; }
+  association _Presupuesto { with draft; }   // camino de vuelta al padre
 
   mapping for ztl_prs_par corresponding
   {
@@ -177,9 +189,31 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
 
 ## Ejercicios
 
-1. **El cliente.** Crea la BDEF de `ZI_GorCliente` (alias `Cliente`, clase `zbp_i_gorcliente`) con el mismo patrón que la del titular: *managed*, `strict ( 2 )`, *draft* con su tabla `zgor_cli_d`, `create`, `update` y `delete`. De solo lectura: el UUID (numerado por RAP), `ClienteId`, `NombreCompleto` y los de administración. Obligatorios (§11.4): `Nombre`, `Direccion` y `Telf`. Completa el `mapping` y crea la tabla de borradores. Guarda sin activar.
-2. **El presupuesto.** Crea la BDEF de `ZI_GorPresupuesto` (alias `Presupuesto`) con sus tres hijos: `ZI_GorPresuLin` (alias `Linea`), `ZI_GorPresuProv` (`PresuProv`) y `ZI_GorPresuEsp` (`PresuEsp`), creables desde la raíz. De solo lectura en la raíz: `PresupuestoId`, `Anio`, `BaseImponible`, `CuotaIva` y `Total`; en la línea, `PresupuestoUUID` y `TotalLinea`. Obligatorios: `ClienteUUID` e `Iva`. Crea las cuatro tablas de borradores.
-3. **Las demás.** Crea las otras ocho BDEF con el mismo patrón:
+1. **El cliente.**
+    - **Dónde:** en `ZGOR_CDS`, clic derecho en `ZI_GorCliente` → **New Behavior Definition**. Deja el nombre que propone (`ZI_GORCLIENTE`), elige *Implementation Type* **Managed** y el paquete `ZGOR_BUS`.
+    - **Qué contiene:** el mismo patrón que la del titular: `managed implementation in class zbp_i_gorcliente unique;`, `strict ( 2 );`, `with draft;` y `define behavior for ZI_GorCliente alias Cliente`, con `persistent table zgor_cli`, `draft table zgor_cli_d`, `lock master`, `total etag LastChangedAt`, `authorization master ( global )` y `etag master LocalLastChangedAt`. Dentro de las llaves:
+        - `create; update; delete;`;
+        - `field ( numbering : managed, readonly ) ClienteUUID;`;
+        - `field ( readonly )` para `ClienteId`, `NombreCompleto` y los cinco de administración;
+        - `field ( mandatory )` para `Nombre`, `Direccion` y `Telf` (§11.4);
+        - las cinco `draft action` del titular;
+        - el `mapping for zgor_cli corresponding` con cada campo de la vista frente a su columna.
+
+        Comenta cada bloque con `//`, como en el taller.
+    - **La tabla de borradores:** pon el cursor sobre `zgor_cli_d` y pulsa **Ctrl+1** → *Create draft table*. ADT la genera con todas las columnas de la vista más las de control del borrador. Muévela a `ZGOR_DDIC` si te la propone en otro paquete y actívala.
+    - **Comprueba:** guarda (**Ctrl+S**) **sin activar**. En *Problems* solo debe quedar un error: que la clase `zbp_i_gorcliente` no existe. La crearás en 3.2.
+
+2. **El presupuesto.**
+    - **Dónde:** igual que el anterior, sobre `ZI_GorPresupuesto`. Al ser raíz con composiciones, ADT añade a la BDEF un `define behavior for` por cada hijo.
+    - **Qué contiene:** como la del presupuesto del taller:
+        - la raíz, alias `Presupuesto`, con `association _Lineas { create; with draft; }` y lo mismo para `_Proveedores` y `_Especialistas`;
+        - tres hijos con `lock dependent by _Presupuesto` y `authorization dependent by _Presupuesto`: `ZI_GorPresuLin` (alias `Linea`), `ZI_GorPresuProv` (`PresuProv`) y `ZI_GorPresuEsp` (`PresuEsp`), cada uno con `update; delete;` y `association _Presupuesto { with draft; }`;
+        - solo lectura en la raíz: `PresupuestoId`, `Anio`, `BaseImponible`, `CuotaIva` y `Total`; en la línea, `PresupuestoUUID` y `TotalLinea`;
+        - obligatorios en la raíz: `ClienteUUID` e `Iva`.
+    - **Las tablas de borradores:** cuatro, `zgor_presu_d`, `zgor_presu_lin_d`, `zgor_presu_pv_d` y `zgor_presu_es_d`, cada una con **Ctrl+1** y en `ZGOR_DDIC` (el nombre de una tabla no puede pasar de 16 caracteres: [B. Nombres](./B_nombres.md)).
+    - **Comprueba:** guarda sin activar; la única queja debe ser la clase.
+
+3. **Las demás.** Crea las otras ocho BDEF igual que las anteriores (clic derecho en la vista raíz → **New Behavior Definition**, tipo *Managed*), cada una con su tabla de borradores y su clase `zbp_i_<vista>`:
 
     | BO (alias de la raíz) | Hijos (alias) | Solo lectura, además de UUID y administración | Obligatorios (§11.4) |
     |---|---|---|---|
@@ -196,7 +230,9 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
     - El **gasto** nace con la obra y no se borra suelto (§3.7). La raíz no permite crearlo desde fuera: `association _Gasto { internal create; with draft; }` (`internal` significa «solo desde la lógica del propio BO»). La entidad `Gasto` tiene `update;` pero **no** `delete;`. Se borrará con su obra, por la composición.
     - La obra no tiene obligatorio el cliente (§3.5: puede no tenerlo).
 
-4. **Activa todo.** Las BDEF no activarán hasta tener su clase (3.2). Comprueba al menos que la única queja de cada una es la clase que falta: cualquier otro error (un campo mal escrito en el `mapping`, un alias repetido) corrígelo ahora.
+4. **Revisa los errores.** Las BDEF no activarán hasta tener su clase (3.2). Abre la pestaña *Problems* y comprueba que la única queja de cada una es la clase que falta: cualquier otro error (un campo mal escrito en el `mapping`, un alias repetido, una tabla de borradores sin activar) corrígelo ahora.
+
+    > Si te aparece el error «*Field X does not exist in draft table*», la tabla de borradores se creó antes de añadir ese campo a la vista. Bórrala y vuelve a crearla con **Ctrl+1**.
 5. **Investiga.** En tu BDEF del cliente, quita la línea `field ( mandatory ) ...` y mira qué avisos aparecen. Vuelve a ponerla. Después busca con **F1** sobre `etag master` qué ocurre si dos usuarios editan el mismo cliente sin draft, y anota por qué el draft lo evita.
 
 ---

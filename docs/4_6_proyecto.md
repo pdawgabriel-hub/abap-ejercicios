@@ -36,7 +36,10 @@ Las tres apps de 4.2 publicadas y con sus anotaciones de 4.3. En el repositorio 
 
 ## Ejercicios
 
-1. **El recorrido.** Haz los 13 pasos de la tabla, en orden, solo desde las apps. En cada paso, comprueba lo que debes ver y haz una captura de pantalla (`docs/capturas/paso_01.png`, etc.).
+1. **El recorrido.**
+    - **Dónde:** la vista previa de los tres bindings de 4.2 (`ZUI_GOR_COMERCIAL_O4`, `ZUI_GOR_FINANCIERO_O4` y `ZUI_GOR_RECURSOS_O4`), cada una en su pestaña del navegador.
+    - **Qué haces:** los 13 pasos de la tabla, en orden, solo desde las apps. Antes de cada paso, escribe en `diseno.md` lo que esperas ver.
+    - **Comprueba:** en cada paso, lo de la columna «Qué debes ver». Haz una captura (`docs/capturas/paso_01.png`, etc.).
 2. **Lo que falle.** Si algún paso no da lo esperado, localiza la capa con la tabla de 4.4, escribe un test que lo reproduzca (en `ZCL_GOR_ESCENARIO` o en la clase de comportamiento que toque), corrígelo y repite el paso.
 3. **Repite el 11b.** Crea otra obra con un presupuesto aprobado y un parte de trabajo, **sin cobros**, y bórrala desde la app. El presupuesto debe quedar sin obra y el parte, desaparecer.
 4. **La experiencia de uso.** Anota en `diseno.md` tres cosas que en Odoo eran más cómodas y tres que en Fiori lo son más. Te servirán para la explicación en 5 minutos del Bloque 7.

@@ -9,16 +9,17 @@ En el taller hay un solo servicio. Tu ERP tendrá tres, uno por área de trabajo
 
 ## El servicio del taller
 
-```sql
+```cds
 @EndUserText.label: 'Taller - Servicio de gestion'
 define service ZUI_TL_TALLER {
+  // expose <vista> as <nombre en el servicio>: una linea por entidad que vera la app
   expose ZC_TlOrden        as Orden;
   expose ZC_TlHojaCostes   as HojaCostes;
   expose ZC_TlOrdenFoto    as OrdenFoto;
   expose ZC_TlPresupuesto  as Presupuesto;
   expose ZC_TlPartida      as Partida;
-  expose ZC_TlTitular      as Titular;
-  expose ZI_TlOrdenResumen as Resumen;
+  expose ZC_TlTitular      as Titular;     // tambien la ayuda de busqueda
+  expose ZI_TlOrdenResumen as Resumen;     // solo lectura
 }
 ```
 
@@ -48,18 +49,28 @@ Las Service Definitions y Bindings van en `ZGOR_SRV`. Los nombres siguen el [Ane
 
 ## Ejercicios
 
-1. **Los tres servicios.** Crea las Service Definitions de tu ERP con este reparto:
+1. **Los tres servicios.**
+    - **Dónde:** en `ZGOR_SRV`, clic derecho → **New → Other ABAP Repository Object** → *Business Services* → **Service Definition**. Tres: `ZUI_GOR_COMERCIAL`, `ZUI_GOR_FINANCIERO` y `ZUI_GOR_RECURSOS`.
+    - **Qué contienen:** una línea `expose <proyeccion> as <Nombre>;` por entidad, como `ZUI_TL_TALLER`:
 
-    | Servicio | Expone | Para quién |
-    |---|---|---|
-    | `ZUI_GOR_COMERCIAL` | Cliente, Presupuesto y Obra, con todos sus hijos, y `ZC_GorObraFinanzas` | El día a día comercial: presupuestar y abrir obras |
-    | `ZUI_GOR_FINANCIERO` | Ingreso (con sus hijos), `ZC_GorObraFinanzas` y la Obra como ayuda de búsqueda | Cobros y seguimiento económico |
-    | `ZUI_GOR_RECURSOS` | Trabajador (con faltas), Proveedor, Especialista y los tres tipos de parte, con sus hijos | Mano de obra y costes externos |
+        | Servicio | Expone | Para quién |
+        |---|---|---|
+        | `ZUI_GOR_COMERCIAL` | Cliente, Presupuesto y Obra, con todos sus hijos, y `ZC_GorObraFinanzas` | El día a día comercial: presupuestar y abrir obras |
+        | `ZUI_GOR_FINANCIERO` | Ingreso (con sus hijos), `ZC_GorObraFinanzas` y la Obra como ayuda de búsqueda | Cobros y seguimiento económico |
+        | `ZUI_GOR_RECURSOS` | Trabajador (con faltas), Proveedor, Especialista y los tres tipos de parte, con sus hijos | Mano de obra y costes externos |
 
-    Si una entidad sirve de ayuda de búsqueda en un servicio (el cliente en el presupuesto, el trabajador en la línea de parte), tiene que estar expuesta **en ese servicio**.
-2. **Los bindings.** Crea, activa y publica los tres bindings (`_O4`, OData V4 - UI).
-3. **Primera vista previa.** Abre la vista previa de `Obra` en `ZUI_GOR_COMERCIAL`. Pulsa **Go**: aunque no haya columnas, debe decir cuántas obras hay. Pulsa una fila: se abre la página de detalle, todavía vacía.
-4. **El metadato.** Abre el `$metadata` de `ZUI_GOR_COMERCIAL` y busca: la entidad `Obra`, la acción `aprobar` y el campo `ClienteNombre`. Anota en `diseno.md` qué es cada cosa.
+        Si una entidad sirve de ayuda de búsqueda en un servicio (el cliente en el presupuesto, el trabajador en la línea de parte), tiene que estar expuesta **en ese servicio**.
+    - **Comprueba:** activa los tres sin avisos.
+
+2. **Los bindings.**
+    - **Dónde:** clic derecho en cada Service Definition → **New Service Binding**. Nombres `ZUI_GOR_COMERCIAL_O4`, `ZUI_GOR_FINANCIERO_O4` y `ZUI_GOR_RECURSOS_O4`, tipo **OData V4 - UI**.
+    - **Qué hace:** activa cada binding y pulsa **Publish** en su editor.
+    - **Comprueba:** en el editor del binding, la lista *Entity Set and Association* muestra todas las entidades del servicio.
+
+3. **Primera vista previa.** En el binding de `ZUI_GOR_COMERCIAL_O4`, selecciona `Obra` y pulsa **Preview**. En el navegador, pulsa **Go**: aunque no haya columnas, debe decir que hay **4** obras. Pulsa una fila: se abre la página de detalle, todavía vacía. Las columnas llegan en 4.3.
+
+4. **El metadato.** En el editor del binding, el enlace *Service URL* abre el documento de servicio; añádele `$metadata` al final. Busca la entidad `Obra`, la acción `aprobar` y el campo `ClienteNombre`, y anota en `diseno.md` qué es cada cosa.
+
 5. **Investiga.** ¿Qué pasa si en `ZUI_GOR_COMERCIAL` quitas la exposición de `ZC_GorCliente` y activas? Lee el aviso. Vuelve a ponerla.
 
 ---

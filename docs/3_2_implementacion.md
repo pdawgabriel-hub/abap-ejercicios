@@ -7,6 +7,7 @@ La BDEF declara **qué** hace cada objeto de negocio; la **clase de implementaci
 Una clase de comportamiento es una clase global **abstracta y vacía**. Todo el código va en sus clases **locales**, en la pestaña inferior **Local Types**:
 
 ```abap
+" La clase global: abstracta, final y vacia. Solo dice de que BO es el comportamiento
 CLASS zbp_i_tltitular DEFINITION PUBLIC ABSTRACT FINAL FOR BEHAVIOR OF zi_tltitular.
 ENDCLASS.
 
@@ -17,8 +18,10 @@ ENDCLASS.
 En *Local Types* hay una clase **manejadora** (*handler*, `lhc_`) por entidad, con un método por cada cosa que declara la BDEF. Para el titular, de momento, solo los permisos:
 
 ```abap
+" Manejadora de la entidad Titular (lhc = local handler class)
 CLASS lhc_titular DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
+    " Firma generada por Eclipse: RAP la llama antes de cada operacion
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
       IMPORTING REQUEST requested_authorizations FOR Titular RESULT result.
 ENDCLASS.
@@ -49,23 +52,25 @@ EML son sentencias ABAP para trabajar con un BO **a través de su comportamiento
 **Crear:**
 
 ```abap
+    " Crear un titular a traves de su comportamiento (se ejecuta su logica)
     MODIFY ENTITIES OF zi_tltitular
-      ENTITY Titular
-        CREATE FIELDS ( RazonSocial DocumentoId Contacto )
-        WITH VALUE #( ( %cid        = 'nuevo'
+      ENTITY Titular                                   " alias de la BDEF
+        CREATE FIELDS ( RazonSocial DocumentoId Contacto )   " campos que se informan
+        WITH VALUE #( ( %cid        = 'nuevo'           " id temporal: aun no hay UUID
                         RazonSocial = 'Autoescuela Pilar'
                         DocumentoId = 'B50999888'
                         Contacto    = '976333444' ) )
-      MAPPED   DATA(ls_mapped)
-      FAILED   DATA(ls_failed)
-      REPORTED DATA(ls_reported).
+      MAPPED   DATA(ls_mapped)                         " %cid -> UUID asignado
+      FAILED   DATA(ls_failed)                         " que instancias fallaron
+      REPORTED DATA(ls_reported).                      " con que mensajes
 
+    " Guardar: aqui se ejecutan las validations; si una falla, no se guarda nada
     COMMIT ENTITIES RESPONSE OF zi_tltitular
       FAILED   DATA(ls_commit_failed)
       REPORTED DATA(ls_commit_reported).
 ```
 
-- `ENTITY Cliente` usa el **alias** de la BDEF.
+- `ENTITY Titular` usa el **alias** de la BDEF.
 - `FIELDS ( ... )` dice qué campos se informan; el resto queda vacío (o lo rellena una *determination*).
 - `%cid` es un identificador temporal de la petición: todavía no hay UUID, y con `%cid` se puede referir al registro nuevo en la misma sentencia (por ejemplo, para crearle partidas).
 - `MAPPED` devuelve el UUID asignado a cada `%cid`; `FAILED`, las instancias que fallaron; `REPORTED`, los mensajes.
@@ -74,23 +79,25 @@ EML son sentencias ABAP para trabajar con un BO **a través de su comportamiento
 **Leer:**
 
 ```abap
+    " Leer: las claves de las instancias van en la tabla de WITH
     READ ENTITIES OF zi_tltitular
       ENTITY Titular
         FIELDS ( TitularRef RazonSocial ) WITH VALUE #( ( TitularUUID = lv_uuid ) )
-      RESULT DATA(lt_titulares)
+      RESULT DATA(lt_titulares)                        " una fila por instancia leida
       FAILED DATA(ls_failed_read).
 ```
 
 **Modificar y borrar:**
 
 ```abap
+    " Varias operaciones en una sola sentencia: cambiar y despues borrar
     MODIFY ENTITIES OF zi_tltitular
       ENTITY Titular
-        UPDATE FIELDS ( Contacto ) WITH VALUE #( ( TitularUUID = lv_uuid Contacto = '976000111' ) )
+        UPDATE FIELDS ( Contacto )                     " solo se cambia Contacto WITH VALUE #( ( TitularUUID = lv_uuid Contacto = '976000111' ) )
       ENTITY Titular
         DELETE FROM VALUE #( ( TitularUUID = lv_uuid ) )
       FAILED DATA(ls_failed_mod).
-    COMMIT ENTITIES.
+    COMMIT ENTITIES.                                   " sin commit, no se guarda nada
 ```
 
 **Hijos a través de la raíz** (`CREATE BY \_Partidas`): se crea el presupuesto y su partida en la misma sentencia, enlazados por `%cid_ref`:
@@ -98,7 +105,9 @@ EML son sentencias ABAP para trabajar con un BO **a través de su comportamiento
 ```abap
     MODIFY ENTITIES OF zi_tlpresupuesto
       ENTITY Presupuesto
+        " 1. La cabecera, con el id temporal 'p1'
         CREATE FIELDS ( TitularUUID Impuesto ) WITH VALUE #( ( %cid = 'p1' TitularUUID = lv_titular Impuesto = 21 ) )
+        " 2. Sus partidas, colgando de 'p1' (%cid_ref); %target son las filas hijas
         CREATE BY \_Partidas FIELDS ( Concepto Cantidad PrecioUnitario )
           WITH VALUE #( ( %cid_ref = 'p1'
                           %target  = VALUE #( ( %cid = 'pa1' Concepto = 'Kit de embrague'
@@ -121,7 +130,7 @@ La barra invertida de `\_Partidas` es parte de la sintaxis: indica que se navega
 
 Una clase `zbp_i_gor<raíz>` por BDEF, en `ZGOR_BUS`. La de pruebas de EML, en `ZGOR_TEST`:
 
-```
+```text
 ZGOR_BUS
 ├── ZI_GorCliente (BDEF) + ZBP_I_GORCLIENTE
 ├── ZI_GorTrabajador (BDEF) + ZBP_I_GORTRABAJADOR
@@ -132,13 +141,42 @@ ZGOR_TEST
 
 ## Ejercicios
 
-1. **El cliente.** Crea `zbp_i_gorcliente` con *Ctrl+1* desde tu BDEF. Su `get_global_authorizations` debe permitir, de momento, crear, modificar, borrar y editar. Activa la clase y la BDEF.
-2. **Las demás.** Haz lo mismo con las otras nueve BDEF. En las que tienen hijos, Eclipse crea un `lhc_` por entidad, pero solo la raíz tiene `get_global_authorizations` (los hijos dependen de ella). Activa todo junto (clic derecho en `ZGOR_BUS` → *Activate*).
-3. **Crear con EML.** Crea en `ZGOR_TEST` la clase ejecutable `ZCL_GOR_EML_DEMO`. Crea con EML la clienta Elena Vidal Soler (C/ Sol 3, Zaragoza, 600222333), guarda con `COMMIT ENTITIES` y escribe en la consola su UUID nuevo (sale en `MAPPED`) y si hubo errores al guardar.
-4. **Leer, cambiar y borrar.** En la misma clase, lee la clienta recién creada, cámbiale el teléfono, vuelve a leerla para comprobarlo y bórrala, guardando tras cada modificación. Comprueba en el Data Preview de `ZI_GorCliente` que ha desaparecido.
-5. **Mira los campos de administración.** Crea otra vez a Elena y **no** la borres. En el Data Preview, `CreatedBy`, `CreatedAt` y `LastChangedAt` tienen valor, porque los ha rellenado RAP gracias a las anotaciones `@Semantics` de 2.2. `ClienteId` sigue vacío: lo pondrás en 3.7.
-6. **Un presupuesto con línea.** Crea con EML, en una sola sentencia, un presupuesto para Elena con IVA 21 y una línea de 10 uds a 100 €, y guarda. Comprueba en el Data Preview que la línea apunta al presupuesto. `TotalLinea`, `BaseImponible` y `Total` siguen a 0: los calcularán tus *determinations* de 3.3.
-7. **Investiga.** Intenta cambiar con EML (sin `IN LOCAL MODE`, desde tu clase de consola) el campo `ClienteId` de Elena. ¿Qué devuelve `FAILED` o `REPORTED`? ¿Por qué la lógica del propio BO sí podrá escribirlo?
+1. **La clase del cliente.**
+    - **Dónde:** abre tu BDEF de `ZI_GorCliente`, pon el cursor sobre `zbp_i_gorcliente` (en la primera línea) y pulsa **Ctrl+1** → *Create behavior implementation class*. Paquete `ZGOR_BUS`.
+    - **Qué contiene:** Eclipse genera la clase global vacía y, en la pestaña *Local Types*, la clase `lhc_cliente` con el método `get_global_authorizations`. Rellénalo como el del titular: `result` con `%create`, `%update`, `%delete` y `%action-Edit` a `if_abap_behv=>auth-allowed`, con un comentario que diga que en 6.1 se cambiará por una comprobación de verdad.
+    - **Comprueba:** activa la clase y después la BDEF (**Ctrl+Shift+F3** con las dos abiertas). En *Problems* no debe quedar ningún error del cliente.
+
+2. **Las demás clases.**
+    - **Dónde:** las otras nueve BDEF, igual que el ejercicio anterior. Los nombres, `zbp_i_` seguido del nombre de la vista: `zbp_i_gorpresupuesto`, `zbp_i_gortrabajador`…
+    - **Qué contiene:** en las que tienen hijos, Eclipse crea un `lhc_` por entidad (`lhc_presupuesto`, `lhc_linea`…), pero solo la raíz tiene `get_global_authorizations`: los hijos dependen de ella.
+    - **Comprueba:** clic derecho en `ZGOR_BUS` → **Activate**, con todo seleccionado. Debe activar sin errores.
+
+3. **Crear con EML.**
+    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_EML_DEMO`, descripción `Pruebas de EML con el ERP`, con la interfaz `if_oo_adt_classrun`. A partir de aquí, cada ejercicio es un bloque de `main` separado por un comentario (`" 3.2 Crear`).
+    - **Qué hace:** con `MODIFY ENTITIES OF zi_gorcliente ENTITY Cliente CREATE FIELDS ( Nombre Apellidos Direccion Telf ) WITH ...` crea la clienta Elena Vidal Soler (C/ Sol 3, Zaragoza, 600222333), con un `%cid` cualquiera (`'ELENA'`). Recoge `MAPPED`, `FAILED` y `REPORTED`, y después guarda con `COMMIT ENTITIES` recogiendo también su `FAILED` y `REPORTED`.
+    - **Comprueba:** escribe en la consola el UUID que aparece en `mapped-cliente[ 1 ]-ClienteUUID` y si `failed` está vacío. Después, `SELECT COUNT( * ) FROM zi_gorcliente WHERE nombre = 'Elena'` debe dar **1**.
+
+    > Si `COMMIT ENTITIES` devuelve errores y Elena no aparece, mira `reported`: lo más probable es que falte un campo obligatorio del ejercicio 1 de 3.1.
+
+4. **Leer, cambiar y borrar.**
+    - **Dónde:** `ZCL_GOR_EML_DEMO`, bloque `" 3.2 Leer, cambiar y borrar`.
+    - **Qué hace:** con el UUID de Elena (léelo con `SELECT SINGLE` si lo necesitas):
+        - `READ ENTITIES` para leer su teléfono y escribirlo;
+        - `MODIFY ... UPDATE FIELDS ( Telf )` con `600999000`, `COMMIT ENTITIES` y otra lectura para comprobarlo;
+        - `MODIFY ... DELETE` y `COMMIT ENTITIES`.
+    - **Comprueba:** la consola debe mostrar `600222333` y después `600999000`, y al final `SELECT COUNT( * ) FROM zi_gorcliente WHERE nombre = 'Elena'` debe dar **0**.
+
+5. **Los campos de administración.**
+    - **Dónde:** el mismo `main`: comenta el bloque de borrar (con **Ctrl+<**) y vuelve a ejecutar la clase, para que Elena quede creada.
+    - **Qué hace:** lee de `zi_gorcliente` los campos `ClienteId, CreatedBy, CreatedAt, LastChangedAt` de Elena y escríbelos.
+    - **Comprueba:** `CreatedBy`, `CreatedAt` y `LastChangedAt` tienen valor, porque los ha rellenado RAP gracias a las anotaciones `@Semantics` de 2.2. `ClienteId` sale **vacío**: lo pondrás en 3.7.
+
+6. **Un presupuesto con línea.**
+    - **Dónde:** `ZCL_GOR_EML_DEMO`, bloque `" 3.2 Presupuesto con linea`.
+    - **Qué hace:** en **una sola** sentencia `MODIFY ENTITIES OF zi_gorpresupuesto`, crea un presupuesto para Elena con IVA 21 (`ENTITY Presupuesto CREATE ... %cid = 'P1'`) y, con `CREATE BY \_Lineas`, una línea de 10 uds a 100 € que apunta al presupuesto por su `%cid_ref = 'P1'`. Guarda con `COMMIT ENTITIES`.
+    - **Comprueba:** lee la línea con `SELECT FROM zi_gorpresulin FIELDS Uds, Precio, TotalLinea, \_Presupuesto-Total WHERE ...` (ruta de 2.3): 10 y 100, pero `TotalLinea` y `Total` siguen a **0**. Los calcularán tus *determinations* de 3.3.
+
+7. **Investiga.** Intenta cambiar con EML (sin `IN LOCAL MODE`, desde tu clase de consola) el campo `ClienteId` de Elena. ¿Qué devuelve `FAILED` o `REPORTED`? ¿Por qué la lógica del propio BO sí podrá escribirlo? Contéstalo en un comentario encima del bloque.
 
 ---
 

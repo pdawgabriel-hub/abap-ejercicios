@@ -18,12 +18,14 @@ Con la biblioteca **XCO** de ABAP Cloud se puede generar un fichero `.xlsx` y gu
 
 ```abap
   METHOD exportarPresupuesto.
+    " Las partidas de los presupuestos pedidos
     READ ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
       ENTITY Presupuesto BY \_Partidas FIELDS ( Concepto Cantidad PrecioUnitario ImportePartida )
       WITH CORRESPONDING #( keys )
       RESULT DATA(lt_partidas).
 
     LOOP AT keys INTO DATA(ls_key).
+      " Una fila de la hoja: todo texto, salvo la cantidad
       TYPES: BEGIN OF ty_fila,
                concepto TYPE string,
                cantidad TYPE i,
@@ -31,6 +33,7 @@ Con la biblioteca **XCO** de ABAP Cloud se puede generar un fichero `.xlsx` y gu
                importe  TYPE string,
              END OF ty_fila.
       DATA lt_filas TYPE STANDARD TABLE OF ty_fila WITH EMPTY KEY.
+      " Primera fila: los titulos de las columnas
       lt_filas = VALUE #( ( concepto = 'Concepto' precio = 'Precio' importe = 'Importe' ) ).
       LOOP AT lt_partidas INTO DATA(ls_partida) WHERE PresupuestoUUID = ls_key-PresupuestoUUID.
         APPEND VALUE #( concepto = ls_partida-Concepto cantidad = ls_partida-Cantidad
@@ -43,7 +46,9 @@ Con la biblioteca **XCO** de ABAP Cloud se puede generar un fichero `.xlsx` y gu
       DATA(lo_hoja) = lo_documento->get_workbook( )->worksheet->at_position( 1 ).
       DATA(lo_patron) = xco_cp_xlsx_selection=>pattern_builder->simple_from_to( )->get_pattern( ).
       lo_hoja->select( lo_patron )->row_stream( )->operation->write_from( REF #( lt_filas ) )->execute( ).
-      DATA(lv_fichero) = lo_documento->get_file_content( ).
+      DATA(lv_fichero) = lo_documento->get_file_content( ).   " el .xlsx en binario
+
+      " Guardarlo como adjunto del presupuesto (la lista de 3.6)
 
       MODIFY ENTITIES OF zi_tlpresupuesto IN LOCAL MODE
         ENTITY Presupuesto CREATE BY \_Fotos FIELDS ( Imagen TipoMime NombreFichero )
@@ -62,7 +67,10 @@ Los nombres de los métodos de XCO son largos y encadenados; si alguno no existe
 ## Ejercicios
 
 1. **Disponibilidad.** Averigua si tu trial tiene el servicio de formularios y anota lo que encuentres y dónde.
-2. **El presupuesto.** Con el camino que te funcione, haz que el presupuesto del ERP se pueda descargar con los datos de §8: cliente (los datos **copiados** en el presupuesto), líneas, base imponible, IVA y total.
+2. **El presupuesto.** Con el camino que te funcione, haz que el presupuesto del ERP se pueda descargar con los datos de §8: cliente (los datos **copiados** en el presupuesto), líneas, base imponible, IVA y total. Si usas el camino 2:
+    - **Dónde:** BDEF `ZI_GorPresupuesto` (`action exportarPresupuesto result [1] $self;`, y `use action` en la proyección), clase local `lhc_presupuesto` y la metadata extension de `ZC_GorPresupuesto` (el botón, `type: #FOR_ACTION`).
+    - **Qué hace:** como `exportarPresupuesto` del taller, pero las primeras filas de la hoja son los datos del cliente y las últimas, base imponible, IVA y total. El fichero se guarda en la lista de archivos del presupuesto (3.6) con `Tipo` `otro`.
+    - **Comprueba:** en `ZCL_GOR_EML_DEMO`, ejecuta la acción sobre `PREP0001` y guarda: `SELECT COUNT( * ) FROM zgor_presu_arc` sube en 1, con `nombre_archivo` `presupuesto.xlsx`. En la vista previa, descárgalo desde la pestaña *Archivos* y ábrelo con LibreOffice: 1210 en el total.
 3. **Los otros dos.** Haz lo mismo con el parte de trabajo (horas y trabajadores) y con el seguimiento de gastos de la obra (ingresos, gastos, beneficio real y saldo pendiente, leídos de `ZI_GorObraFinanzas`).
 4. **Investiga.** Si ninguno de los dos caminos funciona en tu sistema, describe en `diseno.md` cómo resolvería esto una empresa con S/4HANA y qué pondrías en el README.
 

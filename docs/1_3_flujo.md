@@ -48,6 +48,8 @@ El orden importa. Si una orden tiene importe 0 y el titular ya ha pagado algo, n
     ENDCASE.
 ```
 
+ABAP compara `lv_semaforo` con cada `WHEN` en orden y ejecuta solo el primero que coincide; `WHEN OTHERS` recoge todo lo demás, como el `else` de un `IF`. A diferencia de Python, no hace falta `break`: tras ejecutar un `WHEN`, el programa sigue después del `ENDCASE`. Si escribiéramos `'Verde'` con mayúscula, **no** coincidiría: la comparación de textos distingue mayúsculas.
+
 ## Expresiones condicionales: `COND` y `SWITCH`
 
 Cuando lo que se decide es **un valor** (no qué sentencias ejecutar), es más corto usar una expresión. `COND` es un `IF` que devuelve un valor; `SWITCH`, un `CASE`:
@@ -115,6 +117,8 @@ Así quedan en `ZCL_TL_CALCULOS` las decisiones del resumen de la orden. Las con
     ENDDO.
 ```
 
+Este bucle escribe `Orden ORD0001`, `Orden ORD0002` y `Orden ORD0003`. `sy-index` vale 1 en la primera vuelta y va subiendo solo; con las opciones de formato de 1.2 (`WIDTH`, `ALIGN`, `PAD`) lo convertimos en las 4 cifras con ceros de un código. Es, en pequeño, lo que hará la numeración de RAP en el Bloque 3.
+
 ## Funciones de cadena
 
 Las funciones de texto **devuelven** un valor nuevo y no cambian la variable original:
@@ -145,6 +149,8 @@ Con ellas se construye el rótulo de un titular para los desplegables:
     ENDIF.
   ENDMETHOD.
 ```
+
+El método construye el rótulo **por partes**: empieza con lo único seguro, el código, y va añadiendo lo demás solo si existe. El `RETURN` del primer `IF` termina el método en ese punto, así que un titular sin razón social se queda en `TIT0001`. Con razón social y documento, sale `TIT0001 · Talleres Ebro SL [B50123456]`; sin documento, `TIT0001 · Talleres Ebro SL`. En tu ERP harás lo mismo con la etiqueta del cliente (§3.1), que en Odoo era el `_compute_display_name`.
 
 ## Preparación del entorno de trabajo
 

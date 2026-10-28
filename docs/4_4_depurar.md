@@ -35,11 +35,21 @@ Antes de cambiar algo para corregir un error de la app, **escribe un test que lo
 
 ## Ejercicios
 
-1. **Depura una determination.** Pon un *breakpoint* en tu `recalcularTotales` del presupuesto. En la app, cambia las unidades de una línea y sigue el código con **F6**. Comprueba en *Variables* que `lt_lineas` tiene las líneas del presupuesto y que `lv_base` sale bien.
-2. **Depura una validation.** Pon un *breakpoint* en tu `validarHoras` (o como la hayas llamado), escribe 25 h en una línea de parte y guarda. Sigue el `CATCH` y mira qué se añade a `reported`.
-3. **Cambia un valor.** En el ejercicio 1, antes de que se escriba el resultado, cambia en *Variables* el valor de `lv_base` a 2000 y continúa con **F8**. ¿Qué total muestra la app? Descarta el borrador.
-4. **El escenario otra vez.** Ejecuta todos los tests de `ZGOR`. Si alguno falla tras el Bloque 4, usa la tabla de arriba para localizar en qué capa está el problema.
-5. **Investiga.** Busca en Eclipse la vista **ABAP Feed Reader** o, en el menú *Window → Show View*, la de *Runtime Errors* (los *dumps*). Provoca uno (por ejemplo, con la lectura de la quinta fila de 1.7) y comprueba dónde aparece.
+1. **Depura una determination.**
+    - **Dónde:** el método `recalcularTotales` de `lhc_presupuesto` (3.3).
+    - **Qué haces:** doble clic en el margen izquierdo de la primera línea del método para poner un *breakpoint*. En la vista previa de `Presupuesto`, abre `PREP0001`, pulsa *Editar* y cambia las unidades de la línea a 12. Eclipse pasa a la perspectiva *Debug*: avanza línea a línea con **F6**.
+    - **Comprueba:** en la vista *Variables*, `lt_lineas` tiene la línea con 12 uds y, al pasar por el cálculo, la base sale **1200**. Pulsa **F8** para continuar: la app muestra el total nuevo, 1452. Descarta el borrador.
+
+2. **Depura una validation.**
+    - **Dónde:** la validation de las horas de la línea de parte (3.4).
+    - **Qué haces:** *breakpoint* en su primera línea; en la vista previa de `ParteTrabajo`, escribe 25 h en una línea y guarda. Sigue con **F6** hasta el `CATCH`.
+    - **Comprueba:** en *Variables*, `reported-linea` recibe una fila con tu mensaje, y la app lo muestra junto al campo de las horas.
+
+3. **Cambia un valor.** Repite el ejercicio 1 y, antes de que se escriba el resultado, haz doble clic en el valor de `lv_base` en *Variables* y cámbialo a 2000. Continúa con **F8**. ¿Qué total muestra la app? Descarta el borrador.
+
+4. **El escenario otra vez.** Clic derecho en `ZGOR` → **Run As → ABAP Unit Test**. Todos deben seguir en verde; si alguno falla tras el Bloque 4, usa la tabla de arriba para localizar en qué capa está el problema.
+
+5. **Investiga.** En *Window → Show View → Other…*, busca **ABAP Runtime Errors** (los *dumps*). Provoca uno (por ejemplo, con la lectura de la quinta fila de 1.7) y comprueba dónde aparece y qué línea señala.
 
 ---
 

@@ -8,15 +8,15 @@ Dos detalles de acabado: que los importes se vean **como dinero** (con su símbo
 
 En las tablas guardamos los importes como `abap.dec(15,2)`, sin moneda: el ERP trabaja siempre en euros (§12.1). Fiori los muestra como números. Para que los muestre como importes, la vista necesita decirle **qué campo es la moneda** de cada importe. En el taller se añade a la proyección un campo de moneda constante y cada importe se anota con él:
 
-```sql
+```cds
 define root view entity ZC_TlPresupuesto
   provider contract transactional_query
   as projection on ZI_TlPresupuesto
 {
   ...
-      @Semantics.amount.currencyCode: 'Moneda'
+      @Semantics.amount.currencyCode: 'Moneda'   // Importe se expresa en la moneda de este campo
       Importe,
-      Moneda,
+      Moneda,                                    // EUR, constante en la vista interface
   ...
 }
 ```
@@ -39,7 +39,10 @@ En el trial, el paso 1 necesita una suscripción a *Business Application Studio*
 
 ## Ejercicios
 
-1. **Euros.** Añade la moneda a los importes de una entidad de tu ERP (el presupuesto) con la opción que funcione en tu sistema. Compruébalo en la vista previa: el total debe salir con el símbolo de euro.
+1. **Euros.**
+    - **Dónde:** `ZI_GorPresupuesto` y `ZI_GorPresuLin` (el campo constante), `ZC_GorPresupuesto` y `ZC_GorPresuLin` (las anotaciones), la BDEF del presupuesto y sus tablas de borradores.
+    - **Qué cambia:** en las dos vistas interface, `cast( 'EUR' as abap.cuky ) as Moneda`; en la BDEF, `Moneda` en `field ( readonly )`; en las proyecciones, el campo `Moneda` y `@Semantics.amount.currencyCode: 'Moneda'` encima de `BaseImponible`, `CuotaIva`, `Total`, `Precio` y `TotalLinea`. Regenera las dos tablas de borradores con **Ctrl+1**: ganan la columna `moneda`.
+    - **Comprueba:** en la vista previa de `Presupuesto`, el total de `PREP0001` sale como `1.210,00 EUR` (o `1.210,00 €`, según el idioma del navegador).
 2. **Todos los importes.** Si el ejercicio 1 ha funcionado, extiéndelo al resto de importes: líneas, ingresos, partes y la ficha financiera.
 3. **El menú.** Diseña en `diseno.md` el menú del Launchpad del ERP a partir del de Odoo (§4: «Análisis Financiero» y «Consultar datos»): qué mosaicos habría, de qué servicio sale cada uno y en qué grupo va.
 4. **Una app desplegada (opcional).** Si tienes acceso a *Business Application Studio*, genera y despliega la app de obras y ábrela desde el Launchpad.

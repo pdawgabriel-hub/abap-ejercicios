@@ -6,7 +6,7 @@ Las vistas de 2.2 están sueltas: en el taller, `ZI_TlOrden` tiene un `TitularUU
 
 Una *association* declara una relación entre dos vistas. No trae los datos hasta que alguien la usa, como la carga perezosa de un *recordset* de Odoo.
 
-```sql
+```cds
 define view entity ZI_TlOrden
   as select from ztl_orden
   // Relacion con el titular: como mucho uno [0..1].
@@ -47,7 +47,7 @@ La ruta se convierte en un *left outer join*: una orden sin titular sale igualme
 
 Las partidas de un presupuesto no existen sin él: si se borra el presupuesto, se borran sus partidas. Es el `ondelete='cascade'` de Odoo. En CDS se declara con una **composición**, y tiene dos lados:
 
-```sql
+```cds
 // root: es la raiz de un objeto de negocio (el presupuesto con sus partidas)
 define root view entity ZI_TlPresupuesto
   as select from ztl_prs
@@ -65,7 +65,7 @@ define root view entity ZI_TlPresupuesto
 }
 ```
 
-```sql
+```cds
 // Sin root: es hija, solo existe dentro del presupuesto
 define view entity ZI_TlPartida
   as select from ztl_prs_par
@@ -101,7 +101,7 @@ La **hoja de costes como hija `[0..1]` de la orden** es una decisión de diseño
 
 Quién ha trabajado en una orden no se guarda en ningún sitio: se saca de los tramos de sus jornadas con una vista.
 
-```sql
+```cds
 @AccessControl.authorizationCheck: #NOT_REQUIRED
 @EndUserText.label: 'Taller - Mecanicos de cada orden'
 define view entity ZI_TlOrdenMecanico
@@ -129,7 +129,7 @@ En el trial hay pocas, porque es un sistema vacío, pero las básicas sí están
 
 En el taller, el titular guarda su país como el código de dos letras de SAP (`ES`, `FR`…) en una columna `pais` de tipo `abap.char(3)`, y su vista se relaciona con `I_Country`:
 
-```sql
+```cds
 define view entity ZI_TlTitular
   as select from ztl_tit
   // Vista liberada de SAP: se usa igual que una propia
@@ -146,7 +146,7 @@ define view entity ZI_TlTitular
 
 Y el nombre del país, en el idioma del usuario, se lee a través de la association de textos que trae la propia vista de SAP:
 
-```sql
+```cds
       // Ruta: del titular a su pais y de ahi a su texto, filtrado por el idioma de la sesion
       _Pais._Text[1: Language = $session.system_language].CountryName as PaisNombre
 ```
@@ -159,7 +159,7 @@ El filtro entre corchetes elige la fila del idioma de la sesión; `1:` le dice a
 
 Se modifican tus vistas de 2.2 y se crean tres nuevas en `ZGOR_CDS`. Al terminar, tu modelo tiene esta forma:
 
-```
+```text
 ZI_GorCliente (raíz)
 ZI_GorTrabajador (raíz) ──composición── ZI_GorFalta
 ZI_GorProveedor (raíz)

@@ -112,11 +112,13 @@ Un método declara con `RAISING` las excepciones que puede lanzar, y las lanza c
   ENDMETHOD.
 ```
 
+`add_tramo` no captura la excepción: la deja pasar. Si `comprobar_tiempo` la lanza, el `APPEND` **no llega a ejecutarse** y la jornada se queda como estaba. Para eso `add_tramo` tiene que declarar también `RAISING zcx_tl_aviso` en su definición; si no, el editor avisa de que la excepción puede escaparse sin estar declarada. Quien llame a `add_tramo` será quien decida, con un `TRY`, qué hacer con el aviso.
+
 ## Preparación del entorno de trabajo
 
 La excepción del ERP va en `ZGOR_BUS`. Al terminar:
 
-```
+```text
 ZGOR_BUS
 ├── ZIF_GOR_TIPOS, ZCL_GOR_REGLAS          (ampliada en esta unidad)
 ├── ZCX_GOR_REGLA                          ← nueva

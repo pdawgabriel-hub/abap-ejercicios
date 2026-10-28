@@ -109,6 +109,8 @@ Una fecha (`d`) es un texto de 8 cifras, pero ABAP sabe operar con ella: **resta
     out->write( lv_desde + 7 ).              " fecha + numero = otra fecha: 20270104
 ```
 
+Fíjate en que la resta cruza el cambio de año sin que tengamos que hacer nada: del 28 de diciembre al 3 de enero hay 6 días, y ABAP lo sabe porque conoce el calendario. Lo usaremos en el ERP para los días de una falta (§11.2), que se cuentan **incluyendo** los dos extremos: por eso allí sumaremos 1 al resultado de la resta.
+
 ## Redondeo
 
 `round( val = x dec = 2 )` redondea a 2 decimales, **hacia arriba en el empate** (`31.665` → `31.67`).
@@ -177,7 +179,7 @@ Cómo se lee la firma de un método:
 
 Seguimos en los paquetes de [1.1](./1_1_classrun.md). Al terminar, tu proyecto tendrá esta forma:
 
-```
+```text
 ZGOR
 ├── ZGOR_BUS
 │   ├── ZIF_GOR_TIPOS        ← tipos comunes (nueva)
@@ -233,7 +235,7 @@ ZGOR
     - **Qué hace:** en `main`, declara una estructura `zif_gor_tipos=>ty_presu_linea` con 10 uds a 100 € y, con `ZCL_GOR_REGLAS`, calcula su total, la cuota con IVA 21 y el total del presupuesto. Escribe cada valor con una plantilla y `DECIMALS = 2`.
     - **Comprueba:** ejecuta con **F9**. Es el paso 2 de §12.7; deben salir estas tres líneas:
 
-    ```
+    ```text
     Base: 1000.00
     Cuota IVA: 210.00
     Total: 1210.00

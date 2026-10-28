@@ -17,7 +17,7 @@ Es la misma idea que separar el modelo (`models/`) de las vistas (`views/`) en O
 
 Así es la de los titulares del taller:
 
-```sql
+```cds
 @AccessControl.authorizationCheck: #NOT_REQUIRED      // sin control de acceso (hasta 6.1)
 @EndUserText.label: 'Taller - Titulares'
 @Metadata.ignorePropagatedAnnotations: true            // no heredar anotaciones de la tabla
@@ -68,7 +68,7 @@ El Data Preview permite también filtrar, ordenar y, cuando haya associations (2
 
 Todas las vistas van en `ZGOR_CDS`. Al terminar habrá una por tabla:
 
-```
+```text
 ZGOR_CDS
 ├── ZI_GorCliente, ZI_GorTrabajador, ZI_GorFalta
 ├── ZI_GorProveedor, ZI_GorEspecialista

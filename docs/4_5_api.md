@@ -38,8 +38,9 @@ Un mismo servicio se puede publicar con dos tipos de *binding*:
 
 Para que otro programa cree una orden, el borrador estorba: tendría que crear el borrador, rellenarlo y activarlo, en tres peticiones. Por eso, para integraciones se publica un servicio aparte con *binding* **Web API**:
 
-```sql
+```cds
 @EndUserText.label: 'Taller - API para otros sistemas'
+// Otro servicio sobre las mismas proyecciones: solo las raices que usaria otro sistema
 define service ZAPI_TL_TALLER {
   expose ZC_TlOrden       as Orden;
   expose ZC_TlPresupuesto as Presupuesto;
@@ -123,15 +124,28 @@ La Service Definition y el *binding* de la API van en `ZGOR_SRV`, con el prefijo
 
 ## Ejercicios
 
-1. **La API del ERP.** Crea la Service Definition `ZAPI_GOR_ERP` con las raíces que necesitaría otro sistema: clientes, presupuestos (con líneas), obras (con su ficha de gastos), ingresos y la ficha financiera (`ZC_GorObraFinanzas`). Publícala con el *binding* `ZAPI_GOR_ERP_O4`, de tipo **OData V4 - Web API**. Si no te deja por el *draft*, crea las proyecciones de API sin `use draft` para las raíces que lo necesiten.
-2. **Lecturas.** Escribe y prueba en el navegador la petición para cada caso:
-    - las obras de un cliente, por su código, con su ficha financiera;
+1. **La API del ERP.**
+    - **Dónde:** `ZGOR_SRV`: la Service Definition `ZAPI_GOR_ERP` (descripción `ERP - API para otros sistemas`) y su binding `ZAPI_GOR_ERP_O4`, de tipo **OData V4 - Web API**.
+    - **Qué contiene:** como `ZAPI_TL_TALLER`, las raíces que necesitaría otro sistema: clientes, presupuestos (con líneas), obras (con su ficha de gastos), ingresos y la ficha financiera (`ZC_GorObraFinanzas`). Si el binding no se deja publicar por el *draft*, crea para las raíces que lo necesiten proyecciones de API (`ZAPI_GorCliente`…) cuya BDEF de proyección no tenga `use draft`.
+    - **Comprueba:** publica el binding y abre en el navegador `<url del servicio>/Cliente?$top=2`: devuelve un JSON con dos clientes.
+
+2. **Lecturas.** Escribe en `diseno.md` la petición de cada caso y pruébala en el navegador:
+    - las obras de un cliente, por su código, con su ficha financiera (`$filter` sobre la ruta `_Cliente/ClienteId` y `$expand=_Finanzas`);
     - los presupuestos aprobados de 2026, ordenados por total de mayor a menor;
     - las obras con salud `rojo`, solo con código, descripción y beneficio;
-    - cuántos ingresos hay en total (sin traerlos).
+    - cuántos ingresos hay en total, sin traerlos (`$count`).
+
+    **Comprueba:** con los datos de 2.5, el primero da una obra para `CLI0001` (`OBR0001`, con su ficha); el segundo, tres presupuestos con totales 2200, 1452 y 1210; el tercero, solo `OBR0002`; el cuarto, **4**.
+
 3. **La API de §12.5.** El informe propone una API REST mínima para una reimplementación. Haz en `diseno.md` una tabla con cada línea de §12.5 y su equivalente en tu servicio OData. Por ejemplo, `GET /buscar/clientes?q=juan perez` es `GET /Cliente?$search=juan perez`, y `POST /obras/{id}/vincular-presupuesto` es la acción `vincularAObra` sobre el presupuesto. Marca las que no tengan equivalente directo y explica por qué.
-4. **Escribir (si el trial lo permite).** Con un usuario de comunicación, crea un cliente con `POST` sin teléfono: comprueba que la respuesta es un error 400 con el mensaje de tu validation. Créalo bien y comprueba que la respuesta trae su código `CLI…`. Después aprueba un presupuesto con la acción `aprobar`.
+
+4. **Escribir (si el trial lo permite).**
+    - **Dónde:** un terminal, con `curl`, y un usuario de comunicación (sección «Acceso desde fuera»).
+    - **Qué haces:** pide el token CSRF; crea un cliente con `POST` **sin teléfono**; créalo bien; aprueba un presupuesto con la acción `aprobar`.
+    - **Comprueba:** el primer `POST` responde **400** con el mensaje de tu validation; el segundo, **201** con el cliente y su código `CLI…`; la acción devuelve el presupuesto con `Estado` `aprobado`.
+
 5. **El mismo servicio, dos usos.** Compara el `$metadata` de `ZUI_GOR_COMERCIAL_O4` (UI) con el de `ZAPI_GOR_ERP_O4` (Web API). ¿Qué hay en uno que no está en el otro? Busca `IsActiveEntity` y las anotaciones `UI`.
+
 6. **Investiga.** ¿Qué es una petición `$batch` en OData y por qué la usa Fiori? Anota un caso del ERP en el que una integración la necesitaría.
 
 ---

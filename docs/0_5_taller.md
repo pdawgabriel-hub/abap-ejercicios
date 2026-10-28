@@ -8,7 +8,7 @@ Sus objetos usan el prefijo `ZTL` y se prueban en el paquete `ZEJ`. Lo que entre
 
 Un **titular** (la persona o empresa dueña de un vehículo) lleva su coche al taller. El taller le hace un **presupuesto** con varias **partidas** más el impuesto. Si el titular lo **acepta**, se abre una **orden de reparación** para la matrícula. Durante la reparación se anotan las **jornadas** de los mecánicos, los **albaranes** de recambios y las **facturas** de las subcontratas, y el titular va pagando con **abonos**. Cada orden tiene una única **hoja de costes** que resume su dinero.
 
-```
+```text
 Titular → Presupuesto (partidas + impuesto) → Orden de reparación
                                                      │
                  ┌───────────────────────────────────┼───────────────────────────┐
@@ -76,7 +76,7 @@ Todas las tablas siguen el mismo patrón ([1.5](./1_5_abapSql.md)): `client`, un
 
 ### Presupuesto
 
-```
+```text
 importe_partida = ajustar_centimos(cantidad × precio_unitario)
 neto            = ajustar_centimos(Σ importe_partida)
 cuota           = ajustar_centimos(neto × impuesto / 100)
@@ -93,7 +93,7 @@ importe         = neto + cuota
 - Al crear la orden se crea su **hoja de costes**. No se puede crear ni borrar a mano.
 - **Resumen** (lo que muestra la hoja):
 
-```
+```text
 costes            = mano_de_obra + recambios + subcontratas
 rendimiento       = abonado − costes            # lo que de verdad ha ganado el taller
 saldo_pendiente   = importe − abonado           # lo que aún debe el titular

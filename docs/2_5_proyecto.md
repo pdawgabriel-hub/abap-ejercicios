@@ -151,7 +151,7 @@ En el Bloque 3 importa que `last_changed_at` tenga valor: RAP lo usa para detect
 
 Las dos clases van en `ZGOR_TEST`. La comprobación la descargas de los materiales. Al terminar:
 
-```
+```text
 ZGOR_TEST
 ├── (clases del Bloque 1)
 ├── ZCL_GOR_DATOS_DEMO       ← nueva

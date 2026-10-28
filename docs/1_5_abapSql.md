@@ -6,7 +6,7 @@ Hasta ahora todo vivía en memoria y desaparecía al terminar la ejecución. En 
 
 En ABAP Cloud no hay transacción SE11: una tabla se escribe como **código** en Eclipse, con el objeto **Database Table**. Así es la de titulares del taller:
 
-```sql
+```cds
 @EndUserText.label : 'Taller - Titulares'
 @AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
 @AbapCatalog.tableCategory : #TRANSPARENT
@@ -45,7 +45,7 @@ Las anotaciones del principio son las que genera el asistente al crear la tabla.
 
 Una orden pertenece a un titular. En Odoo sería un `Many2one`: una columna con el id del otro registro. Aquí es exactamente igual, una columna con el UUID del titular:
 
-```sql
+```cds
 @EndUserText.label : 'Taller - Ordenes de reparacion'
 @AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
 @AbapCatalog.tableCategory : #TRANSPARENT
@@ -158,7 +158,7 @@ El método puede lanzar una excepción, y ABAP obliga a tratarla con `TRY ... CA
 
 Las tablas van en `ZGOR_DDIC` y la clase de pruebas, en `ZGOR_TEST`. Para crear una tabla: clic derecho en el paquete → **New → Other ABAP Repository Object** → *Database Table*. Al terminar:
 
-```
+```text
 ZGOR
 ├── ZGOR_DDIC
 │   ├── ZGOR_CLI           ← Clientes (nueva)

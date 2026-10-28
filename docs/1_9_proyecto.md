@@ -107,6 +107,8 @@ Y así el paso que añade la mano de obra, con el registro de jornada de 1.6 y e
   ENDMETHOD.
 ```
 
+Cada paso de la simulación trabaja igual: usa los objetos de 1.6, captura con `TRY` los avisos de 1.7 para escribirlos en la consola sin detener la simulación, y guarda el resultado en los atributos de la clase (`mt_tramos`, `mv_recambios`…) para que el paso siguiente lo encuentre. Al final, el método que calcula la ficha solo tiene que leer esos atributos y llamar a `zcl_tl_calculos`.
+
 ## El diseño de las tablas
 
 La segunda entrega es un documento: el diseño de **todas** las tablas del ERP, a partir del modelo relacional del informe (§12.2). En 1.5 ya hiciste dos (`zgor_cli` y `zgor_obra`); ahora toca el resto, sobre el papel. En 2.1 las crearemos en el sistema y podrás comparar tu diseño con el definitivo.
@@ -140,7 +142,7 @@ La segunda entrega es un documento: el diseño de **todas** las tablas del ERP, 
 
 La clase de la simulación va en `ZGOR_TEST`. El diseño es un fichero Markdown en el repositorio del proyecto, `erp-obras-reformas-sap`: si aún no lo tienes clonado en tu equipo, créalo ahora en GitHub (vacío y público) y clónalo con `git clone`. Al terminar, el proyecto queda así:
 
-```
+```text
 ZGOR
 ├── ZGOR_DDIC   zgor_cli, zgor_obra                                    (1.5)
 ├── ZGOR_BUS    ZIF_GOR_TIPOS, ZCL_GOR_REGLAS, ZCX_GOR_REGLA,

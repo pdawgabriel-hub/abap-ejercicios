@@ -131,6 +131,14 @@ Las dos formas modernas de construir una tabla o un valor a partir de otra tabla
                                NEXT lv_suma = lv_suma + ls-importe ).
 ```
 
+Las dos expresiones recorren la tabla igual que un `LOOP AT`, pero **devuelven** un resultado en lugar de ejecutar sentencias:
+
+- **`VALUE ... ( FOR ... )`** crea una tabla nueva con una fila por cada fila de la original. Aquí, la lista de conceptos.
+- **`REDUCE`** empieza con el valor de `INIT` (la suma a 0) y, en cada vuelta, lo sustituye por lo que diga `NEXT`. Al terminar, devuelve el último valor: el neto de todas las partidas.
+- **`WHERE`** dentro del `FOR` filtra las filas antes de procesarlas: en el tercer ejemplo solo se suman los presupuestos aceptados.
+
+El resultado es el mismo que con un `LOOP` y una variable acumuladora, pero en una sola expresión que se puede usar directamente en un `RETURNING`. En los ejercicios podrás usar `REDUCE` para la base imponible de un presupuesto, el total de una obra (con `WHERE`) o las horas de un parte.
+
 ## Partir un texto en palabras
 
 `SPLIT ... AT ... INTO TABLE` convierte un texto en una tabla de palabras. El filtro de mecánicos del taller lo usa para que «García Ruiz» encuentre al mecánico aunque «García» esté en el nombre y «Ruiz» en los apellidos. En el taller, cada palabra tiene que ser el **principio** de algún campo (`garc` encuentra a García, `arcía` no):

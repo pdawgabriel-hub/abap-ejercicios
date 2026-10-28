@@ -67,10 +67,12 @@ Accept: application/json
 En el taller, una clase de consola lee los *Business Partner* con el cliente HTTP de 6.5 y los muestra. No se guarda nada: los datos del *sandbox* son inventados, y el objetivo es ver cómo es un objeto estándar de SAP por dentro. Lo nuevo respecto a 6.5 es la cabecera con la clave y la forma del JSON:
 
 ```abap
+    " La URL: servicio de Business Partner, 5 registros, 2 campos, en JSON
     DATA(lo_destino) = cl_http_destination_provider=>create_by_url(
       |https://sandbox.api.sap.com/s4hanacloud/sap/opu/odata/sap/API_BUSINESS_PARTNER/A_BusinessPartner| &&
       |?$top=5&$select=BusinessPartner,BusinessPartnerFullName&$format=json| ).
     DATA(lo_cliente) = cl_web_http_client_manager=>create_by_http_destination( lo_destino ).
+    " El sandbox pide la clave de API en una cabecera (lv_clave: nunca escrita en el codigo)
     lo_cliente->get_http_request( )->set_header_field( i_name = 'APIKey' i_value = lv_clave ).
     DATA(lo_respuesta) = lo_cliente->execute( if_web_http_client=>get ).
 
@@ -82,6 +84,7 @@ En el taller, una clase de consola lee los *Business Partner* con el cliente HTT
     TYPES: BEGIN OF ty_resultados,
              results TYPE STANDARD TABLE OF ty_bp WITH EMPTY KEY,
            END OF ty_resultados.
+    " La estructura imita el JSON por fuera: d -> results -> lista
     DATA: BEGIN OF ls_respuesta,
             d TYPE ty_resultados,
           END OF ls_respuesta.
@@ -104,7 +107,10 @@ Una cuenta en `api.sap.com` con la clave de la API de *Business Partner*. La cla
 1. **El mapa estándar.** Haz en `diseno.md` una tabla con cada entidad de tu ERP y el objeto estándar de S/4HANA que la cubriría (o «ninguno»). Para tres de ellas, busca en el *Business Accelerator Hub* la vista CDS o la API liberada que usarías y apunta su nombre.
 2. **Si fuera una extensión.** Explica en media página cómo cambiaría tu modelo de datos si el ERP se construyera **dentro** de un S/4HANA: qué tablas desaparecerían, a qué apuntarían las obras y los partes, y qué se ganaría y se perdería.
 3. **Leer el *sandbox*.** Prueba en el navegador o con `curl` la petición de los 5 primeros *Business Partner* con su dirección. Anota qué campos traen el nombre, la calle, el código postal y la ciudad, y dónde estaría el NIF (pista: `to_BusinessPartnerTax`).
-4. **Consultar desde ABAP.** Crea la clase de consola `ZCL_GOR_CONSULTAR_BP`, que lea 5 *Business Partner* de tipo organización (`$filter=BusinessPartnerCategory eq '2'`) con su dirección y su NIF, y escriba en la consola cada uno junto al campo de tu cliente en el que encajaría cada dato: nombre, dirección, código postal, NIF. Anota en `diseno.md` qué datos de tu cliente no tienen equivalente en el *Business Partner* y cuáles del *Business Partner* no tienes tú.
+4. **Consultar desde ABAP.**
+    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_CONSULTAR_BP`, descripción `Consulta de Business Partner del sandbox`, con `if_oo_adt_classrun`. La clave de API, en una constante privada que **no** subas a GitHub (quítala antes del *push* o pon la clase fuera de `ZGOR`).
+    - **Qué hace:** como la consulta del taller, lee 5 *Business Partner* de tipo organización (`$filter=BusinessPartnerCategory eq '2'`) con su dirección y su NIF (con `$expand=to_BusinessPartnerAddress,to_BusinessPartnerTax`), y escribe en la consola cada uno junto al campo de tu cliente en el que encajaría cada dato: nombre, dirección, código postal, NIF.
+    - **Comprueba:** la consola muestra **5** bloques, cada uno con sus cuatro líneas `Nombre -> zgor_cli-nombre`… Anota en `diseno.md` qué datos de tu cliente no tienen equivalente en el *Business Partner* y cuáles del *Business Partner* no tienes tú.
 5. **Investiga.** En la documentación de la API de *Business Partner*, ¿qué roles (`to_BusinessPartnerRole`) tendría un cliente y cuáles un proveedor? ¿Cómo encajarían tus especialistas?
 
 ---

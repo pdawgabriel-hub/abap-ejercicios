@@ -1,0 +1,19 @@
+/* Colores parecidos a los del editor ABAP de Eclipse ADT */
+.markdown-body pre[class*="language-"],
+.markdown-body .highlight pre {
+  background: #fbfbfd;
+  border: 1px solid #e1e4e8;
+  border-left: 4px solid #0a6ed1;
+  color: #1f1f1f;
+}
+.token.comment { color: #808080; font-style: italic; }
+.token.keyword { color: #0000c8; font-weight: 600; }
+.token.string, .token.string-template { color: #3a8a12; }
+.token.number { color: #3399ff; }
+.token.function { color: #7a3e9d; }
+.token.class-name, .token.type { color: #8b5a00; }
+.token.atrule, .token.annotation { color: #b0005a; }
+.token.property, .token.association { color: #00747a; }
+.token.variable { color: #a0522d; }
+.token.operator, .token.punctuation { color: #444; }
+.token.boolean, .token.constant { color: #3399ff; }

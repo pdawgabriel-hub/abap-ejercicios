@@ -10,8 +10,9 @@ Un ***business event*** invierte la relación: el objeto **anuncia** «ha pasado
 
 En el taller, el abono anuncia que se ha registrado. El evento se declara en la BDEF de la raíz, con un parámetro opcional para los datos que acompañan al aviso:
 
-```sql
+```cds
 @EndUserText.label: 'Taller - Datos del evento AbonoRegistrado'
+// Los datos que viajan con el aviso
 define abstract entity ZA_TlAbonoRegistrado
 {
   OrdenUUID       : sysuuid_x16;
@@ -19,7 +20,8 @@ define abstract entity ZA_TlAbonoRegistrado
 }
 ```
 
-```sql
+```bdef
+// El evento se lanza al guardar: hace falta el guardado adicional
 managed with additional save implementation in class zbp_i_tlabono unique;
 ...
 define behavior for ZI_TlAbono alias Abono
@@ -27,6 +29,7 @@ define behavior for ZI_TlAbono alias Abono
 {
   create;
   ...
+  // El BO anuncia que algo ha pasado; no sabe quien escucha
   event AbonoRegistrado parameter ZA_TlAbonoRegistrado;
 }
 ```
@@ -41,7 +44,8 @@ ENDCLASS.
 
 CLASS lsc_zi_tlabono IMPLEMENTATION.
   METHOD save_modified.
-    CHECK create-abono IS NOT INITIAL.
+    CHECK create-abono IS NOT INITIAL.               " solo si se crean abonos
+    " Un evento por abono creado, con sus datos en %param
     RAISE ENTITY EVENT zi_tlabono~AbonoRegistrado
       FROM VALUE #( FOR ls IN create-abono
                     ( %key   = ls-%key
@@ -58,6 +62,7 @@ ENDCLASS.
 Un **manejador de eventos** es una clase global vacía, `FOR EVENTS OF` el BO, con una clase local que tiene un método por evento:
 
 ```abap
+" Clase global vacia: solo dice de que BO escucha eventos
 CLASS zcl_tl_escucha_abonos DEFINITION PUBLIC ABSTRACT FINAL FOR EVENTS OF zi_tlabono.
 ENDCLASS.
 
@@ -66,8 +71,10 @@ ENDCLASS.
 ```
 
 ```abap
+" lhe = local handler of events (pestana Local Types)
 CLASS lhe_abono DEFINITION INHERITING FROM cl_abap_behavior_event_handler.
   PRIVATE SECTION.
+    " Se ejecuta con cada AbonoRegistrado; it_abonos trae los eventos recibidos
     METHODS al_registrar FOR ENTITY EVENT it_abonos FOR Abono~AbonoRegistrado.
 ENDCLASS.
 
@@ -75,6 +82,7 @@ CLASS lhe_abono IMPLEMENTATION.
   METHOD al_registrar.
     " Si con este abono la orden queda liquidada, se apunta en el registro de cobros
     LOOP AT it_abonos INTO DATA(ls_abono).
+      " La situacion de la orden ya incluye este abono (ya esta guardado)
       SELECT SINGLE FROM zi_tlordenresumen FIELDS SituacionCobro
         WHERE OrdenUUID = @ls_abono-%param-OrdenUUID INTO @DATA(lv_situacion).
       IF lv_situacion = 'liquidado'.
@@ -102,9 +110,15 @@ La entidad abstracta del evento va en `ZGOR_CDS`, el manejador en `ZGOR_BUS` y l
 
 ## Ejercicios
 
-1. **El evento.** Declara en tu ingreso el evento `IngresoRegistrado`, con un parámetro que lleve la obra y el importe, y lánzalo al guardar los ingresos nuevos (tu BO de ingresos necesita `with additional save`).
-2. **El registro.** Crea la tabla `zgor_cobro_log` (UUID, obra, fecha y hora, mensaje) y un manejador `ZCL_GOR_ESCUCHA_INGRESOS` que, cuando un ingreso deje la obra **pagada** (`EstadoPago = 'pagado'` en `ZI_GorObraFinanzas`), apunte «Obra cobrada del todo» con la fecha y la hora.
-3. **Pruébalo.** Con EML, registra los dos ingresos del escenario de §12.7 sobre una obra nueva (500 y 710). Tras el segundo, `zgor_cobro_log` debe tener una línea; tras el primero, ninguna. Ten en cuenta que el manejador se ejecuta después del *commit*: espera un momento antes de mirar la tabla.
+1. **El evento.**
+    - **Dónde:** una entidad abstracta nueva en `ZGOR_CDS`, `ZA_GorIngresoRegistrado` (campos `ObraUUID : sysuuid_x16;` e `Importe : abap.dec(15,2);`); la BDEF y la clase de `ZI_GorIngreso`.
+    - **En la BDEF:** la primera línea pasa a `managed with additional save implementation in class zbp_i_goringreso unique;`, y en la entidad, `event IngresoRegistrado parameter ZA_GorIngresoRegistrado;`.
+    - **Qué hace:** en `save_modified` de la clase `lsc_` (créala con **Ctrl+1**), `RAISE ENTITY EVENT zi_goringreso~IngresoRegistrado FROM ...` con una fila por cada ingreso de `create-ingreso`, como el abono del taller.
+    - **Comprueba:** activa sin errores; el efecto se ve en el ejercicio 3.
+2. **El registro.**
+    - **Dónde:** la tabla `zgor_cobro_log` en `ZGOR_DDIC` (`client`, `log_uuid` clave, `obra_uuid`, `momento` `timestampl`, `mensaje` `abap.char(120)`), y la clase `ZCL_GOR_ESCUCHA_INGRESOS` en `ZGOR_BUS`, `FOR EVENTS OF zi_goringreso`, con su clase local y un método `FOR ENTITY EVENT ... FOR Ingreso~IngresoRegistrado`, como `zcl_tl_escucha_abonos`.
+    - **Qué hace:** el manejador, cuando un ingreso deja la obra **pagada** (`EstadoPago = 'pagado'` en `ZI_GorObraFinanzas`), apunta «Obra cobrada del todo» con la fecha y la hora.
+3. **Pruébalo.** En `ZCL_GOR_EML_DEMO`, con EML, registra los dos ingresos del escenario de §12.7 sobre una obra nueva (500 y 710). Tras el segundo, `zgor_cobro_log` debe tener una línea; tras el primero, ninguna. Ten en cuenta que el manejador se ejecuta después del *commit*: espera un momento antes de mirar la tabla.
 4. **Otro suscriptor.** Añade un segundo método al mismo manejador, o un segundo manejador, que reaccione al mismo evento de otra forma (por ejemplo, escribir en la consola de errores si el ingreso supera el total de la obra, el caso de §11.6). Comprueba que el ingreso no ha tenido que cambiar.
 5. **Investiga.** ¿Qué diferencia hay entre resolver el ejercicio 2 con un evento y hacerlo con una *determination* del ingreso? Piensa en qué pasaría si escribir en el registro fallara.
 

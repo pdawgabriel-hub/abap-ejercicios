@@ -8,7 +8,7 @@ En 1.5 creaste `zgor_cli` y `zgor_obra`. En esta unidad crearás **las demás ta
 
 Todas siguen las cuatro decisiones de 1.5: `client`, clave UUID, código visible aparte (si la entidad lo tiene) y los cinco campos de administración al final. Así es la del presupuesto del taller:
 
-```sql
+```cds
 // Anotaciones de cabecera: las genera el asistente; solo cambia la descripcion
 @EndUserText.label : 'Taller - Presupuestos'
 @AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
@@ -48,7 +48,7 @@ Fíjate en tres grupos de campos:
 
 Y la tabla de sus partidas, que es **hija**: además de su propia clave, guarda el UUID del padre, y como no puede existir sin él, lo declara `not null`.
 
-```sql
+```cds
 // Tabla hija: cada fila pertenece a un presupuesto
 @EndUserText.label : 'Taller - Partidas de presupuesto'
 @AbapCatalog.enhancement.category : #NOT_EXTENSIBLE
@@ -71,6 +71,10 @@ define table ztl_prs_par {
 }
 ```
 
+## ¿Y los valores
+
+Si la comparamos con la tabla del presupuesto, veremos que la estructura es la misma: `client`, la clave UUID, los campos propios y los cinco de administración. Lo único nuevo es `presupuesto_uuid`, la columna que enlaza cada partida con su presupuesto. Fíjate en que **no** hay ninguna declaración de clave foránea: en ABAP Cloud la relación entre tablas no se declara en la tabla, sino en las vistas CDS, como veremos en 2.3.
+
 ## ¿Y los valores por defecto?
 
 En el taller, el impuesto vale 21 si no se indica otro y un presupuesto empieza en `borrador`. Las tablas de ABAP no tienen valores por defecto: los pondrá RAP al crear el registro, con una *determination* ([3.3](./3_3_determinations.md)). En las tablas, solo el tipo.
@@ -85,7 +89,7 @@ Todas las tablas del ERP van en `ZGOR_DDIC`. Para crear cada una: clic derecho e
 
 Al terminar, `ZGOR_DDIC` tendrá 16 tablas:
 
-```
+```text
 ZGOR_DDIC
 ├── zgor_cli, zgor_obra                                        (1.5)
 ├── zgor_trab, zgor_falta                                      ← nuevas

@@ -16,23 +16,28 @@ Con nuestra estrategia, el usuario ve el código en cuanto guarda. Mientras edit
 
 La versión sencilla busca el código más alto que existe y suma 1:
 
-```sql
+```bdef
+  // on save: el codigo se pone al guardar, no mientras se edita el borrador
   determination numerar on save { create; }
 ```
 
 ```abap
   METHOD numerar.
+    " Los titulares que se estan guardando...
     READ ENTITIES OF zi_tltitular IN LOCAL MODE
       ENTITY Titular FIELDS ( TitularRef ) WITH CORRESPONDING #( keys )
       RESULT DATA(lt_titulares).
+    " ...que todavia no tienen codigo
     DELETE lt_titulares WHERE TitularRef IS NOT INITIAL.
     CHECK lt_titulares IS NOT INITIAL.
 
+    " El codigo mas alto guardado: TIT0041
     SELECT SINGLE FROM ztl_tit FIELDS MAX( titular_ref ) INTO @DATA(lv_maxima).
     " TIT0041 -> 41 (si no hay ninguno, 0)
     DATA(lv_ultimo) = COND i( WHEN lv_maxima IS INITIAL THEN 0
                               ELSE CONV i( substring( val = lv_maxima off = 3 ) ) ).
 
+    " Cada titular nuevo, el siguiente: 42, 43... (i vale 1, 2, 3...)
     MODIFY ENTITIES OF zi_tltitular IN LOCAL MODE
       ENTITY Titular
         UPDATE FIELDS ( TitularRef )
@@ -56,10 +61,11 @@ Un *Number Range Object* es un contador que el sistema reserva de forma segura a
 
 ```abap
     TRY.
+        " Pedir al sistema el siguiente numero del contador, de forma segura
         cl_numberrange_runtime=>number_get(
           EXPORTING
-            nr_range_nr = '01'
-            object      = 'ZTL_TIT'
+            nr_range_nr = '01'                  " el intervalo del rango
+            object      = 'ZTL_TIT'             " el Number Range Object
           IMPORTING
             number      = DATA(lv_numero) ).
       CATCH cx_nr_object_not_found cx_number_ranges INTO DATA(lx_rango).
@@ -77,9 +83,19 @@ Se amplían tu `ZCL_GOR_REGLAS` (y su pestaña de tests) y tus BDEF y clases de 
 
 ## Ejercicios
 
-1. **Leer el número de un código.** Añade a tu `ZCL_GOR_REGLAS` el método estático `numero_de_codigo`, que recibe `iv_codigo` e `iv_prefijo` (`string`) y devuelve `rv_numero` (`i`): 0 si el código está vacío y, si no, el número que sigue al prefijo, sea cual sea su longitud (`OBR0041` → 41, `PROV0123` → 123). Es el inverso de tu `formatear_codigo`.
-2. **El cliente.** Añade a tu cliente la determination `asignarCodigo` (*on save*, al crear): `ClienteId` con el código siguiente al mayor que exista, usando tus `numero_de_codigo` y `formatear_codigo`. Con EML, crea dos clientes en el mismo `MODIFY` y guarda: con los datos de demo de 2.5, deben recibir `CLI0006` y `CLI0007`.
-3. **Los demás.** Haz lo mismo en los otros siete:
+1. **Leer el número de un código.**
+    - **Dónde:** `ZCL_GOR_REGLAS`, un método estático nuevo junto a `formatear_codigo`.
+    - **Firma:** `CLASS-METHODS numero_de_codigo IMPORTING iv_codigo TYPE string iv_prefijo TYPE string RETURNING VALUE(rv_numero) TYPE i.`
+    - **Qué hace:** devuelve 0 si el código está vacío y, si no, el número que sigue al prefijo, sea cual sea su longitud (`OBR0041` → 41, `PROV0123` → 123). Es el inverso de tu `formatear_codigo`. Pista: `substring( val = iv_codigo off = strlen( iv_prefijo ) )`.
+    - **Comprueba:** con el test de abajo, o escribiendo en `ZCL_GOR_EML_DEMO` `zcl_gor_reglas=>numero_de_codigo( iv_codigo = 'PROV0123' iv_prefijo = 'PROV' )`: **123**.
+
+2. **El código del cliente.**
+    - **Dónde:** BDEF `ZI_GorCliente`, entidad `Cliente`; clase local `lhc_cliente`.
+    - **En la BDEF:** `determination asignarCodigo on save { create; }`, como `numerar` del taller.
+    - **Qué hace:** lee los clientes nuevos sin `ClienteId`, busca el mayor código con `SELECT MAX( cliente_id ) FROM zgor_cli`, y da a cada uno el siguiente con tus `numero_de_codigo` y `formatear_codigo`, sumando 1 en cada vuelta.
+    - **Comprueba:** en `ZCL_GOR_EML_DEMO`, crea dos clientes en el **mismo** `MODIFY` y guarda. Con los datos de demo de 2.5, `SELECT cliente_id FROM zgor_cli ORDER BY cliente_id DESCENDING UP TO 2 ROWS` debe devolver `CLI0007` y `CLI0006`.
+
+3. **Los demás.** Haz lo mismo, con su determination `asignarCodigo` en la BDEF y la clase local de cada uno, en los otros siete:
 
     | BO / entidad | Campo | Tabla | Prefijo |
     |---|---|---|---|
@@ -92,7 +108,10 @@ Se amplían tu `ZCL_GOR_REGLAS` (y su pestaña de tests) y tus BDEF y clases de 
     | Ingreso | `IngresoId` | `zgor_ing` | `ING` |
 
     Como el método es casi igual en los ocho, piensa si merece la pena sacar el `SELECT MAX` a un método de una clase auxiliar. Si lo haces, ten en cuenta que cada uno lee una tabla distinta.
-4. **La obra y su ficha.** Crea una obra con EML y haz *commit*. Comprueba en el Data Preview que la obra tiene `ObraId` **y** su ficha de gastos tiene `GastoId`: la ficha la creó una determination *on modify* de la obra (3.3), y su código, la determination *on save* del gasto.
+4. **La obra y su ficha.**
+    - **Dónde:** `ZCL_GOR_EML_DEMO`, bloque `" 3.7 Codigos`.
+    - **Qué hace:** crea una obra con EML, guarda y lee `ObraId, \_Gasto-GastoId` de `zi_gorobra` para esa obra.
+    - **Comprueba:** la obra tiene `OBR0005` **y** su ficha de gastos `GAS0005`: la ficha la creó una determination *on modify* de la obra (3.3), y su código, la determination *on save* del gasto.
 5. **Investiga.** En tu ERP, ¿qué pasa con los códigos si borras el cliente `CLI0007` y creas otro? ¿Y si borras `CLI0005`? Compáralo con lo que hace `ir.sequence` en Odoo. Anota la diferencia en `diseno.md`, junto con el límite de varios usuarios, para el README.
 
 ## Comprueba tu solución automáticamente (opcional)

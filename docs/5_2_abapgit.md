@@ -68,7 +68,10 @@ En el trial no podrás practicarlo, pero si en la 0.1 Eclipse te pidió una orde
 
 ## Ejercicios
 
-1. **Primer push del ERP.** Enlaza `ZGOR` con `erp-obras-reformas-sap` y sube todo. En GitHub, comprueba que en `src/` hay una carpeta por subpaquete y que tus tablas, vistas, BDEF y clases están.
+1. **Primer push del ERP.**
+    - **Dónde:** en GitHub, crea el repositorio público `erp-obras-reformas-sap` (vacío, con un README). En Eclipse, la vista **abapGit Repositories**.
+    - **Qué haces:** los cuatro pasos de «Enlazar un paquete con un repositorio»: enlaza `ZGOR` (*folder logic* **Prefix**) y haz *Stage and Push* de todo con el mensaje «Bloques 1 a 4».
+    - **Comprueba:** en GitHub, `src/` tiene una carpeta por subpaquete (`zgor_ddic`, `zgor_cds`…) y dentro están tus tablas, vistas, BDEF y clases.
 2. **Los ejercicios del taller.** Enlaza `ZEJ` con `abap-ejercicios` y sube lo que hayas probado del taller.
 3. **Lee lo que se ha subido.** Abre en GitHub el fichero de una BDEF y el de una tabla. ¿En qué formato están? ¿Qué fichero acompaña a cada clase?
 4. **Un pull de prueba.** Cambia en el sistema el texto de un mensaje de una validation **sin** hacer *push*. Haz *Pull*: ¿qué te propone abapGit? Cancela, deshaz el cambio y haz *push* de lo que tengas.

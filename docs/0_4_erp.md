@@ -8,7 +8,7 @@ La referencia funcional es el *Informe Técnico — Módulo `gestion_bd`* (septi
 
 El ERP digitaliza la gestión de una empresa de reformas: clientes, presupuestos, obras, mano de obra propia (trabajadores), especialistas y proveedores externos, y el seguimiento financiero de cada obra (lo cobrado, lo gastado, el beneficio real y lo que falta por cobrar).
 
-```
+```text
 Cliente → Presupuesto (líneas + IVA) → Obra
                                          │
               ┌──────────────────────────┼──────────────────────────┐
@@ -112,7 +112,7 @@ Todas las tablas siguen el mismo patrón ([1.5](./1_5_abapSql.md)): `client`, un
 ### Cálculos (§11.2)
 
 **Presupuesto**
-```
+```text
 linea.total_linea     = redondear(linea.uds × linea.precio)
 presupuesto.base      = redondear(Σ linea.total_linea)
 presupuesto.cuota_iva = redondear(base × iva / 100)
@@ -120,7 +120,7 @@ presupuesto.total     = base + cuota_iva
 ```
 
 **Obra y mano de obra**
-```
+```text
 obra.total             = redondear(Σ total de sus presupuestos APROBADOS)   # 0 si no hay
 linea.coste_subtotal   = horas × coste_hora                                 # coste_hora copiado del trabajador
 obra.coste_moo         = Σ coste_subtotal de las líneas de sus partes
@@ -128,7 +128,7 @@ trabajador.horas/euros = Σ de todas sus líneas, en cualquier obra
 ```
 
 **Ficha financiera**
-```
+```text
 gastos         = redondear(proveedores + especialistas + mano de obra)
 ingresos       = redondear(Σ importe de los ingresos de la obra)
 beneficio_real = ingresos − gastos            # CAJA, no total − gastos
