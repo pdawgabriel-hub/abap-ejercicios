@@ -99,6 +99,8 @@ Necesitas VS Code con la extensión de SAP conectado a tu trial, como se explica
 > | Ver los errores | Pestaña **Problemas** del panel inferior |
 > | Ver la firma o el tipo de algo | Pasa el ratón por encima |
 > | Ejecutar los tests de la clase | **Ctrl+Shift+F10** |
+>
+> **Cómo leer los ejercicios.** **Crea** es un objeto nuevo: abre el asistente (**Ctrl+Shift+Alt+N**), elige el **tipo** que indica (*Interface*, *Class*, *Database Table*…; cada objeto puede ser de un tipo distinto) y rellena paquete, nombre y descripción. No crees ficheros a mano en el explorador. **Dónde** es un objeto que ya existe: ábrelo y trabaja en él.
 
 Al terminar, el proyecto tendrá esta forma:
 
@@ -130,7 +132,7 @@ ZLOCAL
     Para tenerlo a mano, **añádelo al área de trabajo**: **Ctrl+Shift+P** → `ABAP: Add Package as Folder to Workspace...` → `ZGOR`, y guarda el área (**Archivo → Guardar área de trabajo**). Aparecerá en el explorador como `ZGOR [TRIAL]`. No añadas `ZLOCAL`: contiene los objetos de todos los usuarios del trial y desplegarlo es muy lento. Si `ZGOR` sale con un triángulo y no se despliega, inicia sesión (clic derecho → **Logon to Destination**).
 3. **Los subpaquetes.** **Ctrl+Shift+Alt+N** → *Package*, cinco veces: `ZGOR_DDIC`, `ZGOR_CDS`, `ZGOR_BUS`, `ZGOR_SRV` y `ZGOR_TEST`, con *Superpackage* `ZGOR` y la descripción de la tabla de [Los paquetes del proyecto](#los-paquetes-del-proyecto). Comprueba en el explorador que cuelgan de `ZGOR` (si no salen, pulsa refrescar).
 4. **La clase de inicio.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_INICIO`, descripción `Presentacion del proyecto`, interfaz `if_oo_adt_classrun` (si el asistente no la pide, la escribes tú en el código).
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_INICIO` · descripción `Presentacion del proyecto` · interfaz `if_oo_adt_classrun` (es ejecutable; si el asistente no la pide, la escribes tú en el código).
     - **Qué hace:** es una clase ejecutable, como la del taller (implementa `if_oo_adt_classrun`). Su `main` escribe dos líneas.
     - **Comprueba:** guarda (**Ctrl+S**), activa (**Ctrl+F3**) y ejecuta (**F5**). En la consola del panel inferior debe salir exactamente:
 

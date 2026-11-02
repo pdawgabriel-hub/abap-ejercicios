@@ -194,7 +194,7 @@ ZGOR
 ## Ejercicios
 
 1. **La interfaz de tipos.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Interface*, paquete `ZGOR_BUS`. Nombre `ZIF_GOR_TIPOS`, descripción `Tipos comunes del ERP`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Interface** · paquete `ZGOR_BUS` · nombre `ZIF_GOR_TIPOS` · descripción `Tipos comunes del ERP`.
     - **Qué contiene** (con el mismo estilo que `ZIF_TL_TIPOS`, y un comentario por grupo):
 
     | Elemento | Definición |
@@ -208,7 +208,7 @@ ZGOR
     - **Comprueba:** la interfaz activa sin errores (**Ctrl+F3**).
 
 2. **Las fórmulas del presupuesto.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_BUS`. Nombre `ZCL_GOR_REGLAS`, descripción `Reglas de negocio del ERP`. Es una clase normal, **no** ejecutable.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_BUS` · nombre `ZCL_GOR_REGLAS` · descripción `Reglas de negocio del ERP` · **sin interfaz**: es una clase normal, no ejecutable.
     - **Qué contiene:** estos cuatro métodos estáticos (`CLASS-METHODS`), declarados en la `PUBLIC SECTION` con un comentario encima de cada uno que diga su regla, como en `ZCL_TL_CALCULOS`. El IVA llega como porcentaje: 21, no 0.21.
 
     | Método | Parámetros de entrada | Devuelve | Regla (§11.2) |
@@ -233,7 +233,7 @@ ZGOR
     - **Comprueba:** con el test de esta unidad (abajo): 7 en verde.
 
 4. **El presupuesto del escenario.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_TIPOS_DEMO`, descripción `Pruebas de tipos y formulas`. Es ejecutable, como `ZCL_GOR_INICIO`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_TIPOS_DEMO` · descripción `Pruebas de tipos y formulas` · interfaz `if_oo_adt_classrun` (es ejecutable, como `ZCL_GOR_INICIO`).
     - **Qué hace:** en `main`, declara una estructura `zif_gor_tipos=>ty_presu_linea` con 10 uds a 100 € y, con `ZCL_GOR_REGLAS`, calcula su total, la cuota con IVA 21 y el total del presupuesto. Escribe cada valor con una plantilla y `DECIMALS = 2`.
     - **Comprueba:** ejecuta con **F5**. Es el paso 2 de §12.7; deben salir estas tres líneas:
 

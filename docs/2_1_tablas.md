@@ -107,7 +107,7 @@ ZGOR_DDIC
 Todas las tablas llevan las anotaciones del principio, `key client`, su clave UUID (primera columna de cada fila de las tablas de abajo) y los cinco campos de administración al final. En las tablas de los ejercicios, `char(8)` significa `abap.char(8)`, `dec(15,2)` es `abap.dec(15,2)`, `dats` es `abap.dats` e `int4` es `abap.int4`; `abap_boolean` y `sysuuid_x16` se escriben tal cual. Los UUID de los padres en las tablas hijas, **not null**.
 
 1. **Presupuestos.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Database Table*, paquete `ZGOR_DDIC`, una vez por tabla, con el nombre y la descripción de la tabla de abajo.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Database Table** · paquete `ZGOR_DDIC`, **una vez por tabla**, con el nombre y la descripción de la tabla de abajo.
     - **Qué contienen** (§3.6 del informe), con comentarios `//` como en `ztl_prs`:
 
     | Tabla (descripción) | Columnas, en este orden |

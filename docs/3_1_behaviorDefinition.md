@@ -192,7 +192,7 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
 ## Ejercicios
 
 1. **El cliente.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Behavior Definition*, con vista raíz `ZI_GorCliente`. Deja el nombre que propone (`ZI_GORCLIENTE`), elige *Implementation Type* **Managed** y el paquete `ZGOR_BUS`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Behavior Definition** · vista raíz `ZI_GorCliente` · paquete `ZGOR_BUS` · nombre el que propone (`ZI_GORCLIENTE`) · *Implementation Type* **Managed**.
     - **Qué contiene:** el mismo patrón que la del titular: `managed implementation in class zbp_i_gorcliente unique;`, `strict ( 2 );`, `with draft;` y `define behavior for ZI_GorCliente alias Cliente`, con `persistent table zgor_cli`, `draft table zgor_cli_d`, `lock master`, `total etag LastChangedAt`, `authorization master ( global )` y `etag master LocalLastChangedAt`. Dentro de las llaves:
         - `create; update; delete;`;
         - `field ( numbering : managed, readonly ) ClienteUUID;`;
@@ -215,7 +215,7 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
     - **Las tablas de borradores:** cuatro, `zgor_presu_d`, `zgor_presu_lin_d`, `zgor_presu_pv_d` y `zgor_presu_es_d`, cada una con **Ctrl+.** y en `ZGOR_DDIC` (el nombre de una tabla no puede pasar de 16 caracteres: [B. Nombres](./B_nombres.md)).
     - **Comprueba:** guarda sin activar; la única queja debe ser la clase.
 
-3. **Las demás.** Crea las otras ocho BDEF igual que las anteriores (**Ctrl+Shift+Alt+N** → *Behavior Definition* sobre la vista raíz, tipo *Managed*), cada una con su tabla de borradores y su clase `zbp_i_<vista>`:
+3. **Las demás.** Crea las otras ocho BDEF igual que las anteriores (objeto nuevo de tipo **Behavior Definition** sobre la vista raíz, paquete `ZGOR_BUS`, tipo *Managed*), cada una con su tabla de borradores y su clase `zbp_i_<vista>`:
 
     | BO (alias de la raíz) | Hijos (alias) | Solo lectura, además de UUID y administración | Obligatorios (§11.4) |
     |---|---|---|---|

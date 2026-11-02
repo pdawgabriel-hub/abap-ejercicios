@@ -162,7 +162,7 @@ erp-obras-reformas-sap/
 ## Ejercicios
 
 1. **El esqueleto.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_SIMULACION`, descripción `Simulacion de una obra en memoria`. Ejecutable.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_SIMULACION` · descripción `Simulacion de una obra en memoria` · interfaz `if_oo_adt_classrun` (es ejecutable).
     - **Qué contiene:** la misma estructura que la del taller, con comentarios: atributos para el estado de la obra (presupuestos `tt_presupuestos`, líneas de parte `tt_parte_lineas`, ingresos, coste de proveedores y de especialistas) y cuatro métodos privados: `presupuestar`, `trabajar`, `cobrar` (recibe `iv_importe`) e `imprimir_ficha` (recibe `iv_titulo`). Su `main` recorre los pasos 3, 6, 7 y 8 de §12.7, imprimiendo la ficha después de cada uno. Deja los métodos vacíos.
     - **Comprueba:** activa y ejecuta: salen los cuatro títulos, todavía sin datos.
 

@@ -174,7 +174,7 @@ ZGOR
 ## Ejercicios
 
 1. **La tabla de clientes.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Database Table*, paquete `ZGOR_DDIC`. Nombre `zgor_cli`, descripción `Clientes`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Database Table** · paquete `ZGOR_DDIC` · nombre `zgor_cli` · descripción `Clientes`.
     - **Qué contiene:** las cuatro decisiones del taller (`client`, clave UUID, código aparte y los cinco campos de administración al final) y estas columnas propias, en este orden (§3.1 del informe). Añade comentarios `//` como en `ztl_tit`.
 
     | Columna | Tipo | Notas |
@@ -191,12 +191,12 @@ ZGOR
     - **Comprueba:** la tabla activa sin errores (**Ctrl+F3**).
 
 2. **La tabla de obras.**
-    - **Dónde:** igual, en `ZGOR_DDIC`. Nombre `zgor_obra`, descripción `Obras`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Database Table** · paquete `ZGOR_DDIC` · nombre `zgor_obra` · descripción `Obras`.
     - **Qué contiene:** `obra_uuid` (clave), `obra_id` (`abap.char(8)`), `descripcion` (`abap.char(255)`) y `cliente_uuid` (`sysuuid_x16`), con `client` y los cinco de administración. Ningún campo calculado de la obra de Odoo (§3.5) va en la tabla: explícalo en un comentario `//` encima de las columnas.
     - **Comprueba:** activa sin errores.
 
 3. **Clientes de prueba.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_SQL_DEMO`, descripción `Pruebas de ABAP SQL`. Ejecutable.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_SQL_DEMO` · descripción `Pruebas de ABAP SQL` · interfaz `if_oo_adt_classrun` (es ejecutable).
     - **Qué hace:** en `main`, vacía las dos tablas (`DELETE FROM`, primero las obras) y después inserta, con un solo `INSERT ... FROM TABLE`, estos tres clientes, cada uno con su UUID nuevo:
 
     | Código | Nombre | Apellidos | NIF | Dirección | CP | Teléfono |

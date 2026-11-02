@@ -124,7 +124,7 @@ Tus estructuras y tablas van en `ZGOR_DDIC`, las vistas en `ZGOR_CDS`, y el comp
 ## Ejercicios
 
 1. **Las estructuras.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Structure*, paquete `ZGOR_DDIC`. Dos estructuras: `zgor_s_bitacora` (descripción `Campos de una observacion o incidencia`) y `zgor_s_archivo` (`Campos de un archivo adjunto`).
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Structure** · paquete `ZGOR_DDIC`, dos veces: `zgor_s_bitacora` (descripción `Campos de una observacion o incidencia`) y `zgor_s_archivo` (`Campos de un archivo adjunto`).
     - **Qué contienen** (§2 del informe), como `ztl_s_comentario` del taller:
 
         | Estructura | Campos |
@@ -135,7 +135,7 @@ Tus estructuras y tablas van en `ZGOR_DDIC`, las vistas en `ZGOR_CDS`, y el comp
     - **Comprueba:** activa las dos sin errores.
 
 2. **Las tres del presupuesto.** Este ejercicio crea, para cada satélite, una tabla, una vista y su entidad en la BDEF, en este orden:
-    - **Las tablas** (`ZGOR_DDIC`, **Ctrl+Shift+Alt+N** → *Database Table*): `zgor_presu_obs` (clave `obs_uuid`) y `zgor_presu_inc` (clave `inc_uuid`), con `include zgor_s_bitacora;`, y `zgor_presu_arc` (clave `archivo_uuid`), con `include zgor_s_archivo;`. Las tres con `presupuesto_uuid : sysuuid_x16 not null;` y los cinco campos de administración, como `ztl_prs_not`.
+    - **Crea también las tablas** (**Ctrl+Shift+Alt+N**): tipo **Database Table** · paquete `ZGOR_DDIC`: `zgor_presu_obs` (clave `obs_uuid`) y `zgor_presu_inc` (clave `inc_uuid`), con `include zgor_s_bitacora;`, y `zgor_presu_arc` (clave `archivo_uuid`), con `include zgor_s_archivo;`. Las tres con `presupuesto_uuid : sysuuid_x16 not null;` y los cinco campos de administración, como `ztl_prs_not`.
     - **Las vistas** (`ZGOR_CDS`): `ZI_GorPresuObs`, `ZI_GorPresuInc` y `ZI_GorPresuArc`, cada una con su `association to parent ZI_GorPresupuesto as _Presupuesto`. En la de archivos, las anotaciones `@Semantics.largeObject` (con `contentDispositionPreference: #ATTACHMENT`) y `@Semantics.mimeType`, como en el taller.
     - **En la raíz** `ZI_GorPresupuesto`: las composiciones `_Observaciones`, `_Incidencias` y `_Archivos`, expuestas.
     - **En la BDEF:** tres `define behavior for` nuevos (alias `Observacion`, `Incidencia`, `Archivo`) con `lock dependent by _Presupuesto`, `authorization dependent by _Presupuesto`, `update; delete;`, `Texto` obligatorio y su `mapping`; en la raíz, `association _Observaciones { create; with draft; }` y las otras dos. Sus tablas de borradores, con **Ctrl+.**.

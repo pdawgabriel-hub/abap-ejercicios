@@ -206,7 +206,7 @@ En todos los ejercicios, **Comprueba** lee la vista desde `ZCL_GOR_SQL_DEMO`, en
     - **Comprueba:** lee `ClienteId, NombreCompleto` de `zi_gorcliente`: debe salir `CLI0001 Juan Pérez López`.
 
 2. **Las sumas.**
-    - **Dónde:** cinco *Data Definitions* nuevas en `ZGOR_CDS`, plantilla *Define View Entity*, cada una con `@AccessControl.authorizationCheck: #NOT_REQUIRED`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Data Definition** · paquete `ZGOR_CDS` · plantilla *Define View Entity*, cinco veces, cada una con `@AccessControl.authorizationCheck: #NOT_REQUIRED`.
     - **Qué contienen:** una fila por obra (clave `ObraUUID`, con `group by`). Los importes, en `abap.dec(15,2)`; las horas, en `abap.dec(9,2)`:
 
         | Vista | Descripción | Sale de | Devuelve (§11.2) |
@@ -248,7 +248,8 @@ En todos los ejercicios, **Comprueba** lee la vista desde `ZCL_GOR_SQL_DEMO`, en
     - **Comprueba:** el ingreso de Odoo muestra el total cobrado de su obra y lo que falta (§3.8). Escríbelo con una ruta: `SELECT FROM zi_gorobra FIELDS ObraId, \_Finanzas-Ingresos AS Ingresos, \_Finanzas-Debe AS Debe ...` (cada ruta necesita su alias con `AS`). Deben salir las cuatro obras, a 0.
 
 6. **Acumulados del trabajador.**
-    - **Dónde:** `ZI_GorTrabAcum` (nueva, descripción `Acumulados del trabajador`) y `ZI_GorTrabajador`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Data Definition** · paquete `ZGOR_CDS` · nombre `ZI_GorTrabAcum` · descripción `Acumulados del trabajador`.
+    - **Dónde:** además, cambias la vista `ZI_GorTrabajador`, que ya existe.
     - **Qué contiene:** una fila por trabajador (clave `TrabajadorUUID`) con la suma de `horas` (`HorasTotales`) y de `coste_subtotal` (`TotalEuros`) de sus líneas de parte (§11.2 *Obra*). En `ZI_GorTrabajador`, la association `_Acumulado` a la vista nueva, expuesta.
     - **Comprueba:** activa sin errores. ¿Por qué la association es `[0..1]` y no `[1]`? Contéstalo en un comentario encima de ella. Los valores se comprueban en 2.5, cuando haya partes.
 

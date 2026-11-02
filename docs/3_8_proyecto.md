@@ -108,7 +108,7 @@ ZGOR
 ## Ejercicios
 
 1. **La clase.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_ESCENARIO`, descripción `Escenario de pruebas del informe, seccion 12.7`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_ESCENARIO` · descripción `Escenario de pruebas del informe, seccion 12.7` · sin interfaz.
     - **Qué contiene:** nada en la parte global: es solo el sitio donde viven los tests. Todo irá en su pestaña **Test Classes**.
     - **Comprueba:** activa sin errores.
 2. **El comportamiento.**

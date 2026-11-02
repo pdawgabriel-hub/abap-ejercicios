@@ -114,7 +114,7 @@ El objeto de autorización va en `ZGOR_BUS`; los cambios de permisos, en tus die
 ## Ejercicios
 
 1. **El objeto de autorización.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Authorization Object*, paquete `ZGOR_BUS`. Nombre `ZGOR_ERP`, descripción `ERP de Obras y Reformas`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Authorization Object** · paquete `ZGOR_BUS` · nombre `ZGOR_ERP` · descripción `ERP de Obras y Reformas`.
     - **Qué contiene:** el campo `ACTVT` con las actividades 01 (crear), 02 (modificar), 03 (ver), 06 (borrar) y 70 (administrar), como `ZTL_TALLER`.
     - **Comprueba:** activa sin errores.
 2. **Comprobarlo.**

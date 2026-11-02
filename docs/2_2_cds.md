@@ -83,7 +83,7 @@ ZGOR_CDS
 ## Ejercicios
 
 1. **Clientes.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Data Definition*, paquete `ZGOR_CDS`. Nombre `ZI_GorCliente`, descripción `Clientes`, plantilla *Define View Entity*.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Data Definition** · paquete `ZGOR_CDS` · nombre `ZI_GorCliente` · descripción `Clientes` · plantilla *Define View Entity* · tabla de referencia `zgor_cli`.
     - **Qué contiene:** una vista sobre `zgor_cli` con estos alias: `ClienteUUID` (clave), `ClienteId`, `Nombre`, `Apellidos`, `Nif`, `Direccion`, `CodPostal`, `Telf` y los cinco campos de administración con sus `@Semantics`, igual que en el taller.
     - **Comprueba:** en `ZCL_GOR_SQL_DEMO`, lee de la **vista** (`SELECT FROM zi_gorcliente FIELDS ClienteId, Nombre ...`) y escribe el resultado: salen tus tres clientes de 1.5, con los nombres de la vista. ABAP SQL lee igual una tabla que una vista CDS.
 
@@ -116,7 +116,7 @@ ZGOR_CDS
     El resto de columnas se traduce sin sorpresas: `fecha` → `Fecha`, `descripcion` → `Descripcion`, `importe` → `Importe`… Todas llevan los cinco campos de administración con sus `@Semantics`.
     - **Comprueba:** activa todas a la vez (**Ctrl+Shift+F3**) sin errores.
 
-4. **Una vista con condición.** Crea una vista auxiliar de prueba, `ZI_GorClienteMadrid`, sobre `zgor_cli`, con `where cod_postal like '28%'` (se escribe después de la lista de campos, tras la llave de cierre). Léela desde `ZCL_GOR_SQL_DEMO`: deben salir los clientes de Madrid de 1.5. Después **bórrala** (clic derecho sobre ella en el explorador → *Delete*): era solo para practicar y no forma parte del ERP.
+4. **Una vista con condición.** Crea una vista auxiliar de prueba (objeto nuevo de tipo **Data Definition** en `ZGOR_CDS`, plantilla *Define View Entity*), `ZI_GorClienteMadrid`, sobre `zgor_cli`, con `where cod_postal like '28%'` (se escribe después de la lista de campos, tras la llave de cierre). Léela desde `ZCL_GOR_SQL_DEMO`: deben salir los clientes de Madrid de 1.5. Después **bórrala** (clic derecho sobre ella en el explorador → *Delete*): era solo para practicar y no forma parte del ERP.
 5. **Investiga.** Abre `ZI_GorCliente` y pasa el ratón por encima de `zgor_cli`. Después pon el cursor sobre ese nombre y pulsa **F12**. ¿Qué hace cada cosa? Anótalo: las usarás constantemente para navegar entre vistas, tablas y clases.
 
 ---

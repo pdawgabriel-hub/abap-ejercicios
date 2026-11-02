@@ -116,12 +116,13 @@ La entidad abstracta del evento va en `ZGOR_CDS`, el manejador en `ZGOR_BUS` y l
 ## Ejercicios
 
 1. **El evento.**
-    - **Dónde:** una entidad abstracta nueva en `ZGOR_CDS`, `ZA_GorIngresoRegistrado` (campos `ObraUUID : sysuuid_x16;` e `Importe : abap.dec(15,2);`); la BDEF y la clase de `ZI_GorIngreso`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Data Definition** · paquete `ZGOR_CDS` · nombre `ZA_GorIngresoRegistrado` · plantilla *Define Abstract Entity* · campos `ObraUUID : sysuuid_x16;` e `Importe : abap.dec(15,2);`.
+    - **Dónde:** además, la BDEF y la clase de `ZI_GorIngreso`, que ya existen.
     - **En la BDEF:** la primera línea pasa a `managed with additional save implementation in class zbp_i_goringreso unique;`, y en la entidad, `event IngresoRegistrado parameter ZA_GorIngresoRegistrado;`.
     - **Qué hace:** en `save_modified` de la clase `lsc_` (créala con **Ctrl+.**), `RAISE ENTITY EVENT zi_goringreso~IngresoRegistrado FROM ...` con una fila por cada ingreso de `create-ingreso`, como el abono del taller.
     - **Comprueba:** activa sin errores; el efecto se ve en el ejercicio 3.
 2. **El registro.**
-    - **Dónde:** la tabla `zgor_cobro_log` en `ZGOR_DDIC` (`client`, `log_uuid` clave, `obra_uuid`, `momento` `timestampl`, `mensaje` `abap.char(120)`), y la clase `ZCL_GOR_ESCUCHA_INGRESOS` en `ZGOR_BUS`, `FOR EVENTS OF zi_goringreso`, con su clase local y un método `FOR ENTITY EVENT ... FOR Ingreso~IngresoRegistrado`, como `zcl_tl_escucha_abonos`.
+    - **Crea** dos objetos nuevos (**Ctrl+Shift+Alt+N**): tipo **Database Table** · paquete `ZGOR_DDIC` · nombre `zgor_cobro_log` (`client`, `log_uuid` clave, `obra_uuid`, `momento` `timestampl`, `mensaje` `abap.char(120)`); y tipo **Class** · paquete `ZGOR_BUS` · nombre `ZCL_GOR_ESCUCHA_INGRESOS` · sin interfaz, `FOR EVENTS OF zi_goringreso`, con su clase local y un método `FOR ENTITY EVENT ... FOR Ingreso~IngresoRegistrado`, como `zcl_tl_escucha_abonos`.
     - **Qué hace:** el manejador, cuando un ingreso deja la obra **pagada** (`EstadoPago = 'pagado'` en `ZI_GorObraFinanzas`), apunta «Obra cobrada del todo» con la fecha y la hora.
 3. **Pruébalo.** En `ZCL_GOR_EML_DEMO`, con EML, registra los dos ingresos del escenario de §12.7 sobre una obra nueva (500 y 710). Tras el segundo, `zgor_cobro_log` debe tener una línea; tras el primero, ninguna. Ten en cuenta que el manejador se ejecuta después del *commit*: espera un momento antes de mirar la tabla.
 4. **Otro suscriptor.** Añade un segundo método al mismo manejador, o un segundo manejador, que reaccione al mismo evento de otra forma (por ejemplo, escribir en la consola de errores si el ingreso supera el total de la obra, el caso de §11.6). Comprueba que el ingreso no ha tenido que cambiar.

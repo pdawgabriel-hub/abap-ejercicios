@@ -165,7 +165,7 @@ Puedes ejecutar `ZCL_GOR_DATOS_DEMO` tantas veces como quieras: lo primero que h
 ## Ejercicios
 
 1. **El esqueleto.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_DATOS_DEMO`, descripción `Datos de demo del ERP`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_DATOS_DEMO` · descripción `Datos de demo del ERP` · interfaz `if_oo_adt_classrun` (es ejecutable).
     - **Qué contiene:** la misma estructura que la del taller:
         - el tipo `ty_uuid` (`ref TYPE string`, `uuid TYPE sysuuid_x16`) y el atributo `mt_uuids`, tabla *hashed* con clave única `ref`;
         - `registrar( iv_ref ) → rv_uuid`, que crea el UUID y lo apunta, y `uuid_de( iv_ref ) → rv_uuid`, que lo busca;
@@ -225,7 +225,7 @@ Puedes ejecutar `ZCL_GOR_DATOS_DEMO` tantas veces como quieras: lo primero que h
     - **Comprueba:** `OBR0001` con Juan, 1210, 670 y `verde`; los trabajadores `TRB0001` y `TRB0002`; y `TRB0001` con **16 h y 320 €** (8 h en `OBR0001` y 8 h en `OBR0003`).
 
 8. **Comprueba la ficha.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_COMPROBAR_CDS`, con el código de [2_5_comprobar_cds.abap](materiales/tests/2_5_comprobar_cds.abap).
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_COMPROBAR_CDS` · descripción `Comprobacion de las vistas CDS` · interfaz `if_oo_adt_classrun`. Sustituye todo su código por el de [2_5_comprobar_cds.abap](materiales/tests/2_5_comprobar_cds.abap).
     - **Qué hace:** lee cada obra de `ZI_GorObraFinanzas`, la compara con la tabla de la sección «El diseño» y escribe `OK` o el campo que no cuadra.
     - **Comprueba:** ejecútala con **F5**. Si algo falla, el error puede estar en los datos (ejercicios 3 a 5) o en las vistas (2.4): lee esa obra en `ZI_GorObraImportes` para ver qué suma no cuadra.
 

@@ -234,7 +234,8 @@ METHODS precheck_delete FOR PRECHECK
     - **Comprueba:** en `ZCL_GOR_EML_DEMO`, bloque `" 3.5 Aprobar`: lee el UUID de `PREP0005` (el de `OBR0004`) con `SELECT SINGLE`, ejecuta `MODIFY ENTITIES ... EXECUTE aprobar` y `COMMIT ENTITIES`, y escribe `Total` de `zi_gorobrafinanzas` para `OBR0004`: pasa de 0 a **1210**. Ejecuta `desaprobar` y vuelve a 0. Si intentas `aprobar` dos veces seguidas, la segunda debe aparecer en `FAILED`.
 
 2. **Vincular a una obra.**
-    - **Dónde:** una *Data Definition* nueva en `ZGOR_CDS`, `ZA_GorVincularObra` (plantilla *Define Abstract Entity*, descripción `Obra a la que vincular`); y la BDEF y la clase del presupuesto.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Data Definition** · paquete `ZGOR_CDS` · nombre `ZA_GorVincularObra` · descripción `Obra a la que vincular` · plantilla *Define Abstract Entity*.
+    - **Dónde:** además, la BDEF y la clase del presupuesto, que ya existen.
     - **Qué contiene:** la entidad abstracta, con un solo campo, `ObraId : abap.char(8);`. En la BDEF, `action ( features : instance ) vincularAObra parameter ZA_GorVincularObra result [1] $self;`.
     - **Qué hace** (§3.15): busca la obra por su código (`%param-ObraId`); si no existe, o si tiene cliente y no es el del presupuesto, error en `failed` y `reported` con mensaje. Si todo está bien, pone `ObraUUID`. En `get_instance_features`, la acción solo está activa para presupuestos **sin obra**.
     - **Comprueba:** en `ZCL_GOR_EML_DEMO`, bloque `" 3.5 Vincular`:

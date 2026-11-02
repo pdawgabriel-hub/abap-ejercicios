@@ -40,7 +40,12 @@ Todos los objetos (paquetes, clases, interfaces, tablas, vistas CDS, BDEF, *serv
 3. Rellena el **paquete**, el **nombre** y la **descripción**. Según el tipo, pregunta algo más: en una clase, la superclase y las interfaces (`if_oo_adt_classrun` para las de consola); en una vista CDS, la plantilla y la tabla o vista de referencia; en una BDEF, la vista raíz y el tipo de implementación.
 4. Si pregunta por una **orden de transporte**: en `ZLOCAL` no hay (*No change recording*), así que continúa sin elegir ninguna.
 
-El objeto se abre en el editor. En los ejercicios, «**Dónde:** en `ZGOR_TEST`, clase `ZCL_GOR_X`» significa exactamente esto.
+El objeto se abre en el editor. **No crees los ficheros a mano** en el explorador (por ejemplo, un `.clas.abap` nuevo): el explorador es una vista del sistema SAP, y un objeto solo existe si lo registra el asistente, con su tipo, paquete y descripción.
+
+En los ejercicios:
+
+- **Crea** significa un objeto nuevo con este asistente. La línea dice todo lo que pide: *tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_X` · descripción `…` · interfaz `if_oo_adt_classrun`*. Cada objeto puede ser de un tipo distinto: fíjate en el tipo antes de elegirlo en la lista.
+- **Dónde** significa un objeto que ya existe: ábrelo (**Ctrl+Shift+A**) y trabaja en él.
 
 ## Guardar, activar y ejecutar
 

@@ -144,7 +144,7 @@ ZGOR_TEST
 ## Ejercicios
 
 1. **La clase del cliente.**
-    - **Dónde:** abre tu BDEF de `ZI_GorCliente`, pon el cursor sobre `zbp_i_gorcliente` (en la primera línea) y pulsa **Ctrl+.** → *Create behavior implementation class*. Paquete `ZGOR_BUS`.
+    - **Crea** la clase **desde la BDEF**, no con el asistente general: abre tu BDEF de `ZI_GorCliente`, pon el cursor sobre `zbp_i_gorcliente` (en la primera línea) y pulsa **Ctrl+.** → *Create behavior implementation class*. Paquete `ZGOR_BUS`.
     - **Qué contiene:** El editor genera la clase global vacía y, en la pestaña *Local Types*, la clase `lhc_cliente` con el método `get_global_authorizations`. Rellénalo como el del titular: `result` con `%create`, `%update`, `%delete` y `%action-Edit` a `if_abap_behv=>auth-allowed`, con un comentario que diga que en 6.1 se cambiará por una comprobación de verdad.
     - **Comprueba:** activa la clase y después la BDEF (**Ctrl+Shift+F3** con las dos abiertas). En **Problemas** no debe quedar ningún error del cliente.
 
@@ -154,7 +154,7 @@ ZGOR_TEST
     - **Comprueba:** clic derecho en `ZGOR_BUS` → **Activate**, con todo seleccionado. Debe activar sin errores.
 
 3. **Crear con EML.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_EML_DEMO`, descripción `Pruebas de EML con el ERP`, con la interfaz `if_oo_adt_classrun`. A partir de aquí, cada ejercicio es un bloque de `main` separado por un comentario (`" 3.2 Crear`).
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_EML_DEMO` · descripción `Pruebas de EML con el ERP` · interfaz `if_oo_adt_classrun` (es ejecutable). A partir de aquí, cada ejercicio es un bloque de `main` separado por un comentario (`" 3.2 Crear`).
     - **Qué hace:** con `MODIFY ENTITIES OF zi_gorcliente ENTITY Cliente CREATE FIELDS ( Nombre Apellidos Direccion Telf ) WITH ...` crea la clienta Elena Vidal Soler (C/ Sol 3, Zaragoza, 600222333), con un `%cid` cualquiera (`'ELENA'`). Recoge `MAPPED`, `FAILED` y `REPORTED`, y después guarda con `COMMIT ENTITIES` recogiendo también su `FAILED` y `REPORTED`.
     - **Comprueba:** escribe en la consola el UUID que aparece en `mapped-cliente[ 1 ]-ClienteUUID` y si `failed` está vacío. Después, `SELECT COUNT( * ) FROM zi_gorcliente WHERE nombre = 'Elena'` debe dar **1**.
 

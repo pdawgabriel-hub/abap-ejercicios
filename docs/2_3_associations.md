@@ -210,7 +210,7 @@ Solo lectura: ZI_GorObraTrab, ZI_GorObraProv, ZI_GorObraEsp   ← nuevas
     Muchas vistas se mencionan entre sí (la obra al cliente y el cliente a sus obras), así que actívalas todas a la vez con **Ctrl+Shift+F3** (*Activate All*). Si queda alguna con error, corrígela y vuelve a activar el grupo.
 
 4. **Participantes.** Las tres vistas de quién participa en cada obra (§11.2 *Otros*).
-    - **Dónde:** tres *Data Definitions* nuevas en `ZGOR_CDS`, con la plantilla *Define View Entity*.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Data Definition** · paquete `ZGOR_CDS` · plantilla *Define View Entity*, tres veces (una por vista).
     - **Qué contienen:** cada una, con `select distinct`, dos claves (`ObraUUID` y el UUID del recurso) y una association `[1]` a la vista del recurso, como `ZI_TlOrdenMecanico`:
 
         | Vista | Descripción | Sale de | Claves | Association |

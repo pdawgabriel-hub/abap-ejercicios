@@ -110,14 +110,14 @@ Las proyecciones de tu ERP van en `ZGOR_SRV`. Necesitas también la proyección 
 ## Ejercicios
 
 1. **La obra.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Data Definition*, paquete `ZGOR_SRV`. Dos vistas: `ZC_GorObra` (descripción `Obra - proyeccion`, plantilla *Define Projection View*, sobre `ZI_GorObra`) y `ZC_GorGasto` (`Ficha de gastos - proyeccion`, sobre `ZI_GorGasto`).
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Data Definition** · paquete `ZGOR_SRV`, dos veces. Dos vistas: `ZC_GorObra` (descripción `Obra - proyeccion`, plantilla *Define Projection View*, sobre `ZI_GorObra`) y `ZC_GorGasto` (`Ficha de gastos - proyeccion`, sobre `ZI_GorGasto`).
     - **Qué contienen:** como `ZC_TlOrden`:
         - en la obra, `define root view entity ZC_GorObra provider contract transactional_query as projection on ZI_GorObra`, con `@Search.searchable: true`;
         - `@Search.defaultSearchElement: true` en `ObraId` y `Descripcion`;
         - el campo `_Cliente.NombreCompleto as ClienteNombre`, y en `ClienteUUID` las anotaciones `@ObjectModel.text.element: [ 'ClienteNombre' ]` y `@Consumption.valueHelpDefinition` a `ZC_GorCliente`;
         - las associations a `_Finanzas` y `_Trabajadores` expuestas, y `_Gasto : redirected to composition child ZC_GorGasto`;
         - en el gasto, `_Obra : redirected to parent ZC_GorObra`.
-    - **La BDEF de proyección:** **Ctrl+Shift+Alt+N** → *Behavior Definition* sobre `ZC_GorObra` (tipo *Projection*). Contiene `projection; strict ( 2 ); use draft;` y, en la obra, `use create; use update; use delete;`, las `use action` de borrador y `use association _Gasto { with draft; }`; en el gasto, solo `use update;` (la ficha se modifica pero no se crea ni se borra, §3.7).
+    - **Crea también la BDEF de proyección** (**Ctrl+Shift+Alt+N**): tipo **Behavior Definition** · vista raíz `ZC_GorObra` · paquete `ZGOR_SRV` · *Implementation Type* **Projection**. Contiene `projection; strict ( 2 ); use draft;` y, en la obra, `use create; use update; use delete;`, las `use action` de borrador y `use association _Gasto { with draft; }`; en el gasto, solo `use update;` (la ficha se modifica pero no se crea ni se borra, §3.7).
     - **Comprueba:** activa todo. En `ZCL_GOR_SQL_DEMO`, `SELECT FROM zc_gorobra FIELDS ObraId, ClienteNombre` devuelve las cuatro obras de 2.5, cada una con el nombre completo de su cliente.
 
 2. **El presupuesto.**

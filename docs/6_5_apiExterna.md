@@ -120,12 +120,12 @@ La clase de la API va en `ZGOR_BUS`; la tabla de festivos, en `ZGOR_DDIC`; la cl
 ## Ejercicios
 
 1. **La clase de la API.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_BUS`. Nombre `ZCL_GOR_FESTIVOS`, descripción `Festivos desde una API externa`.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_BUS` · nombre `ZCL_GOR_FESTIVOS` · descripción `Festivos desde una API externa` · sin interfaz.
     - **Firma:** `CLASS-METHODS festivos IMPORTING iv_anio TYPE i RETURNING VALUE(rt_festivos) TYPE tt_festivos RAISING cx_static_check.`, con `tt_festivos` una tabla de `fecha` (`d`) y `nombre` (`string`) declarada en la sección pública.
     - **Qué hace:** como `ZCL_TL_FESTIVOS`: crea el cliente HTTP, pide el JSON del año para `ES` y lo convierte con `/ui2/cl_json=>deserialize`.
     - **Comprueba:** desde `ZCL_GOR_EML_DEMO` (o una clase de consola nueva), llama con 2026 y escribe cuántos festivos hay y los tres primeros. El primero debe ser el 1 de enero.
 2. **Los de tu comunidad.** Añade un parámetro con el código de la comunidad (por ejemplo `ES-MD`) y devuelve solo los festivos nacionales (`global`) y los de esa comunidad. Compara cuántos salen para dos comunidades distintas.
-3. **La caché.** Crea la tabla `zgor_festivo` (`fecha` dats como clave junto a `client`, y `nombre` char(80)) y una clase de consola `ZCL_GOR_CARGA_FESTIVOS` que la vacíe y la rellene con los festivos del año y la comunidad que indiques. Ejecútala.
+3. **La caché.** Crea dos objetos nuevos (**Ctrl+Shift+Alt+N**): la tabla `zgor_festivo` (tipo **Database Table**, paquete `ZGOR_DDIC`; `fecha` dats como clave junto a `client`, y `nombre` char(80)) y la clase `ZCL_GOR_CARGA_FESTIVOS` (tipo **Class**, paquete `ZGOR_TEST`, interfaz `if_oo_adt_classrun`) que la vacíe y la rellene con los festivos del año y la comunidad que indiques. Ejecútala.
 4. **El aviso.**
     - **Dónde:** BDEF `ZI_GorParteTrabajo`, entidad `ParteTrabajo`; clase local `lhc_parte_trabajo` (o el nombre que te generó el editor).
     - **En la BDEF:** `validation avisarFestivo on save { create; field Fecha; }`, y en `Prepare`.

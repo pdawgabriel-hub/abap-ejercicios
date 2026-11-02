@@ -130,7 +130,7 @@ ZGOR_BUS
 ## Ejercicios
 
 1. **La excepción del ERP.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_BUS`. Nombre `ZCX_GOR_REGLA`, descripción `Regla de negocio incumplida`, superclase `CX_STATIC_CHECK`. Si se genera una plantilla de excepción, sustitúyela por tu código.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_BUS` · nombre `ZCX_GOR_REGLA` · descripción `Regla de negocio incumplida` · superclase `CX_STATIC_CHECK`. Si se genera una plantilla de excepción, sustitúyela por tu código.
     - **Qué contiene** (como `ZCX_TL_AVISO`, con otros nombres):
 
     | Elemento | Definición |
@@ -164,7 +164,7 @@ ZGOR_BUS
     - **Comprueba:** con el segundo test de la unidad.
 
 4. **El escenario, paso 9.**
-    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_EXC_DEMO`, descripción `Pruebas de excepciones`. Ejecutable.
+    - **Crea** un objeto nuevo (**Ctrl+Shift+Alt+N**): tipo **Class** · paquete `ZGOR_TEST` · nombre `ZCL_GOR_EXC_DEMO` · descripción `Pruebas de excepciones` · interfaz `if_oo_adt_classrun` (es ejecutable).
     - **Qué hace:** primero un caso que no falla (`validar_iva( 21 )`), que escribe «IVA correcto». Después, cada caso del paso 9 de §12.7 en su propio `TRY`, escribiendo en el `CATCH` el texto y el campo de la excepción: una línea de parte con 25 h, otra con −1 h, un parte externo de 0 €, un IVA de 150 y una falta que termina antes de empezar.
     - **Comprueba:** salen **6 líneas**: «IVA correcto» y cinco mensajes, cada uno con su campo (`Horas`, `Horas`, `Importe`, `Iva`, `FechaFin`).
 

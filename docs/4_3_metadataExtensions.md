@@ -155,7 +155,7 @@ Una metadata extension por proyección, en `ZGOR_SRV`, más las de las vistas de
 Todas las metadata extensions van en `ZGOR_SRV`: **Ctrl+Shift+Alt+N** → *Metadata Extension* sobre la proyección, con el mismo nombre que la vista (`ZC_GorObra`). Para que la vista las use, la proyección necesita `@Metadata.allowExtensions: true`. Después de cada una, actívala y recarga la vista previa del binding (**F5** en el navegador).
 
 1. **La obra** (§4 del informe, `obras_views.xml`).
-    - **Dónde:** las metadata extensions de `ZC_GorObra` y de `ZI_GorObraFinanzas` (como la del resumen del taller; la vista necesita `@Metadata.allowExtensions: true`).
+    - **Crea** (**Ctrl+Shift+Alt+N**, tipo **Metadata Extension**, paquete `ZGOR_SRV`, mismo nombre que la vista): las metadata extensions de `ZC_GorObra` y de `ZI_GorObraFinanzas` (como la del resumen del taller; la vista necesita `@Metadata.allowExtensions: true`).
     - **Qué contienen:**
         - `@UI.headerInfo` con `typeName: 'Obra'`, `typeNamePlural: 'Obras'` y el código como título;
         - lista (`@UI.lineItem`): código, descripción, cliente, total, pendiente de cobro y salud (con `criticality: 'SaludCriticality'`);
@@ -165,7 +165,7 @@ Todas las metadata extensions van en `ZGOR_SRV`: **Ctrl+Shift+Alt+N** → *Metad
     - **Comprueba:** en la vista previa de `Obra`, **Go** muestra las 4 obras con sus 6 columnas; `OBR0002` sale con la salud en rojo; al abrir `OBR0001` se ven las 5 tarjetas (1210, 670, 540, 0, 540) y las 11 pestañas.
 
 2. **El presupuesto** (`presupuestos_views.xml`).
-    - **Dónde:** las de `ZC_GorPresupuesto` y sus hijos.
+    - **Crea** (tipo **Metadata Extension**, paquete `ZGOR_SRV`): las de `ZC_GorPresupuesto` y sus hijos.
     - **Qué contienen:** lista con código, cliente, fecha, total y estado; filtros por cliente, estado y año. Página con los datos del cliente copiados (solo lectura), las líneas como lista, y los botones *Aprobar*, *Desaprobar* y *Vincular a obra* (`@UI.lineItem` e `@UI.identification` con `type: #FOR_ACTION`). Pestañas de proveedores, especialistas, observaciones, incidencias y archivos.
     - **Comprueba:** en la vista previa de `Presupuesto`, abre `PREP0005`: el botón *Aprobar* está activo y *Desaprobar* no (el *feature control* de 3.5). Pulsa *Aprobar*: cambian los dos.
 
