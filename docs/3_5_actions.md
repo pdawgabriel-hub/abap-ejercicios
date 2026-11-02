@@ -66,7 +66,7 @@ define behavior for ZI_TlPresupuesto alias Presupuesto
   ENDMETHOD.
 ```
 
-El método aparece en cuanto una operación de la BDEF lleva `features : instance` (**Ctrl+1** → *Add missing method*). El *feature control* no es solo visual: si alguien ejecuta con EML una acción desactivada, RAP la rechaza.
+El método aparece en cuanto una operación de la BDEF lleva `features : instance` (**Ctrl+.** → *Add missing method*). El *feature control* no es solo visual: si alguien ejecuta con EML una acción desactivada, RAP la rechaza.
 
 ## Acciones con parámetro
 
@@ -211,7 +211,7 @@ Tu entidad abstracta va en `ZGOR_CDS`. Lo demás amplía tus BDEF y clases de co
 
 ## Ejercicios
 
-Como en 3.3, las firmas se crean con **Ctrl+1** → *Add missing method* sobre el nombre de cada pieza en la BDEF. Para que las reconozcas, son estas:
+Como en 3.3, las firmas se crean con **Ctrl+.** → *Add missing method* sobre el nombre de cada pieza en la BDEF. Para que las reconozcas, son estas:
 
 ```abap
 " Una accion que devuelve la propia instancia (result [1] $self)
@@ -250,7 +250,7 @@ METHODS precheck_delete FOR PRECHECK
 
 4. **El guardado adicional.**
     - **Dónde:** la BDEF `ZI_GorObra` y la clase `zbp_i_gorobra`, pestaña *Local Types*.
-    - **En la BDEF:** la primera línea pasa a `managed with additional save implementation in class zbp_i_gorobra unique;`. Con **Ctrl+1** sobre ella, Eclipse crea la clase `lsc_zi_gorobra` con el método `save_modified`.
+    - **En la BDEF:** la primera línea pasa a `managed with additional save implementation in class zbp_i_gorobra unique;`. Con **Ctrl+.** sobre ella, el editor crea la clase `lsc_zi_gorobra` con el método `save_modified`.
     - **Qué hace** (§3.5, `unlink`): para cada obra de `delete-obra`, borra sus partes de trabajo con sus líneas y sus partes de especialista y de proveedor (`DELETE FROM` sobre las tablas), y deja sus presupuestos **sin obra** (`UPDATE zgor_presu SET obra_uuid = ...`). La ficha de gastos no hay que borrarla: se borra sola por la composición.
     - **Comprueba** (paso 11b de §12.7): en `ZCL_GOR_EML_DEMO`, crea con EML una obra con un presupuesto aprobado y un parte de trabajo de 8 h de `TRB0002`, **sin ingresos**, y bórrala. Con `SELECT COUNT( * )`: 0 fichas de gastos y 0 partes de esa obra, y el presupuesto sigue existiendo, sin obra. `ZI_GorTrabAcum` de `TRB0002` vuelve a sus 8 h de antes.
 

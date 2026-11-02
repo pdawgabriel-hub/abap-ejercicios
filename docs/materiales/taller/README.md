@@ -12,7 +12,7 @@ El taller está organizado como un proyecto real de ABAP Cloud: un paquete princ
 taller/
 ├── README.md            esta guia
 ├── abaplint.json        configuracion de la comprobacion automatica
-├── tablas/              las tablas en DDL, tal como se escriben en Eclipse
+├── tablas/              las tablas en DDL, tal como se escriben en el editor
 └── src/                 los objetos en formato abapGit (paquete ZTL)
     ├── ddic/            ZTL_DDIC: tablas, estructuras y tablas de borradores (.tabl.xml)
     ├── cds/             ZTL_CDS:  vistas interface, vistas de calculo y control de acceso
@@ -23,7 +23,7 @@ taller/
 
 En `src/`, cada objeto es un fichero de código y un `.xml` con su nombre y su descripción:
 
-| Fichero | Objeto | En Eclipse |
+| Fichero | Objeto | En el editor |
 |---|---|---|
 | `.clas.abap` | Clase | La pestaña principal |
 | `.clas.locals_imp.abap` | Clase | La pestaña **Local Types** (clases de comportamiento) |
@@ -97,10 +97,10 @@ Si al activarlo algo falla, es un error de estos apuntes: avisa con el mensaje e
 
 El repositorio `abap-ejercicios` tiene un `.abapgit.xml` que apunta a `docs/materiales/taller/src/`, así que abapGit puede crear el taller entero:
 
-1. En Eclipse, crea el paquete **`ZTL`** en `ZLOCAL` (*New → ABAP Package*), sin subpaquetes: los crea abapGit.
-2. Crea el objeto de autorización **`ZTL_TALLER`** con el campo `ACTVT` y las actividades 03, 06 y 70 (*New → Other ABAP Repository Object → Authorization Object*). Lo usan los permisos de 6.1. Si no lo creas, solo fallarán la clase de la orden y el control de acceso de las jornadas.
+1. Crea el paquete **`ZTL`** en `ZLOCAL` (**Ctrl+Shift+Alt+N** → *Package*), sin subpaquetes: los crea abapGit.
+2. Crea el objeto de autorización **`ZTL_TALLER`** con el campo `ACTVT` y las actividades 03, 06 y 70 (**Ctrl+Shift+Alt+N** → *Authorization Object*). Lo usan los permisos de 6.1. Si no lo creas, solo fallarán la clase de la orden y el control de acceso de las jornadas.
 3. En la vista **abapGit Repositories**, *Link New abapGit Repository* con la URL de `abap-ejercicios`, paquete `ZTL`, y haz **Pull**.
-4. Activa todo (clic derecho en `ZTL` → *Activate*). Crea a mano los *bindings* `ZUI_TL_TALLER_O4` (OData V4 - UI) y `ZAPI_TL_TALLER_O4` (OData V4 - Web API), que abapGit no incluye aquí.
+4. Activa todo (**Ctrl+Shift+F3**). Crea a mano los *bindings* `ZUI_TL_TALLER_O4` (OData V4 - UI) y `ZAPI_TL_TALLER_O4` (OData V4 - Web API), que abapGit no incluye aquí.
 5. Ejecuta `ZCL_TL_DATOS_DEMO` y después `ZCL_TL_COMPROBAR_CDS`: debe escribir «0 errores».
 
 En el trial compartido, asegúrate antes de que nadie más usa el prefijo `ZTL` (ejercicio 1 de 1.1).

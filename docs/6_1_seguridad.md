@@ -114,7 +114,7 @@ El objeto de autorización va en `ZGOR_BUS`; los cambios de permisos, en tus die
 ## Ejercicios
 
 1. **El objeto de autorización.**
-    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → Other ABAP Repository Object** → *Authorization Object*. Nombre `ZGOR_ERP`, descripción `ERP de Obras y Reformas`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Authorization Object*, paquete `ZGOR_BUS`. Nombre `ZGOR_ERP`, descripción `ERP de Obras y Reformas`.
     - **Qué contiene:** el campo `ACTVT` con las actividades 01 (crear), 02 (modificar), 03 (ver), 06 (borrar) y 70 (administrar), como `ZTL_TALLER`.
     - **Comprueba:** activa sin errores.
 2. **Comprobarlo.**
@@ -125,7 +125,7 @@ El objeto de autorización va en `ZGOR_BUS`; los cambios de permisos, en tus die
 4. **Tabla de permisos.** Haz en `diseno.md` la tabla de §5 del informe traducida a SAP: qué rol puede hacer qué en cada BO. Señala qué regla la cumple la BDEF y cuál el objeto de autorización.
 5. **Autorización por instancia.** Una regla que no está en el informe: una obra **pagada del todo** (estado de gasto `finalizado`) solo la puede modificar o borrar quien tenga la actividad `70` de `ZGOR_ERP` (el rol de jefe).
     - **Dónde:** BDEF `ZI_GorObra` y clase local `lhc_obra`.
-    - **En la BDEF:** `authorization master ( global, instance )`. Con **Ctrl+1**, Eclipse añade `get_instance_authorizations`.
+    - **En la BDEF:** `authorization master ( global, instance )`. Con **Ctrl+.**, el editor añade `get_instance_authorizations`.
     - **Qué hace:** lee `EstadoGasto` de `ZI_GorObraFinanzas` para cada obra de `keys`; si es `finalizado`, comprueba la actividad `70` y, sin ella, deja `%update` y `%delete` como `unauthorized`.
     - **Comprueba:** en `ZCL_GOR_EML_DEMO`, modifica la descripción de `OBR0001` (pagada en los datos de demo): sin la actividad 70, `FAILED` trae la obra. Modifica `OBR0003` (no pagada): se guarda. Explica en `diseno.md` por qué es una autorización y no un *feature control*.
 6. **Investiga.** ¿Qué ve en las apps un usuario **sin** ningún rol del ERP? Si no puedes probarlo con otro usuario, búscalo en la documentación y anótalo.

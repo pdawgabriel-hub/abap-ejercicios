@@ -93,7 +93,7 @@ Las vistas de indicadores van en `ZGOR_CDS` y sus metadata extensions en `ZGOR_S
 
 ## Ejercicios
 
-Los bloques del dashboard de Odoo (§3.14) son la especificación. Todas las vistas van en `ZGOR_CDS`, se crean como en 2.4 (*New → Data Definition*, plantilla *Define View Entity*) y se comprueban leyéndolas desde `ZCL_GOR_SQL_DEMO`, en un bloque `" 6.4 Dashboard`, con los datos de demo de 2.5:
+Los bloques del dashboard de Odoo (§3.14) son la especificación. Todas las vistas van en `ZGOR_CDS`, se crean como en 2.4 (**Ctrl+Shift+Alt+N** → *Data Definition*, plantilla *Define View Entity*) y se comprueban leyéndolas desde `ZCL_GOR_SQL_DEMO`, en un bloque `" 6.4 Dashboard`, con los datos de demo de 2.5:
 
 1. **Bloque 1: salud global.** `ZI_GorKpiSalud`, sobre `ZI_GorObraFinanzas`, agrupada por `Salud`: el número de obras (`count( * )`) y la suma de `Debe`. **Comprueba:** `verde` 1 obra, `rojo` 1, `ambar` 2 con 852 € pendientes.
 2. **Bloque 2: rentabilidad.** `ZI_GorKpiBeneficio` (código, descripción, beneficio real, total y salud de cada obra; el «top 10» lo hará la app ordenando y limitando) y `ZI_GorKpiManoObra` (coste de mano de obra por obra). **Comprueba:** leyendo con `ORDER BY BeneficioReal DESCENDING UP TO 10 ROWS`, el orden es `OBR0001` (540), `OBR0003` (240), `OBR0004` (0) y `OBR0002` (−380).

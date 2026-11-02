@@ -13,11 +13,11 @@ El sistema SAP es desechable; los repositorios son la copia de seguridad (5.3). 
 
 1. Registra el trial y ejecuta el booster **Prepare an Account for ABAP Trial**.
 2. Apunta la fecha de registro y genera los recordatorios: `python3 herramientas/generar_recordatorios.py AAAA-MM-DD > trial.ics`.
-3. En Eclipse, crea el proyecto ABAP Cloud con la nueva instancia (0.1).
+3. Conecta VS Code y Eclipse con la nueva instancia (0.1): en VS Code, un destino nuevo con la URL nueva; en Eclipse, un proyecto ABAP Cloud (lo necesitas para abapGit).
 4. Comprueba con **Ctrl+Shift+A** que `ZGOR` y `ZEJ` siguen libres. Si no, para: hay que cambiar de prefijo antes de traer nada.
 5. Crea el paquete `ZGOR` (en `ZLOCAL`, con el mismo nombre y descripción que antes). Los subpaquetes los creará el *pull*.
 6. En la vista **abapGit Repositories**, enlaza `erp-obras-reformas-sap` con `ZGOR` y haz **Pull**. Repite con `abap-ejercicios` y `ZEJ`.
-7. Activa todo `ZGOR` (clic derecho → *Activate*). Si algo no activa a la primera, vuelve a activar: a veces el orden importa.
+7. Añade `ZGOR` al área de trabajo de VS Code y activa todo (**Ctrl+Shift+F3**). Si algo no activa a la primera, vuelve a activar: a veces el orden importa.
 8. Publica los tres *service bindings* (`ZUI_GOR_*_O4`).
 9. Ejecuta `ZCL_GOR_DATOS_DEMO` y después `ZCL_GOR_COMPROBAR_CDS`: «0 errores».
 10. Ejecuta los tests de `ZGOR`: todos en verde. Abre una app.
@@ -32,7 +32,7 @@ Si el *pull* da errores, copia el mensaje exacto y consúltalo antes de borrar n
 | La publicación de los *bindings* | Paso 8 |
 | Roles y catálogos asignados (6.1) | A mano, si los usaste |
 | Datos | `ZCL_GOR_DATOS_DEMO` |
-| Ajustes de Eclipse | A mano |
+| Área de trabajo de VS Code y ajustes de Eclipse | A mano (0.1) |
 | (añade aquí lo que encuentres) | |
 
 ---

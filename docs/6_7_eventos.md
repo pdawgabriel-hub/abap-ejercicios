@@ -1,6 +1,6 @@
 # 6.7. Business events
 
-> **Zona menos verificada.** Los eventos de RAP y su consumo dentro del mismo sistema existen en las versiones recientes de ABAP Cloud, pero la sintaxis exacta no se ha probado contra el trial. Si el editor no acepta algo, pulsa **F1** sobre la palabra clave y consulta la documentación de *RAP Business Events*.
+> **Zona menos verificada.** Los eventos de RAP y su consumo dentro del mismo sistema existen en las versiones recientes de ABAP Cloud, pero la sintaxis exacta no se ha probado contra el trial. Si el editor no acepta algo, consulta la documentación de *RAP Business Events* en la [ayuda de ABAP](./F_vscode.md#errores-y-ayuda).
 
 Hasta ahora, cuando algo pasaba en un objeto de negocio, la reacción estaba programada **dentro** de él: al crear una orden, su *determination* crea la hoja de costes. Pero a veces lo que pasa en un objeto le interesa a **otros**: cuando el titular termina de pagar una orden, quizá el departamento de contabilidad quiera registrarlo, o un sistema externo quiera enviar un correo de agradecimiento. Si el abono tuviera que llamar a cada uno de ellos, quedaría atado a todos.
 
@@ -118,7 +118,7 @@ La entidad abstracta del evento va en `ZGOR_CDS`, el manejador en `ZGOR_BUS` y l
 1. **El evento.**
     - **Dónde:** una entidad abstracta nueva en `ZGOR_CDS`, `ZA_GorIngresoRegistrado` (campos `ObraUUID : sysuuid_x16;` e `Importe : abap.dec(15,2);`); la BDEF y la clase de `ZI_GorIngreso`.
     - **En la BDEF:** la primera línea pasa a `managed with additional save implementation in class zbp_i_goringreso unique;`, y en la entidad, `event IngresoRegistrado parameter ZA_GorIngresoRegistrado;`.
-    - **Qué hace:** en `save_modified` de la clase `lsc_` (créala con **Ctrl+1**), `RAISE ENTITY EVENT zi_goringreso~IngresoRegistrado FROM ...` con una fila por cada ingreso de `create-ingreso`, como el abono del taller.
+    - **Qué hace:** en `save_modified` de la clase `lsc_` (créala con **Ctrl+.**), `RAISE ENTITY EVENT zi_goringreso~IngresoRegistrado FROM ...` con una fila por cada ingreso de `create-ingreso`, como el abono del taller.
     - **Comprueba:** activa sin errores; el efecto se ve en el ejercicio 3.
 2. **El registro.**
     - **Dónde:** la tabla `zgor_cobro_log` en `ZGOR_DDIC` (`client`, `log_uuid` clave, `obra_uuid`, `momento` `timestampl`, `mensaje` `abap.char(120)`), y la clase `ZCL_GOR_ESCUCHA_INGRESOS` en `ZGOR_BUS`, `FOR EVENTS OF zi_goringreso`, con su clase local y un método `FOR ENTITY EVENT ... FOR Ingreso~IngresoRegistrado`, como `zcl_tl_escucha_abonos`.

@@ -29,8 +29,8 @@ define service ZUI_TL_TALLER {
 
 ## Publicar
 
-1. Clic derecho en el paquete → **New → Other ABAP Repository Object → Service Definition**. Escribe el contenido y activa.
-2. Clic derecho sobre la Service Definition → **New Service Binding**. Nombre: el de la definición con `_O4` al final (`ZUI_TL_TALLER_O4`). Tipo **OData V4 - UI**.
+1. **Ctrl+Shift+Alt+N** → *Service Definition*. Escribe el contenido y activa.
+2. **Ctrl+Shift+Alt+N** → *Service Binding* sobre la Service Definition. Nombre: el de la definición con `_O4` al final (`ZUI_TL_TALLER_O4`). Tipo **OData V4 - UI**.
 3. Activa el binding y pulsa **Publish** en el editor del binding. Tarda unos segundos.
 
 ## Vista previa
@@ -52,7 +52,7 @@ Las Service Definitions y Bindings van en `ZGOR_SRV`. Los nombres siguen el [Ane
 ## Ejercicios
 
 1. **Los tres servicios.**
-    - **Dónde:** en `ZGOR_SRV`, clic derecho → **New → Other ABAP Repository Object** → *Business Services* → **Service Definition**. Tres: `ZUI_GOR_COMERCIAL`, `ZUI_GOR_FINANCIERO` y `ZUI_GOR_RECURSOS`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Service Definition*, paquete `ZGOR_SRV`. Tres: `ZUI_GOR_COMERCIAL`, `ZUI_GOR_FINANCIERO` y `ZUI_GOR_RECURSOS`.
     - **Qué contienen:** una línea `expose <proyeccion> as <Nombre>;` por entidad, como `ZUI_TL_TALLER`:
 
         | Servicio | Expone | Para quién |
@@ -65,7 +65,7 @@ Las Service Definitions y Bindings van en `ZGOR_SRV`. Los nombres siguen el [Ane
     - **Comprueba:** activa los tres sin avisos.
 
 2. **Los bindings.**
-    - **Dónde:** clic derecho en cada Service Definition → **New Service Binding**. Nombres `ZUI_GOR_COMERCIAL_O4`, `ZUI_GOR_FINANCIERO_O4` y `ZUI_GOR_RECURSOS_O4`, tipo **OData V4 - UI**.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Service Binding*, uno por Service Definition. Nombres `ZUI_GOR_COMERCIAL_O4`, `ZUI_GOR_FINANCIERO_O4` y `ZUI_GOR_RECURSOS_O4`, tipo **OData V4 - UI**.
     - **Qué hace:** activa cada binding y pulsa **Publish** en su editor.
     - **Comprueba:** en el editor del binding, la lista *Entity Set and Association* muestra todas las entidades del servicio.
 

@@ -21,7 +21,7 @@ En *Local Types* hay una clase **manejadora** (*handler*, `lhc_`) por entidad, c
 " Manejadora de la entidad Titular (lhc = local handler class)
 CLASS lhc_titular DEFINITION INHERITING FROM cl_abap_behavior_handler.
   PRIVATE SECTION.
-    " Firma generada por Eclipse: RAP la llama antes de cada operacion
+    " Firma generada por el editor: RAP la llama antes de cada operacion
     METHODS get_global_authorizations FOR GLOBAL AUTHORIZATION
       IMPORTING REQUEST requested_authorizations FOR Titular RESULT result.
 ENDCLASS.
@@ -37,12 +37,12 @@ CLASS lhc_titular IMPLEMENTATION.
 ENDCLASS.
 ```
 
-Cada vez que añadamos una *determination*, una *validation* o una acción a la BDEF, aparecerá aquí su método. **No hace falta escribir las firmas a mano**: con el cursor sobre el nombre en la BDEF, **Ctrl+1** → *Add missing method*.
+Cada vez que añadamos una *determination*, una *validation* o una acción a la BDEF, aparecerá aquí su método. **No hace falta escribir las firmas a mano**: con el cursor sobre el nombre en la BDEF, **Ctrl+.** → *Add missing method*.
 
 ## Crear la clase
 
-1. En la BDEF, cursor sobre el nombre de la clase (`zbp_i_tltitular`) → **Ctrl+1** → *Create behavior implementation class*.
-2. Eclipse crea la clase con *Local Types* ya rellena: un `lhc_titular` con `get_global_authorizations` vacío.
+1. En la BDEF, cursor sobre el nombre de la clase (`zbp_i_tltitular`) → **Ctrl+.** → *Create behavior implementation class*.
+2. El editor crea la clase con *Local Types* ya rellena: un `lhc_titular` con `get_global_authorizations` vacío.
 3. Completa `get_global_authorizations` como arriba y activa la clase. Después activa la BDEF.
 
 ## EML: leer y modificar objetos de negocio
@@ -144,17 +144,17 @@ ZGOR_TEST
 ## Ejercicios
 
 1. **La clase del cliente.**
-    - **Dónde:** abre tu BDEF de `ZI_GorCliente`, pon el cursor sobre `zbp_i_gorcliente` (en la primera línea) y pulsa **Ctrl+1** → *Create behavior implementation class*. Paquete `ZGOR_BUS`.
-    - **Qué contiene:** Eclipse genera la clase global vacía y, en la pestaña *Local Types*, la clase `lhc_cliente` con el método `get_global_authorizations`. Rellénalo como el del titular: `result` con `%create`, `%update`, `%delete` y `%action-Edit` a `if_abap_behv=>auth-allowed`, con un comentario que diga que en 6.1 se cambiará por una comprobación de verdad.
-    - **Comprueba:** activa la clase y después la BDEF (**Ctrl+Shift+F3** con las dos abiertas). En *Problems* no debe quedar ningún error del cliente.
+    - **Dónde:** abre tu BDEF de `ZI_GorCliente`, pon el cursor sobre `zbp_i_gorcliente` (en la primera línea) y pulsa **Ctrl+.** → *Create behavior implementation class*. Paquete `ZGOR_BUS`.
+    - **Qué contiene:** El editor genera la clase global vacía y, en la pestaña *Local Types*, la clase `lhc_cliente` con el método `get_global_authorizations`. Rellénalo como el del titular: `result` con `%create`, `%update`, `%delete` y `%action-Edit` a `if_abap_behv=>auth-allowed`, con un comentario que diga que en 6.1 se cambiará por una comprobación de verdad.
+    - **Comprueba:** activa la clase y después la BDEF (**Ctrl+Shift+F3** con las dos abiertas). En **Problemas** no debe quedar ningún error del cliente.
 
 2. **Las demás clases.**
     - **Dónde:** las otras nueve BDEF, igual que el ejercicio anterior. Los nombres, `zbp_i_` seguido del nombre de la vista: `zbp_i_gorpresupuesto`, `zbp_i_gortrabajador`…
-    - **Qué contiene:** en las que tienen hijos, Eclipse crea un `lhc_` por entidad (`lhc_presupuesto`, `lhc_linea`…), pero solo la raíz tiene `get_global_authorizations`: los hijos dependen de ella.
+    - **Qué contiene:** en las que tienen hijos, se crea un `lhc_` por entidad (`lhc_presupuesto`, `lhc_linea`…), pero solo la raíz tiene `get_global_authorizations`: los hijos dependen de ella.
     - **Comprueba:** clic derecho en `ZGOR_BUS` → **Activate**, con todo seleccionado. Debe activar sin errores.
 
 3. **Crear con EML.**
-    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_EML_DEMO`, descripción `Pruebas de EML con el ERP`, con la interfaz `if_oo_adt_classrun`. A partir de aquí, cada ejercicio es un bloque de `main` separado por un comentario (`" 3.2 Crear`).
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_EML_DEMO`, descripción `Pruebas de EML con el ERP`, con la interfaz `if_oo_adt_classrun`. A partir de aquí, cada ejercicio es un bloque de `main` separado por un comentario (`" 3.2 Crear`).
     - **Qué hace:** con `MODIFY ENTITIES OF zi_gorcliente ENTITY Cliente CREATE FIELDS ( Nombre Apellidos Direccion Telf ) WITH ...` crea la clienta Elena Vidal Soler (C/ Sol 3, Zaragoza, 600222333), con un `%cid` cualquiera (`'ELENA'`). Recoge `MAPPED`, `FAILED` y `REPORTED`, y después guarda con `COMMIT ENTITIES` recogiendo también su `FAILED` y `REPORTED`.
     - **Comprueba:** escribe en la consola el UUID que aparece en `mapped-cliente[ 1 ]-ClienteUUID` y si `failed` está vacío. Después, `SELECT COUNT( * ) FROM zi_gorcliente WHERE nombre = 'Elena'` debe dar **1**.
 
@@ -169,7 +169,7 @@ ZGOR_TEST
     - **Comprueba:** la consola debe mostrar `600222333` y después `600999000`, y al final `SELECT COUNT( * ) FROM zi_gorcliente WHERE nombre = 'Elena'` debe dar **0**.
 
 5. **Los campos de administración.**
-    - **Dónde:** el mismo `main`: comenta el bloque de borrar (con **Ctrl+<**) y vuelve a ejecutar la clase, para que Elena quede creada.
+    - **Dónde:** el mismo `main`: comenta el bloque de borrar (selecciónalo y **Ctrl+/**) y vuelve a ejecutar la clase, para que Elena quede creada.
     - **Qué hace:** lee de `zi_gorcliente` los campos `ClienteId, CreatedBy, CreatedAt, LastChangedAt` de Elena y escríbelos.
     - **Comprueba:** `CreatedBy`, `CreatedAt` y `LastChangedAt` tienen valor, porque los ha rellenado RAP gracias a las anotaciones `@Semantics` de 2.2. `ClienteId` sale **vacío**: lo pondrás en 3.7.
 

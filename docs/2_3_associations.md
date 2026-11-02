@@ -29,7 +29,7 @@ define view entity ZI_TlOrden
 - **`$projection.TitularUUID`** se refiere al campo `TitularUUID` **de esta vista** (por su alias); `_Titular.TitularUUID`, al de la vista destino.
 - Las associations empiezan por guion bajo y se **exponen** al final de la lista de campos. Si no se exponen, solo sirven dentro de la vista.
 
-Con la association expuesta, el Data Preview permite navegar: en una fila de `ZI_TlOrden`, clic derecho → *Follow Association* → `_Titular`. Y una vista puede leer a través de ella con una **expresión de ruta**: `_Titular.RazonSocial as TitularNombre`.
+Con la association expuesta se puede navegar: en el Data Preview de Eclipse, clic derecho en una fila de `ZI_TlOrden` → *Follow Association* → `_Titular`. Y una vista puede leer a través de ella con una **expresión de ruta**: `_Titular.RazonSocial as TitularNombre`.
 
 Desde ABAP SQL se recorre igual, pero la ruta empieza por una barra invertida y el campo se separa con un guion, como en una estructura:
 
@@ -82,7 +82,7 @@ define view entity ZI_TlPartida
 
 - La raíz se declara con **`define root view entity`**: es el punto de entrada del objeto de negocio. En RAP, todo lo que se crea, bloquea o borra se hace a través de la raíz.
 - El padre dice `composition [0..*] of` el hijo; el hijo dice `association to parent` el padre. Las dos partes son obligatorias.
-- **Activa las dos vistas juntas.** Cada una menciona a la otra, así que por separado ninguna activa. Selecciona las dos en el *Project Explorer* y pulsa **Ctrl+Shift+F3** (*Activate All*), o abre ambas y actívalas desde la ventana de activación.
+- **Activa las dos vistas juntas.** Cada una menciona a la otra, así que por separado ninguna activa. Guarda las dos y pulsa **Ctrl+Shift+F3** (*Activate All*): activa a la vez todo lo pendiente.
 
 ## El mapa de relaciones
 
@@ -125,7 +125,7 @@ define view entity ZI_TlOrdenMecanico
 
 Tus vistas no solo se relacionan entre sí: también pueden apuntar a las **vistas liberadas** de SAP. En ABAP Cloud no se pueden leer las tablas de SAP, pero sí las vistas CDS que SAP ha marcado como liberadas para usarlas (*released*, contrato C1). Son las mismas en cualquier sistema SAP moderno, y es lo primero que harás en un proyecto de empresa: apoyarte en ellas en vez de crear tus propias tablas de países, monedas o unidades.
 
-En el trial hay pocas, porque es un sistema vacío, pero las básicas sí están: `I_Country` (países), `I_Currency` (monedas), `I_UnitOfMeasure` (unidades), `I_Language` (idiomas)… Para buscarlas: **Ctrl+Shift+A**, escribe `I_Country` y, con la vista abierta, mira la pestaña *Properties → API State*: debe decir *Released*.
+En el trial hay pocas, porque es un sistema vacío, pero las básicas sí están: `I_Country` (países), `I_Currency` (monedas), `I_UnitOfMeasure` (unidades), `I_Language` (idiomas)… Para buscarlas: **Ctrl+Shift+A**, escribe `I_Country` y, con la vista abierta, pasa el ratón por su nombre o mira sus propiedades: el estado de la API debe decir *Released* (en Eclipse, pestaña *Properties → API State*).
 
 En el taller, el titular guarda su país como el código de dos letras de SAP (`ES`, `FR`…) en una columna `pais` de tipo `abap.char(3)`, y su vista se relaciona con `I_Country`:
 
@@ -153,7 +153,7 @@ Y el nombre del país, en el idioma del usuario, se lee a través de la associat
 
 El filtro entre corchetes elige la fila del idioma de la sesión; `1:` le dice a CDS que, con ese filtro, sale una sola fila. Pon este campo en la **proyección** (Bloque 4), no en la vista interface, por el mismo motivo que el nombre del titular en la orden: es un dato de otro objeto.
 
-> Comprueba con **F2** sobre `I_Country` el nombre exacto de su association de textos y de sus campos en tu sistema. Si no tiene `_Text`, busca la vista `I_CountryText` y relaciónala tú.
+> Comprueba pasando el ratón por encima de `I_Country` (o con **F12**, que la abre) el nombre exacto de su association de textos y de sus campos en tu sistema. Si no tiene `_Text`, busca la vista `I_CountryText` y relaciónala tú.
 
 > **Código completo del taller:** [ZI_TlOrden](./materiales/taller/src/cds/zi_tlorden.ddls.asddls), [ZI_TlPresupuesto](./materiales/taller/src/cds/zi_tlpresupuesto.ddls.asddls), [ZI_TlPartida](./materiales/taller/src/cds/zi_tlpartida.ddls.asddls), [ZI_TlOrdenMecanico](./materiales/taller/src/cds/zi_tlordenmecanico.ddls.asddls) y [ZI_TlTitular](./materiales/taller/src/cds/zi_tltitular.ddls.asddls). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 
@@ -181,7 +181,7 @@ Solo lectura: ZI_GorObraTrab, ZI_GorObraProv, ZI_GorObraEsp   ← nuevas
 1. **Presupuesto con líneas.**
     - **Dónde:** `ZI_GorPresupuesto` y `ZI_GorPresuLin`, en `ZGOR_CDS` (las dos de 2.2).
     - **Qué cambia:** `ZI_GorPresupuesto` pasa a `define root view entity`, con la composición `_Lineas` (`[0..*] of ZI_GorPresuLin`) y las associations `_Cliente` (`[0..1]` a `ZI_GorCliente`) y `_Obra` (`[0..1]` a `ZI_GorObra`). `ZI_GorPresuLin` recibe `association to parent ZI_GorPresupuesto as _Presupuesto`. Expón las associations al final de cada lista de campos y comenta cada una, como en el taller.
-    - **Comprueba:** abre las dos y actívalas juntas (**Ctrl+Shift+F3**): por separado, cada una se queja de que la otra no la reconoce. Deben quedar sin errores en *Problems*.
+    - **Comprueba:** abre las dos y actívalas juntas (**Ctrl+Shift+F3**): por separado, cada una se queja de que la otra no la reconoce. Deben quedar sin errores en **Problemas**.
 
 2. **Proveedores y especialistas del presupuesto.**
     - **Dónde:** `ZI_GorPresupuesto`, `ZI_GorPresuProv` y `ZI_GorPresuEsp`.
@@ -207,7 +207,7 @@ Solo lectura: ZI_GorObraTrab, ZI_GorObraProv, ZI_GorObraEsp   ← nuevas
 
     Las associations `[0..*]` hacia otra raíz usan su UUID: por ejemplo, `_Ingresos` de la obra es `on $projection.ObraUUID = _Ingresos.ObraUUID`.
 
-    Muchas vistas se mencionan entre sí (la obra al cliente y el cliente a sus obras), así que actívalas todas a la vez: clic derecho en `ZGOR_CDS` → **Activate** (o **Ctrl+Shift+F3** con todas abiertas). Si queda alguna con error, corrígela y vuelve a activar el grupo.
+    Muchas vistas se mencionan entre sí (la obra al cliente y el cliente a sus obras), así que actívalas todas a la vez con **Ctrl+Shift+F3** (*Activate All*). Si queda alguna con error, corrígela y vuelve a activar el grupo.
 
 4. **Participantes.** Las tres vistas de quién participa en cada obra (§11.2 *Otros*).
     - **Dónde:** tres *Data Definitions* nuevas en `ZGOR_CDS`, con la plantilla *Define View Entity*.

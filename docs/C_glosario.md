@@ -5,7 +5,7 @@
 | **ABAP Cloud** | Modelo de desarrollo de ABAP que solo permite objetos liberados por SAP |
 | **abapGit** | Cliente de Git para ABAP: serializa los objetos en ficheros y los sincroniza con un repositorio (5.2) |
 | **Action** | Operación de negocio con nombre propio, más allá de crear, modificar y borrar; en Fiori, un botón (3.5) |
-| **ADT** | *ABAP Development Tools*: el plugin de Eclipse para desarrollar ABAP |
+| **ADT** | *ABAP Development Tools*: las herramientas de SAP para desarrollar ABAP, como extensión de VS Code o plugin de Eclipse |
 | **Association** | Relación declarada entre dos vistas CDS, que se navega solo cuando se usa (2.3) |
 | **API** | Interfaz para que un programa use a otro. En RAP, un servicio OData es una API REST (4.5) |
 | **ATC** | *ABAP Test Cockpit*: análisis estático de calidad (5.1) |

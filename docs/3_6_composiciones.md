@@ -124,7 +124,7 @@ Tus estructuras y tablas van en `ZGOR_DDIC`, las vistas en `ZGOR_CDS`, y el comp
 ## Ejercicios
 
 1. **Las estructuras.**
-    - **Dónde:** clic derecho en `ZGOR_DDIC` → **New → Other ABAP Repository Object** → *Dictionary* → **Structure**. Dos estructuras: `zgor_s_bitacora` (descripción `Campos de una observacion o incidencia`) y `zgor_s_archivo` (`Campos de un archivo adjunto`).
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Structure*, paquete `ZGOR_DDIC`. Dos estructuras: `zgor_s_bitacora` (descripción `Campos de una observacion o incidencia`) y `zgor_s_archivo` (`Campos de un archivo adjunto`).
     - **Qué contienen** (§2 del informe), como `ztl_s_comentario` del taller:
 
         | Estructura | Campos |
@@ -135,10 +135,10 @@ Tus estructuras y tablas van en `ZGOR_DDIC`, las vistas en `ZGOR_CDS`, y el comp
     - **Comprueba:** activa las dos sin errores.
 
 2. **Las tres del presupuesto.** Este ejercicio crea, para cada satélite, una tabla, una vista y su entidad en la BDEF, en este orden:
-    - **Las tablas** (`ZGOR_DDIC`, *New → Database Table*): `zgor_presu_obs` (clave `obs_uuid`) y `zgor_presu_inc` (clave `inc_uuid`), con `include zgor_s_bitacora;`, y `zgor_presu_arc` (clave `archivo_uuid`), con `include zgor_s_archivo;`. Las tres con `presupuesto_uuid : sysuuid_x16 not null;` y los cinco campos de administración, como `ztl_prs_not`.
+    - **Las tablas** (`ZGOR_DDIC`, **Ctrl+Shift+Alt+N** → *Database Table*): `zgor_presu_obs` (clave `obs_uuid`) y `zgor_presu_inc` (clave `inc_uuid`), con `include zgor_s_bitacora;`, y `zgor_presu_arc` (clave `archivo_uuid`), con `include zgor_s_archivo;`. Las tres con `presupuesto_uuid : sysuuid_x16 not null;` y los cinco campos de administración, como `ztl_prs_not`.
     - **Las vistas** (`ZGOR_CDS`): `ZI_GorPresuObs`, `ZI_GorPresuInc` y `ZI_GorPresuArc`, cada una con su `association to parent ZI_GorPresupuesto as _Presupuesto`. En la de archivos, las anotaciones `@Semantics.largeObject` (con `contentDispositionPreference: #ATTACHMENT`) y `@Semantics.mimeType`, como en el taller.
     - **En la raíz** `ZI_GorPresupuesto`: las composiciones `_Observaciones`, `_Incidencias` y `_Archivos`, expuestas.
-    - **En la BDEF:** tres `define behavior for` nuevos (alias `Observacion`, `Incidencia`, `Archivo`) con `lock dependent by _Presupuesto`, `authorization dependent by _Presupuesto`, `update; delete;`, `Texto` obligatorio y su `mapping`; en la raíz, `association _Observaciones { create; with draft; }` y las otras dos. Sus tablas de borradores, con **Ctrl+1**.
+    - **En la BDEF:** tres `define behavior for` nuevos (alias `Observacion`, `Incidencia`, `Archivo`) con `lock dependent by _Presupuesto`, `authorization dependent by _Presupuesto`, `update; delete;`, `Texto` obligatorio y su `mapping`; en la raíz, `association _Observaciones { create; with draft; }` y las otras dos. Sus tablas de borradores, con **Ctrl+.**.
     - **Comprueba:** activa todo junto (clic derecho en `ZGOR` → **Activate** con los objetos nuevos seleccionados) sin errores.
 
 3. **Pruébalo con EML.**
@@ -174,7 +174,7 @@ Tus estructuras y tablas van en `ZGOR_DDIC`, las vistas en `ZGOR_CDS`, y el comp
     - **Dónde:** el método `save_modified` de `lsc_zi_gorobra` (3.5).
     - **Qué hace:** antes de borrar los partes de la obra, borra las incidencias de sus partes de trabajo y las incidencias y adjuntos de sus partes externos (`DELETE FROM zgor_pt_inc WHERE parte_uuid IN ...`). Los satélites de la propia obra (y los adjuntos de su ficha de gastos) se borran solos: son hijos de su composición.
     - **Comprueba:** repite la prueba del ejercicio 4 de 3.5 añadiendo una incidencia al parte de trabajo antes de borrar la obra: `SELECT COUNT( * ) FROM zgor_pt_inc` vuelve al valor de antes.
-7. **Investiga.** Abre tu tabla de borradores `zgor_presu_obs_d`, la que generó Eclipse. ¿Qué contiene el bloque `"%admin"`? Busca con **F2** sobre su tipo qué campos tiene y anota para qué crees que sirve cada uno.
+7. **Investiga.** Abre tu tabla de borradores `zgor_presu_obs_d`, la que generó el editor. ¿Qué contiene el bloque `"%admin"`? Pasa el ratón por encima de su tipo para ver qué campos tiene y anota para qué crees que sirve cada uno.
 
 ---
 

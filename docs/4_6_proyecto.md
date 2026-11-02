@@ -48,7 +48,7 @@ Las tres apps de 4.2 publicadas y con sus anotaciones de 4.3. En el repositorio 
 ## Comprueba tu solución
 
 - Los 13 pasos dan lo esperado y tienes sus capturas.
-- Clic derecho en `ZGOR` → **Run As → ABAP Unit Test**: todos en verde.
+- Ejecuta los tests de todo `ZGOR`: clic derecho en el paquete, en el explorador, y la opción de ABAP Unit (o la vista **Testing** de VS Code; ver [F](./F_vscode.md#tests)): todos en verde.
 - Haz *push* con abapGit de lo que tengas (o espera a [5.2](./5_2_abapgit.md)).
 
 ---

@@ -62,7 +62,7 @@ Con la biblioteca **XCO** de ABAP Cloud se puede generar un fichero `.xlsx` y gu
   ENDMETHOD.
 ```
 
-Los nombres de los métodos de XCO son largos y encadenados; si alguno no existe en tu versión, busca la clase `XCO_CP_XLSX` con **F2** y el ejemplo de la documentación de XCO.
+Los nombres de los métodos de XCO son largos y encadenados; si alguno no existe en tu versión, abre la clase `XCO_CP_XLSX` (**Ctrl+Shift+A**), mira sus métodos pasando el ratón por encima y busca el ejemplo de la documentación de XCO.
 
 > **Código completo del taller:** el método `exportarPresupuesto` de [zbp_i_tlpresupuesto](./materiales/taller/src/bus/zbp_i_tlpresupuesto.clas.locals_imp.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 

@@ -12,8 +12,8 @@ ABAP Cloud no es otro lenguaje: es el mismo ABAP con **reglas más estrictas** y
 | Interfaz de usuario | Dynpros, Web Dynpro, ALV | Fiori Elements generado a partir de metadatos |
 | Programa de prueba | `REPORT` + `WRITE` | Clase con `IF_OO_ADT_CLASSRUN` |
 | Modularizar | `FORM`/`PERFORM`, módulos de función | Clases y métodos |
-| Crear tablas | SE11 (SAP GUI) | Código en Eclipse (*Database Table*) |
-| Herramienta | SAP GUI (SE80, SE24…) | Eclipse con ADT |
+| Crear tablas | SE11 (SAP GUI) | Código en el editor (*Database Table*) |
+| Herramienta | SAP GUI (SE80, SE24…) | VS Code o Eclipse con ADT (ABAP Development Tools) |
 
 > **En un proyecto de empresa.** Si el cliente usa S/4HANA Cloud, el código nuevo será ABAP Cloud. Si es on-premise, puede seguir en clásico o adoptar RAP. Aprender RAP cubre ambos casos y el lenguaje (tablas internas, SQL, clases) es el mismo. Lo que verás en clásico está resumido en el [Anexo A](./A_clasico.md).
 
@@ -36,7 +36,8 @@ Hay un servidor de aplicaciones ABAP real sobre una base de datos SAP HANA Cloud
 
 | Herramienta | Para qué la usas |
 |---|---|
-| Eclipse + ABAP Development Tools (ADT) | Escribir todo el código: tablas, CDS, comportamiento, clases |
+| VS Code + ABAP Development Tools (ADT) | Escribir todo el código: tablas, CDS, comportamiento, clases ([F](./F_vscode.md)) |
+| Eclipse + ADT | abapGit, la copia de seguridad en GitHub (5.2), y respaldo para lo que VS Code aún no haga |
 | Cockpit de BTP (navegador) | Crear la cuenta y la instancia, ver su estado, copiar la URL, gestionar usuarios y roles |
 | Preview de Fiori Elements | Probar tu app desde el editor del Service Binding |
 | Fiori Launchpad | El menú de aplicaciones |

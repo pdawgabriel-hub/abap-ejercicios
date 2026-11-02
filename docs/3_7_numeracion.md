@@ -57,7 +57,7 @@ La versión sencilla busca el código más alto que existe y suma 1:
 
 ## Rangos de números
 
-Un *Number Range Object* es un contador que el sistema reserva de forma segura aunque haya muchos usuarios a la vez. Se crea en ADT (*New → Other ABAP Repository Object → Number Range Object*) y se consume con la clase liberada `CL_NUMBERRANGE_RUNTIME`:
+Un *Number Range Object* es un contador que el sistema reserva de forma segura aunque haya muchos usuarios a la vez. Se crea en ADT (**Ctrl+Shift+Alt+N** → *Number Range Object*) y se consume con la clase liberada `CL_NUMBERRANGE_RUNTIME`:
 
 ```abap
     TRY.
@@ -75,7 +75,7 @@ Un *Number Range Object* es un contador que el sistema reserva de forma segura a
 
 Después, `componer_codigo( iv_serie = `TIT` iv_numero = CONV #( lv_numero ) )` como antes.
 
-> **Variante poco verificada.** El nombre exacto de los parámetros y excepciones de la API, y cómo se mantienen los intervalos del rango, dependen de la versión del sistema. Antes de usarla, mira la documentación de `CL_NUMBERRANGE_RUNTIME` con **F2** en Eclipse. Para el portfolio, el máximo + 1 es suficiente si lo explicas en el README.
+> **Variante poco verificada.** El nombre exacto de los parámetros y excepciones de la API, y cómo se mantienen los intervalos del rango, dependen de la versión del sistema. Antes de usarla, mira la documentación de `CL_NUMBERRANGE_RUNTIME` pasando el ratón por encima. Para el portfolio, el máximo + 1 es suficiente si lo explicas en el README.
 
 > **Código completo del taller:** el método `numerar` de cada clase de comportamiento, por ejemplo [zbp_i_tltitular](./materiales/taller/src/bus/zbp_i_tltitular.clas.locals_imp.abap). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 

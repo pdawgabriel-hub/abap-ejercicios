@@ -120,14 +120,14 @@ La clase de la API va en `ZGOR_BUS`; la tabla de festivos, en `ZGOR_DDIC`; la cl
 ## Ejercicios
 
 1. **La clase de la API.**
-    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → ABAP Class**. Nombre `ZCL_GOR_FESTIVOS`, descripción `Festivos desde una API externa`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_BUS`. Nombre `ZCL_GOR_FESTIVOS`, descripción `Festivos desde una API externa`.
     - **Firma:** `CLASS-METHODS festivos IMPORTING iv_anio TYPE i RETURNING VALUE(rt_festivos) TYPE tt_festivos RAISING cx_static_check.`, con `tt_festivos` una tabla de `fecha` (`d`) y `nombre` (`string`) declarada en la sección pública.
     - **Qué hace:** como `ZCL_TL_FESTIVOS`: crea el cliente HTTP, pide el JSON del año para `ES` y lo convierte con `/ui2/cl_json=>deserialize`.
     - **Comprueba:** desde `ZCL_GOR_EML_DEMO` (o una clase de consola nueva), llama con 2026 y escribe cuántos festivos hay y los tres primeros. El primero debe ser el 1 de enero.
 2. **Los de tu comunidad.** Añade un parámetro con el código de la comunidad (por ejemplo `ES-MD`) y devuelve solo los festivos nacionales (`global`) y los de esa comunidad. Compara cuántos salen para dos comunidades distintas.
 3. **La caché.** Crea la tabla `zgor_festivo` (`fecha` dats como clave junto a `client`, y `nombre` char(80)) y una clase de consola `ZCL_GOR_CARGA_FESTIVOS` que la vacíe y la rellene con los festivos del año y la comunidad que indiques. Ejecútala.
 4. **El aviso.**
-    - **Dónde:** BDEF `ZI_GorParteTrabajo`, entidad `ParteTrabajo`; clase local `lhc_parte_trabajo` (o el nombre que te generó Eclipse).
+    - **Dónde:** BDEF `ZI_GorParteTrabajo`, entidad `ParteTrabajo`; clase local `lhc_parte_trabajo` (o el nombre que te generó el editor).
     - **En la BDEF:** `validation avisarFestivo on save { create; field Fecha; }`, y en `Prepare`.
     - **Qué hace:** si la fecha está en `zgor_festivo`, añade a `reported` un mensaje con severidad `if_abap_behv_message=>severity-warning` y el nombre del festivo. **No** añade nada a `failed`: es un aviso, no un error.
     - **Comprueba:** en `ZCL_GOR_EML_DEMO`, crea un parte para `OBR0001` con fecha 25/12/2026 y guarda: `FAILED` vacío, el parte existe (`SELECT COUNT( * )`) y `REPORTED` trae «Navidad» (o el nombre que dé la API).

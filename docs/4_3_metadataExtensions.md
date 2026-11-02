@@ -142,7 +142,7 @@ annotate entity ZC_TlPresuNota with
 
 ## Crear y ver
 
-Clic derecho en la proyección → **New Metadata Extension**, con el mismo nombre que la vista. Escribe las anotaciones, activa y **recarga la vista previa** del binding (a veces hace falta vaciar la caché del navegador con **Ctrl+F5**).
+**Ctrl+Shift+Alt+N** → *Metadata Extension* sobre la proyección, con el mismo nombre que la vista. Escribe las anotaciones, activa y **recarga la vista previa** del binding (a veces hace falta vaciar la caché del navegador con **Ctrl+F5**).
 
 > **Código completo del taller:** [la de la orden](./materiales/taller/src/srv/zc_tlorden.ddlx.asddlxs), [la del resumen](./materiales/taller/src/srv/zi_tlordenresumen.ddlx.asddlxs) y [la del presupuesto](./materiales/taller/src/srv/zc_tlpresupuesto.ddlx.asddlxs). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 
@@ -152,7 +152,7 @@ Una metadata extension por proyección, en `ZGOR_SRV`, más las de las vistas de
 
 ## Ejercicios
 
-Todas las metadata extensions van en `ZGOR_SRV`: clic derecho en la proyección → **New Metadata Extension**, con el mismo nombre que la vista (`ZC_GorObra`). Para que la vista las use, la proyección necesita `@Metadata.allowExtensions: true`. Después de cada una, actívala y recarga la vista previa del binding (**F5** en el navegador).
+Todas las metadata extensions van en `ZGOR_SRV`: **Ctrl+Shift+Alt+N** → *Metadata Extension* sobre la proyección, con el mismo nombre que la vista (`ZC_GorObra`). Para que la vista las use, la proyección necesita `@Metadata.allowExtensions: true`. Después de cada una, actívala y recarga la vista previa del binding (**F5** en el navegador).
 
 1. **La obra** (§4 del informe, `obras_views.xml`).
     - **Dónde:** las metadata extensions de `ZC_GorObra` y de `ZI_GorObraFinanzas` (como la del resumen del taller; la vista necesita `@Metadata.allowExtensions: true`).

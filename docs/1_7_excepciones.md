@@ -75,10 +75,10 @@ ENDCLASS.
 - `INHERITING FROM` indica la superclase; `super->constructor( )` llama a su constructor, que en las excepciones es obligatorio.
 - `READ-ONLY` permite leer el atributo desde fuera (`lx_aviso->mv_elemento`) pero no cambiarlo.
 - `REDEFINITION` sustituye el método `get_text` heredado: así, `get_text( )` devuelve nuestro mensaje.
-- `##ADT_SUPPRESS_GENERATION` es un *pragma*: le dice a Eclipse que no regenere el constructor por su cuenta.
+- `##ADT_SUPPRESS_GENERATION` es un *pragma*: le dice al editor (ADT) que no regenere el constructor por su cuenta.
 - `previous` permite **encadenar** una excepción con la que la causó.
 
-Al crear la clase, Eclipse ofrece la plantilla de *Exception Class*; se sustituye entera.
+Al crear una clase de excepción, el asistente puede generar una plantilla; se sustituye entera.
 
 En proyectos grandes, los textos se guardan en una **clase de mensajes** y la excepción implementa `IF_T100_MESSAGE`, para poder traducirlos. Para un portfolio basta con el texto directo.
 
@@ -130,7 +130,7 @@ ZGOR_BUS
 ## Ejercicios
 
 1. **La excepción del ERP.**
-    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → ABAP Class**. Nombre `ZCX_GOR_REGLA`, descripción `Regla de negocio incumplida`, superclase `CX_STATIC_CHECK`. Eclipse genera una plantilla de excepción: sustitúyela por tu código.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_BUS`. Nombre `ZCX_GOR_REGLA`, descripción `Regla de negocio incumplida`, superclase `CX_STATIC_CHECK`. Si se genera una plantilla de excepción, sustitúyela por tu código.
     - **Qué contiene** (como `ZCX_TL_AVISO`, con otros nombres):
 
     | Elemento | Definición |
@@ -164,15 +164,15 @@ ZGOR_BUS
     - **Comprueba:** con el segundo test de la unidad.
 
 4. **El escenario, paso 9.**
-    - **Dónde:** `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_EXC_DEMO`, descripción `Pruebas de excepciones`. Ejecutable.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_EXC_DEMO`, descripción `Pruebas de excepciones`. Ejecutable.
     - **Qué hace:** primero un caso que no falla (`validar_iva( 21 )`), que escribe «IVA correcto». Después, cada caso del paso 9 de §12.7 en su propio `TRY`, escribiendo en el `CATCH` el texto y el campo de la excepción: una línea de parte con 25 h, otra con −1 h, un parte externo de 0 €, un IVA de 150 y una falta que termina antes de empezar.
     - **Comprueba:** salen **6 líneas**: «IVA correcto» y cinco mensajes, cada uno con su campo (`Horas`, `Horas`, `Importe`, `Iva`, `FechaFin`).
 
 5. **Excepciones del sistema.**
     - **Dónde:** el mismo `main`, al final.
-    - **Qué hace:** lee la quinta fila de una tabla de dos códigos **sin** `TRY` y ejecuta. Mira el *dump*: Eclipse muestra la excepción, el programa y la línea. Después rodea la lectura con el `TRY ... CATCH` adecuado.
+    - **Qué hace:** lee la quinta fila de una tabla de dos códigos **sin** `TRY` y ejecuta. Mira el *dump* (la pestaña **ABAP Feeds** del panel inferior, o el mensaje de la consola): muestra la excepción, el programa y la línea. Después rodea la lectura con el `TRY ... CATCH` adecuado.
     - **Comprueba:** ya no hay *dump*, y la consola muestra tu mensaje del `CATCH`.
-6. **Investiga.** ¿Qué pasa si llamas a `validar_iva( 150 )` desde `main` sin `TRY` ni `RAISING`? Activa y mira la pestaña *Problems*: ¿es un error o un aviso? Ejecuta: ¿qué ocurre? Anota la diferencia con una excepción de `CX_DYNAMIC_CHECK` como `cx_sy_zerodivide`.
+6. **Investiga.** ¿Qué pasa si llamas a `validar_iva( 150 )` desde `main` sin `TRY` ni `RAISING`? Activa y mira la pestaña **Problemas**: ¿es un error o un aviso? Ejecuta: ¿qué ocurre? Anota la diferencia con una excepción de `CX_DYNAMIC_CHECK` como `cx_sy_zerodivide`.
 
 ## Comprueba tu solución automáticamente (opcional)
 

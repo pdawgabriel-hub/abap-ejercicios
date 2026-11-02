@@ -162,7 +162,7 @@ erp-obras-reformas-sap/
 ## Ejercicios
 
 1. **El esqueleto.**
-    - **Dónde:** `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_SIMULACION`, descripción `Simulacion de una obra en memoria`. Ejecutable.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_SIMULACION`, descripción `Simulacion de una obra en memoria`. Ejecutable.
     - **Qué contiene:** la misma estructura que la del taller, con comentarios: atributos para el estado de la obra (presupuestos `tt_presupuestos`, líneas de parte `tt_parte_lineas`, ingresos, coste de proveedores y de especialistas) y cuatro métodos privados: `presupuestar`, `trabajar`, `cobrar` (recibe `iv_importe`) e `imprimir_ficha` (recibe `iv_titulo`). Su `main` recorre los pasos 3, 6, 7 y 8 de §12.7, imprimiendo la ficha después de cada uno. Deja los métodos vacíos.
     - **Comprueba:** activa y ejecuta: salen los cuatro títulos, todavía sin datos.
 
@@ -201,7 +201,7 @@ erp-obras-reformas-sap/
 No hay test automático de la simulación, porque es una salida por consola. Para comprobarla:
 
 - Las fichas de los pasos 7 y 8 deben coincidir con [1_8_ltcl_escenario.abap](materiales/tests/1_8_ltcl_escenario.abap).
-- Clic derecho en `ZGOR` → **Run As → ABAP Unit Test**: todos los tests del bloque en verde. Son 34 en `ZCL_GOR_REGLAS`, 3 en `ZCL_GOR_PRESUPUESTO` y 3 en `ZCL_GOR_PARTE_TRABAJO`: **40 en total**.
+- Ejecuta los tests de todo `ZGOR`: clic derecho en el paquete, en el explorador, y la opción de ABAP Unit (o la vista **Testing** de VS Code; ver [F](./F_vscode.md#tests)): todos los tests del bloque en verde. Son 34 en `ZCL_GOR_REGLAS`, 3 en `ZCL_GOR_PRESUPUESTO` y 3 en `ZCL_GOR_PARTE_TRABAJO`: **40 en total**.
 - Del diseño, lo importante es que cada campo calculado tenga claro su caso. En [2.1](./2_1_tablas.md) verás la versión definitiva: anota las diferencias con la tuya y por qué.
 
 ---

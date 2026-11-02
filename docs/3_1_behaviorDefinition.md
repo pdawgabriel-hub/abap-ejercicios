@@ -23,7 +23,7 @@ En un formulario de Odoo, los cambios no se guardan hasta pulsar **Guardar**, y 
 - Si se cierra el navegador, el borrador sigue ahí (*Resume*).
 - Dos usuarios no pueden editar a la vez el mismo registro: el primero que lo abre lo bloquea.
 
-Todos los BO, del taller y del ERP, serán *draft*. Cada tabla tendrá su gemela con `_d` al final. No hay que escribirlas: las genera Eclipse.
+Todos los BO, del taller y del ERP, serán *draft*. Cada tabla tendrá su gemela con `_d` al final. No hay que escribirlas: las genera el editor.
 
 ## La BDEF del titular
 
@@ -178,9 +178,9 @@ etag master LocalLastChangedAt
 
 ## Crear una BDEF
 
-1. Clic derecho en la vista raíz → **New Behavior Definition**. En tu ERP, paquete `ZGOR_BUS`; tipo **Managed**. Eclipse genera un esqueleto con las entidades del BO.
+1. **Ctrl+Shift+Alt+N** → *Behavior Definition* sobre la vista raíz (también con clic derecho sobre la vista en el explorador). En tu ERP, paquete `ZGOR_BUS`; tipo **Managed**. Se genera un esqueleto con las entidades del BO.
 2. Sustituye el contenido por el tuyo y guarda (todavía no actives).
-3. Pon el cursor sobre el nombre de la tabla de borradores (`ztl_tit_d` en el taller) y pulsa **Ctrl+1** → *Create draft table*. Eclipse la crea con todos los campos de la vista más un bloque de administración del borrador (`"%admin"`). Activa la tabla.
+3. Pon el cursor sobre el nombre de la tabla de borradores (`ztl_tit_d` en el taller) y pulsa **Ctrl+.** → *Create draft table*. El editor la crea con todos los campos de la vista más un bloque de administración del borrador (`"%admin"`). Activa la tabla.
 4. La BDEF seguirá marcando un error: falta su clase de implementación. Se crea en [3.2](./3_2_implementacion.md).
 
 > **Código completo del taller:** [BDEF del titular](./materiales/taller/src/bus/zi_tltitular.bdef.asbdef), [del presupuesto](./materiales/taller/src/bus/zi_tlpresupuesto.bdef.asbdef) y las tablas de borradores `_d` de [tablas/](./materiales/taller/tablas/). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
@@ -192,7 +192,7 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
 ## Ejercicios
 
 1. **El cliente.**
-    - **Dónde:** en `ZGOR_CDS`, clic derecho en `ZI_GorCliente` → **New Behavior Definition**. Deja el nombre que propone (`ZI_GORCLIENTE`), elige *Implementation Type* **Managed** y el paquete `ZGOR_BUS`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Behavior Definition*, con vista raíz `ZI_GorCliente`. Deja el nombre que propone (`ZI_GORCLIENTE`), elige *Implementation Type* **Managed** y el paquete `ZGOR_BUS`.
     - **Qué contiene:** el mismo patrón que la del titular: `managed implementation in class zbp_i_gorcliente unique;`, `strict ( 2 );`, `with draft;` y `define behavior for ZI_GorCliente alias Cliente`, con `persistent table zgor_cli`, `draft table zgor_cli_d`, `lock master`, `total etag LastChangedAt`, `authorization master ( global )` y `etag master LocalLastChangedAt`. Dentro de las llaves:
         - `create; update; delete;`;
         - `field ( numbering : managed, readonly ) ClienteUUID;`;
@@ -202,8 +202,8 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
         - el `mapping for zgor_cli corresponding` con cada campo de la vista frente a su columna.
 
         Comenta cada bloque con `//`, como en el taller.
-    - **La tabla de borradores:** pon el cursor sobre `zgor_cli_d` y pulsa **Ctrl+1** → *Create draft table*. ADT la genera con todas las columnas de la vista más las de control del borrador. Muévela a `ZGOR_DDIC` si te la propone en otro paquete y actívala.
-    - **Comprueba:** guarda (**Ctrl+S**) **sin activar**. En *Problems* solo debe quedar un error: que la clase `zbp_i_gorcliente` no existe. La crearás en 3.2.
+    - **La tabla de borradores:** pon el cursor sobre `zgor_cli_d` y pulsa **Ctrl+.** → *Create draft table*. ADT la genera con todas las columnas de la vista más las de control del borrador. Muévela a `ZGOR_DDIC` si te la propone en otro paquete y actívala.
+    - **Comprueba:** guarda (**Ctrl+S**) **sin activar**. En **Problemas** solo debe quedar un error: que la clase `zbp_i_gorcliente` no existe. La crearás en 3.2.
 
 2. **El presupuesto.**
     - **Dónde:** igual que el anterior, sobre `ZI_GorPresupuesto`. Al ser raíz con composiciones, ADT añade a la BDEF un `define behavior for` por cada hijo.
@@ -212,10 +212,10 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
         - tres hijos con `lock dependent by _Presupuesto` y `authorization dependent by _Presupuesto`: `ZI_GorPresuLin` (alias `Linea`), `ZI_GorPresuProv` (`PresuProv`) y `ZI_GorPresuEsp` (`PresuEsp`), cada uno con `update; delete;` y `association _Presupuesto { with draft; }`;
         - solo lectura en la raíz: `PresupuestoId`, `Anio`, `BaseImponible`, `CuotaIva` y `Total`; en la línea, `PresupuestoUUID` y `TotalLinea`;
         - obligatorios en la raíz: `ClienteUUID` e `Iva`.
-    - **Las tablas de borradores:** cuatro, `zgor_presu_d`, `zgor_presu_lin_d`, `zgor_presu_pv_d` y `zgor_presu_es_d`, cada una con **Ctrl+1** y en `ZGOR_DDIC` (el nombre de una tabla no puede pasar de 16 caracteres: [B. Nombres](./B_nombres.md)).
+    - **Las tablas de borradores:** cuatro, `zgor_presu_d`, `zgor_presu_lin_d`, `zgor_presu_pv_d` y `zgor_presu_es_d`, cada una con **Ctrl+.** y en `ZGOR_DDIC` (el nombre de una tabla no puede pasar de 16 caracteres: [B. Nombres](./B_nombres.md)).
     - **Comprueba:** guarda sin activar; la única queja debe ser la clase.
 
-3. **Las demás.** Crea las otras ocho BDEF igual que las anteriores (clic derecho en la vista raíz → **New Behavior Definition**, tipo *Managed*), cada una con su tabla de borradores y su clase `zbp_i_<vista>`:
+3. **Las demás.** Crea las otras ocho BDEF igual que las anteriores (**Ctrl+Shift+Alt+N** → *Behavior Definition* sobre la vista raíz, tipo *Managed*), cada una con su tabla de borradores y su clase `zbp_i_<vista>`:
 
     | BO (alias de la raíz) | Hijos (alias) | Solo lectura, además de UUID y administración | Obligatorios (§11.4) |
     |---|---|---|---|
@@ -232,10 +232,10 @@ Las BDEF van en `ZGOR_BUS`; las tablas de borradores, en `ZGOR_DDIC`. Al termina
     - El **gasto** nace con la obra y no se borra suelto (§3.7). La raíz no permite crearlo desde fuera: `association _Gasto { internal create; with draft; }` (`internal` significa «solo desde la lógica del propio BO»). La entidad `Gasto` tiene `update;` pero **no** `delete;`. Se borrará con su obra, por la composición.
     - La obra no tiene obligatorio el cliente (§3.5: puede no tenerlo).
 
-4. **Revisa los errores.** Las BDEF no activarán hasta tener su clase (3.2). Abre la pestaña *Problems* y comprueba que la única queja de cada una es la clase que falta: cualquier otro error (un campo mal escrito en el `mapping`, un alias repetido, una tabla de borradores sin activar) corrígelo ahora.
+4. **Revisa los errores.** Las BDEF no activarán hasta tener su clase (3.2). Abre la pestaña **Problemas** y comprueba que la única queja de cada una es la clase que falta: cualquier otro error (un campo mal escrito en el `mapping`, un alias repetido, una tabla de borradores sin activar) corrígelo ahora.
 
-    > Si te aparece el error «*Field X does not exist in draft table*», la tabla de borradores se creó antes de añadir ese campo a la vista. Bórrala y vuelve a crearla con **Ctrl+1**.
-5. **Investiga.** En tu BDEF del cliente, quita la línea `field ( mandatory ) ...` y mira qué avisos aparecen. Vuelve a ponerla. Después busca con **F1** sobre `etag master` qué ocurre si dos usuarios editan el mismo cliente sin draft, y anota por qué el draft lo evita.
+    > Si te aparece el error «*Field X does not exist in draft table*», la tabla de borradores se creó antes de añadir ese campo a la vista. Bórrala y vuelve a crearla con **Ctrl+.**.
+5. **Investiga.** En tu BDEF del cliente, quita la línea `field ( mandatory ) ...` y mira qué avisos aparecen. Vuelve a ponerla. Después busca en la [ayuda de ABAP](./F_vscode.md#errores-y-ayuda) `etag master` qué ocurre si dos usuarios editan el mismo cliente sin draft, y anota por qué el draft lo evita.
 
 ---
 

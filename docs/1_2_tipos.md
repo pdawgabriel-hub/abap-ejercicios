@@ -194,7 +194,7 @@ ZGOR
 ## Ejercicios
 
 1. **La interfaz de tipos.**
-    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → ABAP Interface**. Nombre `ZIF_GOR_TIPOS`, descripción `Tipos comunes del ERP`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Interface*, paquete `ZGOR_BUS`. Nombre `ZIF_GOR_TIPOS`, descripción `Tipos comunes del ERP`.
     - **Qué contiene** (con el mismo estilo que `ZIF_TL_TIPOS`, y un comentario por grupo):
 
     | Elemento | Definición |
@@ -208,7 +208,7 @@ ZGOR
     - **Comprueba:** la interfaz activa sin errores (**Ctrl+F3**).
 
 2. **Las fórmulas del presupuesto.**
-    - **Dónde:** clic derecho en `ZGOR_BUS` → **New → ABAP Class**. Nombre `ZCL_GOR_REGLAS`, descripción `Reglas de negocio del ERP`. Es una clase normal, **no** ejecutable.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_BUS`. Nombre `ZCL_GOR_REGLAS`, descripción `Reglas de negocio del ERP`. Es una clase normal, **no** ejecutable.
     - **Qué contiene:** estos cuatro métodos estáticos (`CLASS-METHODS`), declarados en la `PUBLIC SECTION` con un comentario encima de cada uno que diga su regla, como en `ZCL_TL_CALCULOS`. El IVA llega como porcentaje: 21, no 0.21.
 
     | Método | Parámetros de entrada | Devuelve | Regla (§11.2) |
@@ -233,9 +233,9 @@ ZGOR
     - **Comprueba:** con el test de esta unidad (abajo): 7 en verde.
 
 4. **El presupuesto del escenario.**
-    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_TIPOS_DEMO`, descripción `Pruebas de tipos y formulas`. Es ejecutable, como `ZCL_GOR_INICIO`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_TIPOS_DEMO`, descripción `Pruebas de tipos y formulas`. Es ejecutable, como `ZCL_GOR_INICIO`.
     - **Qué hace:** en `main`, declara una estructura `zif_gor_tipos=>ty_presu_linea` con 10 uds a 100 € y, con `ZCL_GOR_REGLAS`, calcula su total, la cuota con IVA 21 y el total del presupuesto. Escribe cada valor con una plantilla y `DECIMALS = 2`.
-    - **Comprueba:** ejecuta con **F9**. Es el paso 2 de §12.7; deben salir estas tres líneas:
+    - **Comprueba:** ejecuta con **F5**. Es el paso 2 de §12.7; deben salir estas tres líneas:
 
     ```text
     Base: 1000.00
@@ -261,7 +261,7 @@ ZGOR
 
 ## Comprueba tu solución automáticamente (opcional)
 
-Abre `ZCL_GOR_REGLAS`, ve a la pestaña inferior **Test Classes** y pega el contenido de [1_2_ltcl_presupuesto.abap](materiales/tests/1_2_ltcl_presupuesto.abap). Ejecútalo con **Ctrl+Shift+F10** (*Run As → ABAP Unit Test*). Si tu solución es correcta, salen **7 tests en verde**. Si alguno sale en rojo, el mensaje dice qué valor esperaba y cuál ha salido. En [1.8](./1_8_abapUnit.md) aprenderás a escribirlos tú.
+Abre `ZCL_GOR_REGLAS`, ve a la pestaña inferior **Test Classes** y pega el contenido de [1_2_ltcl_presupuesto.abap](materiales/tests/1_2_ltcl_presupuesto.abap). Ejecútalo con **Ctrl+Shift+F10**. Si tu solución es correcta, salen **7 tests en verde**. Si alguno sale en rojo, el mensaje dice qué valor esperaba y cuál ha salido. En [1.8](./1_8_abapUnit.md) aprenderás a escribirlos tú.
 
 Cada unidad del bloque añade otra clase de test **a continuación** de las anteriores, en la misma pestaña: no borres las de unidades previas.
 

@@ -54,15 +54,15 @@ define view entity ZI_TlTitular
 
 ## Crear una vista
 
-1. Clic derecho en `ZGOR_CDS` → **New → Other ABAP Repository Object** → *Data Definition*.
+1. **Ctrl+Shift+Alt+N** → *Data Definition*, paquete `ZGOR_CDS`.
 2. Nombre de la vista, descripción y, en *Referenced Object*, la tabla de debajo.
-3. El asistente ofrece plantillas: elige **Define View Entity**. Con la tabla de referencia, Eclipse ya rellena las columnas. Ponles los alias, guarda y activa.
+3. El asistente ofrece plantillas: elige **Define View Entity**. Con la tabla de referencia, el asistente ya rellena las columnas. Ponles los alias, guarda y activa.
 
 ## Data Preview
 
-Con la vista abierta, **F8** abre el *Data Preview*: los datos de la vista tal como los vería RAP. Después de cada vista nueva, ábrelo. Debe mostrar las mismas filas que la tabla, con los nombres de columna nuevos.
+El *Data Preview* muestra los datos de la vista tal como los vería RAP. En VS Code se hace con un **SQL Notebook** sobre la vista ([F](./F_vscode.md#ver-datos-data-preview)); en Eclipse, con **F8**. Después de cada vista nueva, consúltala: debe mostrar las mismas filas que la tabla, con los nombres de columna nuevos.
 
-El Data Preview permite también filtrar, ordenar y, cuando haya associations (2.3), **navegar** de un registro a sus relacionados.
+En la consulta puedes también filtrar (`WHERE`), ordenar (`ORDER BY`) y, cuando haya associations (2.3), leer los campos de los registros relacionados.
 
 > **Código completo del taller:** [ZI_TlTitular](./materiales/taller/src/cds/zi_tltitular.ddls.asddls) y las demás interface views en [src/cds/](./materiales/taller/src/cds/). Todos los objetos, en [materiales/taller](./materiales/taller/README.md).
 
@@ -83,7 +83,7 @@ ZGOR_CDS
 ## Ejercicios
 
 1. **Clientes.**
-    - **Dónde:** clic derecho en `ZGOR_CDS` → **New → Other ABAP Repository Object** → *Data Definition*. Nombre `ZI_GorCliente`, descripción `Clientes`, plantilla *Define View Entity*.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Data Definition*, paquete `ZGOR_CDS`. Nombre `ZI_GorCliente`, descripción `Clientes`, plantilla *Define View Entity*.
     - **Qué contiene:** una vista sobre `zgor_cli` con estos alias: `ClienteUUID` (clave), `ClienteId`, `Nombre`, `Apellidos`, `Nif`, `Direccion`, `CodPostal`, `Telf` y los cinco campos de administración con sus `@Semantics`, igual que en el taller.
     - **Comprueba:** en `ZCL_GOR_SQL_DEMO`, lee de la **vista** (`SELECT FROM zi_gorcliente FIELDS ClienteId, Nombre ...`) y escribe el resultado: salen tus tres clientes de 1.5, con los nombres de la vista. ABAP SQL lee igual una tabla que una vista CDS.
 
@@ -114,10 +114,10 @@ ZGOR_CDS
     | `ZI_GorParteProv` | `zgor_pp` | `ParteUUID`, `ObraUUID`, `ProveedorUUID`, `EstadoPago` |
 
     El resto de columnas se traduce sin sorpresas: `fecha` → `Fecha`, `descripcion` → `Descripcion`, `importe` → `Importe`… Todas llevan los cinco campos de administración con sus `@Semantics`.
-    - **Comprueba:** activa todas a la vez (clic derecho en `ZGOR_CDS` → *Activate*) sin errores.
+    - **Comprueba:** activa todas a la vez (**Ctrl+Shift+F3**) sin errores.
 
-4. **Una vista con condición.** Crea una vista auxiliar de prueba, `ZI_GorClienteMadrid`, sobre `zgor_cli`, con `where cod_postal like '28%'` (se escribe después de la lista de campos, tras la llave de cierre). Léela desde `ZCL_GOR_SQL_DEMO`: deben salir los clientes de Madrid de 1.5. Después **bórrala** (clic derecho → *Delete*): era solo para practicar y no forma parte del ERP.
-5. **Investiga.** Abre `ZI_GorCliente`, pon el cursor sobre `zgor_cli` y pulsa **F2**. Después pulsa **F3**. ¿Qué hace cada tecla? Anótalo: las usarás constantemente para navegar entre vistas, tablas y clases.
+4. **Una vista con condición.** Crea una vista auxiliar de prueba, `ZI_GorClienteMadrid`, sobre `zgor_cli`, con `where cod_postal like '28%'` (se escribe después de la lista de campos, tras la llave de cierre). Léela desde `ZCL_GOR_SQL_DEMO`: deben salir los clientes de Madrid de 1.5. Después **bórrala** (clic derecho sobre ella en el explorador → *Delete*): era solo para practicar y no forma parte del ERP.
+5. **Investiga.** Abre `ZI_GorCliente` y pasa el ratón por encima de `zgor_cli`. Después pon el cursor sobre ese nombre y pulsa **F12**. ¿Qué hace cada cosa? Anótalo: las usarás constantemente para navegar entre vistas, tablas y clases.
 
 ---
 

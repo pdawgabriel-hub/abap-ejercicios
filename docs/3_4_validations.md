@@ -37,7 +37,7 @@ En la clase de comportamiento, cada validation es un método con esta firma, den
       IMPORTING keys FOR Presupuesto~validarImpuesto.
 ```
 
-Puedes escribirla a mano o generarla con **Ctrl+1** sobre el nombre en la BDEF (*Add missing method*).
+Puedes escribirla a mano o generarla con **Ctrl+.** sobre el nombre en la BDEF (*Add missing method*).
 
 ## Implementación: de la excepción al mensaje
 
@@ -227,7 +227,7 @@ En todos los ejercicios, el orden es el mismo:
     En la `Prepare` de la raíz, las validations de una entidad hija llevan delante su alias: `validation Falta~validarFechas;`.
 
 4. **El paso 9 de §12.7, con código.**
-    - **Dónde:** una clase de consola nueva, `ZCL_GOR_PASO9`, en `ZGOR_TEST` (*New → ABAP Class*, descripción `Paso 9 del escenario: casos rechazados`).
+    - **Dónde:** una clase de consola nueva, `ZCL_GOR_PASO9`, en `ZGOR_TEST` (**Ctrl+Shift+Alt+N** → *Class*, descripción `Paso 9 del escenario: casos rechazados`).
     - **Qué hace:** un intento de guardar por cada caso, cada uno con su `MODIFY ENTITIES` y su `COMMIT ENTITIES RESPONSE`: una línea de parte de 25 h, una de −1 h, un parte de proveedor de 0 €, un presupuesto con IVA 150 y una falta con fin anterior al inicio. Para cada uno escribe una línea `<caso>: <mensaje>`.
     - **Comprueba:** salen **5 líneas**, todas con mensaje (ninguna «se ha guardado»), y los textos son los de tus métodos `validar_*` de 1.7.
 

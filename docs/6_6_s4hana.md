@@ -25,7 +25,7 @@ SAP pide a sus clientes mantener el **núcleo limpio** (*clean core*): no modifi
 | Forma | Quién | Qué permite | Dónde |
 |---|---|---|---|
 | **Extensibilidad *key user*** | Un consultor o usuario avanzado, sin programar | Campos propios en objetos estándar, lógica sencilla, formularios | Apps de Fiori del propio S/4HANA |
-| **Extensibilidad de desarrollador** (*on-stack*) | Un programador ABAP Cloud | Objetos propios (como tu ERP) dentro del S/4HANA, usando solo objetos **liberados** de SAP | Eclipse, en el mismo sistema |
+| **Extensibilidad de desarrollador** (*on-stack*) | Un programador ABAP Cloud | Objetos propios (como tu ERP) dentro del S/4HANA, usando solo objetos **liberados** de SAP | VS Code o Eclipse con ADT, en el mismo sistema |
 | **Extensión *side-by-side*** | Un programador | Una aplicación aparte, en BTP, que habla con S/4HANA por API | SAP BTP (como tu trial) |
 
 Tu ERP, tal como está, es una extensión *side-by-side*: vive en BTP. La misma técnica (ABAP Cloud, RAP, solo objetos liberados) sirve para la extensibilidad de desarrollador dentro de S/4HANA. Por eso lo que has aprendido se aplica directamente.
@@ -110,7 +110,7 @@ Una cuenta en `api.sap.com` con la clave de la API de *Business Partner*. La cla
 2. **Si fuera una extensión.** Explica en media página cómo cambiaría tu modelo de datos si el ERP se construyera **dentro** de un S/4HANA: qué tablas desaparecerían, a qué apuntarían las obras y los partes, y qué se ganaría y se perdería.
 3. **Leer el *sandbox*.** Prueba en el navegador o con `curl` la petición de los 5 primeros *Business Partner* con su dirección. Anota qué campos traen el nombre, la calle, el código postal y la ciudad, y dónde estaría el NIF (pista: `to_BusinessPartnerTax`).
 4. **Consultar desde ABAP.**
-    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_CONSULTAR_BP`, descripción `Consulta de Business Partner del sandbox`, con `if_oo_adt_classrun`. La clave de API, en una constante privada que **no** subas a GitHub (quítala antes del *push* o pon la clase fuera de `ZGOR`).
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_CONSULTAR_BP`, descripción `Consulta de Business Partner del sandbox`, con `if_oo_adt_classrun`. La clave de API, en una constante privada que **no** subas a GitHub (quítala antes del *push* o pon la clase fuera de `ZGOR`).
     - **Qué hace:** como la consulta del taller, lee 5 *Business Partner* de tipo organización (`$filter=BusinessPartnerCategory eq '2'`) con su dirección y su NIF (con `$expand=to_BusinessPartnerAddress,to_BusinessPartnerTax`), y escribe en la consola cada uno junto al campo de tu cliente en el que encajaría cada dato: nombre, dirección, código postal, NIF.
     - **Comprueba:** la consola muestra **5** bloques, cada uno con sus cuatro líneas `Nombre -> zgor_cli-nombre`… Anota en `diseno.md` qué datos de tu cliente no tienen equivalente en el *Business Partner* y cuáles del *Business Partner* no tienes tú.
 5. **Investiga.** En la documentación de la API de *Business Partner*, ¿qué roles (`to_BusinessPartnerRole`) tendría un cliente y cuáles un proveedor? ¿Cómo encajarían tus especialistas?

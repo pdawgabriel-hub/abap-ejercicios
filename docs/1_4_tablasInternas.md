@@ -225,7 +225,7 @@ Seguimos con `ZIF_GOR_TIPOS`, `ZCL_GOR_REGLAS` y `ZCL_GOR_TIPOS_DEMO` de [1.2](.
     - **Dónde:** el `main` de `ZCL_GOR_TIPOS_DEMO`.
     - **Qué hace:** monta una tabla `tt_presupuestos` con tres presupuestos de la misma obra: uno aprobado de 1210 €, otro no aprobado de 500 € y otro aprobado de 363 €. Escribe `total_obra`. Después, cambia el estado del segundo a aprobado con un *field symbol* y vuelve a escribirlo.
     - **Comprueba:** deben salir **1573.00** y después **2073.00**. Es la regla §11.5 (punto 1): aprobar un presupuesto cambia el precio de la obra.
-7. **Investiga.** Reescribe `horas_por_trabajador` con `LOOP AT ... GROUP BY` y `LOOP AT GROUP` (búscalos con **F1**). ¿Qué versión te parece más clara? Deja la que prefieras y explica en un comentario por qué.
+7. **Investiga.** Reescribe `horas_por_trabajador` con `LOOP AT ... GROUP BY` y `LOOP AT GROUP` (busca su documentación pasando el ratón por encima o en la [ayuda de ABAP](./F_vscode.md#errores-y-ayuda)). ¿Qué versión te parece más clara? Deja la que prefieras y explica en un comentario por qué.
 
 ## Comprueba tu solución automáticamente (opcional)
 

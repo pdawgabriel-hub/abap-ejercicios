@@ -78,7 +78,7 @@ ENDCLASS.
 - `clear_doubles( )` en `setup` deja las copias vacías antes de cada test.
 - `cl_system_uuid=>create_uuid_x16_static( )` puede lanzar `cx_uuid_error`. En los tests se declara `RAISING cx_static_check` en el método o se captura, como en 3.3.
 
-> **Poco verificado.** La forma exacta de doblar vistas apiladas y de insertar datos en sus tablas de debajo (`i_select_base_dependencies`, `insert_test_data` con o sin `i_named_dependency`) puede variar según la versión. Si tu sistema da un error al crear el entorno, mira la documentación de `CL_CDS_TEST_ENVIRONMENT` con **F2**. Si los tests de comportamiento de 3.3 a 3.5 no ven los datos de los dobles al leer otro BO, puede que tu versión lea a través de las vistas CDS: en ese caso, añade también un entorno CDS para esas vistas.
+> **Poco verificado.** La forma exacta de doblar vistas apiladas y de insertar datos en sus tablas de debajo (`i_select_base_dependencies`, `insert_test_data` con o sin `i_named_dependency`) puede variar según la versión. Si tu sistema da un error al crear el entorno, mira la documentación de `CL_CDS_TEST_ENVIRONMENT` pasando el ratón por encima. Si los tests de comportamiento de 3.3 a 3.5 no ven los datos de los dobles al leer otro BO, puede que tu versión lea a través de las vistas CDS: en ese caso, añade también un entorno CDS para esas vistas.
 
 ## El diseño
 
@@ -108,7 +108,7 @@ ZGOR
 ## Ejercicios
 
 1. **La clase.**
-    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_ESCENARIO`, descripción `Escenario de pruebas del informe, seccion 12.7`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_ESCENARIO`, descripción `Escenario de pruebas del informe, seccion 12.7`.
     - **Qué contiene:** nada en la parte global: es solo el sitio donde viven los tests. Todo irá en su pestaña **Test Classes**.
     - **Comprueba:** activa sin errores.
 2. **El comportamiento.**
@@ -131,8 +131,8 @@ ZGOR
     - **Qué contiene:** un entorno CDS sobre `ZI_GorObraFinanzas` como el del taller, y un método por paso: `paso_06_gastos` (gastos 670, sin ingresos, `pendiente`), `paso_07_primer_cobro` y `paso_08_obra_cobrada`, con todos los valores de las filas 7 y 8 de §12.7. Los datos (obra, presupuesto aprobado, líneas de parte, partes externos e ingresos) se insertan en las tablas dobladas.
     - **Comprueba:** **Ctrl+Shift+F10**: **9 tests en verde** entre las dos clases.
 4. **Que falle por el motivo correcto.** Cambia temporalmente en tu `ZI_GorObraFinanzas` el `BeneficioReal` a `total − gastos` (el error de Odoo que cuenta §11.5, punto 2). Ejecuta: debe fallar `paso_07_primer_cobro`, y el mensaje debe decir que el beneficio es 540 en vez de −170. Deshazlo.
-5. **Todo el proyecto.** Clic derecho en `ZGOR` → **Run As → ABAP Unit Test**. Anota cuántos tests tienes en total y cuánto tardan.
-6. **Investiga.** Ejecuta los tests con cobertura (clic derecho en `ZGOR` → **Coverage As → ABAP Unit Test**). ¿Qué métodos de tus clases de comportamiento no recorre ningún test? Elige uno y escribe el test que falta.
+5. **Todo el proyecto.** Ejecuta los tests de todo `ZGOR`: clic derecho en el paquete, en el explorador, y la opción de ABAP Unit (o la vista **Testing** de VS Code; ver [F](./F_vscode.md#tests)). Anota cuántos tests tienes en total y cuánto tardan.
+6. **Investiga.** Ejecuta los tests con cobertura ([F](./F_vscode.md#tests); si tu VS Code no la tiene, en Eclipse: clic derecho en `ZGOR` → *Coverage As → ABAP Unit Test*). ¿Qué métodos de tus clases de comportamiento no recorre ningún test? Elige uno y escribe el test que falta.
 
 ## Comprueba tu solución automáticamente
 

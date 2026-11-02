@@ -165,14 +165,14 @@ Puedes ejecutar `ZCL_GOR_DATOS_DEMO` tantas veces como quieras: lo primero que h
 ## Ejercicios
 
 1. **El esqueleto.**
-    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_DATOS_DEMO`, descripción `Datos de demo del ERP`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_DATOS_DEMO`, descripción `Datos de demo del ERP`.
     - **Qué contiene:** la misma estructura que la del taller:
         - el tipo `ty_uuid` (`ref TYPE string`, `uuid TYPE sysuuid_x16`) y el atributo `mt_uuids`, tabla *hashed* con clave única `ref`;
         - `registrar( iv_ref ) → rv_uuid`, que crea el UUID y lo apunta, y `uuid_de( iv_ref ) → rv_uuid`, que lo busca;
         - los métodos sin parámetros `vaciar`, `crear_maestros`, `crear_escenario`, `crear_otras_obras` y `sellar`, de momento vacíos.
 
         El `main` los llama en ese orden y termina con `out->write( |Datos del ERP creados: { lines( mt_uuids ) } registros| )`. Comenta cada parte como en el taller.
-    - **Comprueba:** activa y ejecuta (**F9**): debe escribir `Datos del ERP creados: 0 registros`.
+    - **Comprueba:** activa y ejecuta (**F5**): debe escribir `Datos del ERP creados: 0 registros`.
 
 2. **Vaciar.**
     - **Dónde:** el método `vaciar`.
@@ -225,9 +225,9 @@ Puedes ejecutar `ZCL_GOR_DATOS_DEMO` tantas veces como quieras: lo primero que h
     - **Comprueba:** `OBR0001` con Juan, 1210, 670 y `verde`; los trabajadores `TRB0001` y `TRB0002`; y `TRB0001` con **16 h y 320 €** (8 h en `OBR0001` y 8 h en `OBR0003`).
 
 8. **Comprueba la ficha.**
-    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_COMPROBAR_CDS`, con el código de [2_5_comprobar_cds.abap](materiales/tests/2_5_comprobar_cds.abap).
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_COMPROBAR_CDS`, con el código de [2_5_comprobar_cds.abap](materiales/tests/2_5_comprobar_cds.abap).
     - **Qué hace:** lee cada obra de `ZI_GorObraFinanzas`, la compara con la tabla de la sección «El diseño» y escribe `OK` o el campo que no cuadra.
-    - **Comprueba:** ejecútala con **F9**. Si algo falla, el error puede estar en los datos (ejercicios 3 a 5) o en las vistas (2.4): lee esa obra en `ZI_GorObraImportes` para ver qué suma no cuadra.
+    - **Comprueba:** ejecútala con **F5**. Si algo falla, el error puede estar en los datos (ejercicios 3 a 5) o en las vistas (2.4): lee esa obra en `ZI_GorObraImportes` para ver qué suma no cuadra.
 
 9. **Investiga.** Cambia en `ZCL_GOR_DATOS_DEMO` el estado del presupuesto de 800 € de `OBR0003` a `aprobado` y vuelve a ejecutar las dos clases. ¿Qué campos fallan ahora? Calcula a mano los valores nuevos, compruébalos con la lectura del ejercicio 7 y deja el estado como estaba.
 

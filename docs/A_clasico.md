@@ -9,7 +9,7 @@ En ABAP Cloud no se usa, pero al ver código antiguo en un sistema real conviene
 | `WRITE` | `out->write( )` |
 | Dynpros | Fiori Elements |
 | ALV | Apps Fiori |
-| SE80 | Eclipse con ADT |
+| SE80 | VS Code o Eclipse con ADT |
 | Funciones (`CALL FUNCTION`) | Clases y APIs liberadas |
 | `SELECT ... INTO TABLE @DATA(...)` | Igual, es ABAP SQL |
 

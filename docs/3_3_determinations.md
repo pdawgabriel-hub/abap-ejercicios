@@ -261,11 +261,11 @@ La orden del taller debe nacer con su hoja de costes. Lo hace una determination 
 
 ## Preparación del entorno de trabajo
 
-Se amplían tus BDEF de 3.1 y tus clases de 3.2. Tras añadir cada determination a la BDEF, crea su método con **Ctrl+1** → *Add missing method*. Activa la BDEF y la clase juntas.
+Se amplían tus BDEF de 3.1 y tus clases de 3.2. Tras añadir cada determination a la BDEF, crea su método con **Ctrl+.** → *Add missing method*. Activa la BDEF y la clase juntas.
 
 ## Ejercicios
 
-Para crear los métodos no hace falta escribir la firma a mano: después de declarar una pieza en la BDEF, pon el cursor sobre su nombre y pulsa **Ctrl+1** → *Add missing method*. Eclipse la añade a la clase local de esa entidad con la firma correcta. Las firmas son de dos tipos:
+Para crear los métodos no hace falta escribir la firma a mano: después de declarar una pieza en la BDEF, pon el cursor sobre su nombre y pulsa **Ctrl+.** → *Add missing method*. El editor la añade a la clase local de esa entidad con la firma correcta. Las firmas son de dos tipos:
 
 ```abap
 " Una determination: se ejecuta sola cuando se cumple su disparador
@@ -292,7 +292,7 @@ Las de `on save` son iguales, pero con `FOR DETERMINE ON SAVE`.
         | `totalesAlGuardar` | `Presupuesto` | `determination totalesAlGuardar on save { create; update; }`, y en `Prepare` con `determination ( always ) totalesAlGuardar;` | Ejecuta `recalcularTotales` |
         | `calcularLinea` | `Linea` | `determination calcularLinea on modify { create; field Uds, Precio; }` | `TotalLinea` con tu `total_linea`, y ejecuta `recalcularTotales` en su presupuesto |
 
-    - **Firmas:** con **Ctrl+1** sobre cada nombre, como se explica arriba.
+    - **Firmas:** con **Ctrl+.** sobre cada nombre, como se explica arriba.
     - **Qué hace cada método:** los tres pasos del taller: leer con `READ ENTITIES ... IN LOCAL MODE`, calcular con tu `zcl_gor_reglas` y escribir con `MODIFY ENTITIES ... IN LOCAL MODE`. `copiarCliente` lee el cliente de **otro** BO (`zi_gorcliente`), sin `IN LOCAL MODE`, como `copiarTitular`.
     - **Comprueba:** activa la BDEF y la clase sin errores. El comportamiento se prueba en el ejercicio 2.
 
@@ -307,7 +307,7 @@ Las de `on save` son iguales, pero con `FOR DETERMINE ON SAVE`.
     - **Qué hace:** crea la ficha de gastos de la obra si no la tiene (§11.5, punto 5), con `MODIFY ENTITIES ... IN LOCAL MODE ENTITY Obra CREATE BY \_Gasto`, como `crearHojaCostes` del taller. Antes de crearla, lee con `READ ENTITIES ... BY \_Gasto` si ya existe.
     - **Comprueba:** en `ZCL_GOR_EML_DEMO`, crea una obra con EML y guarda. `SELECT COUNT( * ) FROM zi_gorgasto WHERE ObraUUID = ...` debe dar **1**. Modifica la descripción de la misma obra y guarda: sigue dando 1, porque el disparador es solo `create`.
 
-4. **El resto.** Añade estas determinations, cada una en la BDEF y la clase local de su entidad, con **Ctrl+1** para la firma:
+4. **El resto.** Añade estas determinations, cada una en la BDEF y la clase local de su entidad, con **Ctrl+.** para la firma:
 
     | BO / entidad | Determination | Disparador | Qué hace (informe) |
     |---|---|---|---|

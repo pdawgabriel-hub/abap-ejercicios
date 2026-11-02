@@ -66,8 +66,8 @@ Todas aceptan `msg = '...'`, el texto que se muestra si fallan. Úsalo cuando el
 ## Ejecutar y leer los resultados
 
 - **Ctrl+Shift+F10**: ejecuta los tests de la clase abierta.
-- Clic derecho en un paquete → **Run As → ABAP Unit Test**: los de todo el paquete. Hazlo sobre `ZGOR` antes de cada commit.
-- Clic derecho → **Run As → ABAP Unit Test With… → Coverage**: además, marca en verde las líneas del código que los tests han recorrido y en rojo las que no. Sirve para ver qué ramas de un `COND` no tienen test.
+- Clic derecho en un paquete del explorador → la opción de ABAP Unit, o la vista **Testing** de VS Code: los de todo el paquete. Hazlo sobre `ZGOR` antes de cada commit.
+- Con **cobertura** (en Eclipse, clic derecho → *Coverage As → ABAP Unit Test*; en VS Code, mira la [chuleta](./F_vscode.md#tests)): además, marca en verde las líneas del código que los tests han recorrido y en rojo las que no. Sirve para ver qué ramas de un `COND` no tienen test.
 
 En la vista **ABAP Unit** salen los tests en verde o en rojo. Al pulsar un test en rojo, abajo se ven el valor esperado y el obtenido, y la línea del `assert` que falló.
 
@@ -157,7 +157,7 @@ Todo en esta unidad amplía objetos que ya existen: `ZIF_GOR_TIPOS`, `ZCL_GOR_RE
     - **Comprueba:** en verde. Si falla, el mensaje te dice qué valor no cuadra.
 
 6. **Pasos 1 a 6 encadenados.** En `ltcl_escenario`, añade `pasos_2_a_6_hasta_los_gastos`, que construye los datos **con los métodos de las unidades anteriores** en lugar de escribir los totales a mano: el total con `base_imponible` + `total_presupuesto` + `total_obra` (con el presupuesto primero no aprobado, total 0, y después aprobado, 1210); el coste de mano de obra con `coste_parte` sobre dos líneas de 8 h a 20 €/h; y los gastos con `kpi_obra` sin ingresos. Comprueba los valores de los pasos 2, 3, 4 y 6.
-7. **La cobertura.** Ejecuta los tests de `ZCL_GOR_REGLAS` con cobertura (clic derecho → **Run As → ABAP Unit Test With… → Coverage**). ¿Queda alguna línea en rojo? Si queda, escribe el test que falta.
+7. **La cobertura.** Ejecuta los tests de `ZCL_GOR_REGLAS` con cobertura ([F](./F_vscode.md#tests); si tu VS Code no la tiene, hazlo en Eclipse). ¿Queda alguna línea en rojo? Si queda, escribe el test que falta.
 8. **Investiga.** Rompe a propósito una regla: cambia en `salud_obra` el orden de las dos primeras condiciones. ¿Qué tests fallan? Lee el mensaje de cada uno y deshaz el cambio. Anota en un comentario de `ltcl_escenario` qué error del informe (§11.5, punto 2) protege el test del paso 7.
 
 ## Comprueba tu solución automáticamente (opcional)

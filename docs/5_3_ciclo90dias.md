@@ -44,7 +44,7 @@ En 90 días caben, con margen, los Bloques 2 a 5 si trabajas con regularidad. Un
 
 1. **Fechas.** Apunta tu fecha de registro, la de caducidad y las de los avisos. Genera los recordatorios.
 2. **La instancia.** Busca en el cockpit cuánto dura tu instancia ABAP y si coincide con la cuenta. Anótalo en el anexo de restauración.
-3. **Lo que no se guarda.** Completa la lista de la tabla con todo lo que has configurado a mano desde 0.1 (usuarios, *bindings* publicados, ajustes de Eclipse…) y dónde lo anotas.
+3. **Lo que no se guarda.** Completa la lista de la tabla con todo lo que has configurado a mano desde 0.1 (usuarios, *bindings* publicados, ajustes de VS Code y de Eclipse…) y dónde lo anotas.
 4. **Investiga.** ¿Qué pasa con los objetos que creaste en `ZLOCAL` si el trial es compartido y caduca **tu** cuenta? ¿Siguen ahí para los demás? Anota lo que encuentres y la fuente.
 
 ---

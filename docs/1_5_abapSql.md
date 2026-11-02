@@ -4,7 +4,7 @@ Hasta ahora todo vivía en memoria y desaparecía al terminar la ejecución. En 
 
 ## Tablas en ABAP Cloud
 
-En ABAP Cloud no hay transacción SE11: una tabla se escribe como **código** en Eclipse, con el objeto **Database Table**. Así es la de titulares del taller:
+En ABAP Cloud no hay transacción SE11: una tabla se escribe como **código** en el editor, con el objeto **Database Table**. Así es la de titulares del taller:
 
 ```cds
 @EndUserText.label : 'Taller - Titulares'
@@ -158,7 +158,7 @@ El método puede lanzar una excepción, y ABAP obliga a tratarla con `TRY ... CA
 
 ## Preparación del entorno de trabajo
 
-Las tablas van en `ZGOR_DDIC` y la clase de pruebas, en `ZGOR_TEST`. Para crear una tabla: clic derecho en el paquete → **New → Other ABAP Repository Object** → *Database Table*. Al terminar:
+Las tablas van en `ZGOR_DDIC` y la clase de pruebas, en `ZGOR_TEST`. Para crear una tabla: **Ctrl+Shift+Alt+N** → *Database Table*. Al terminar:
 
 ```text
 ZGOR
@@ -174,7 +174,7 @@ ZGOR
 ## Ejercicios
 
 1. **La tabla de clientes.**
-    - **Dónde:** clic derecho en `ZGOR_DDIC` → **New → Other ABAP Repository Object** → *Database Table*. Nombre `zgor_cli`, descripción `Clientes`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Database Table*, paquete `ZGOR_DDIC`. Nombre `zgor_cli`, descripción `Clientes`.
     - **Qué contiene:** las cuatro decisiones del taller (`client`, clave UUID, código aparte y los cinco campos de administración al final) y estas columnas propias, en este orden (§3.1 del informe). Añade comentarios `//` como en `ztl_tit`.
 
     | Columna | Tipo | Notas |
@@ -196,7 +196,7 @@ ZGOR
     - **Comprueba:** activa sin errores.
 
 3. **Clientes de prueba.**
-    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_SQL_DEMO`, descripción `Pruebas de ABAP SQL`. Ejecutable.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_SQL_DEMO`, descripción `Pruebas de ABAP SQL`. Ejecutable.
     - **Qué hace:** en `main`, vacía las dos tablas (`DELETE FROM`, primero las obras) y después inserta, con un solo `INSERT ... FROM TABLE`, estos tres clientes, cada uno con su UUID nuevo:
 
     | Código | Nombre | Apellidos | NIF | Dirección | CP | Teléfono |
@@ -218,7 +218,7 @@ ZGOR
     - Las obras con el nombre de su cliente, primero con `INNER JOIN` (3 filas) y después con `LEFT OUTER JOIN` (4). Explica en un comentario por qué cambia el número.
 6. **Modificar y borrar.** En el mismo `main`: cambia el teléfono de `CLI0002` a 600999888 y borra `OBR0004`.
     - **Comprueba:** escribe `sy-dbcnt` después de cada sentencia (**1** y **1**) y vuelve a leer las obras: quedan 3.
-7. **Los campos de administración.** Al final del `main`, lee de `zgor_cli` el código, `created_by` y `created_at` de los tres clientes y escríbelos. Salen vacíos, porque has insertado con SQL directo: en el Bloque 3 los rellenará RAP. (Si quieres ver las filas sin escribir código, también puedes abrir la tabla con **F8**, *Data Preview*.)
+7. **Los campos de administración.** Al final del `main`, lee de `zgor_cli` el código, `created_by` y `created_at` de los tres clientes y escríbelos. Salen vacíos, porque has insertado con SQL directo: en el Bloque 3 los rellenará RAP. (Si quieres ver las filas sin escribir código, también puedes consultarlas en el *Data Preview*, que en VS Code es el **SQL Notebook**: ver [F](./F_vscode.md#ver-datos-data-preview).)
 8. **Investiga.** En Odoo, `nif` es único (§3.1). Busca si en ABAP Cloud se puede declarar un índice único sobre una tabla propia y anota lo que encuentres y en qué fuente. En el Bloque 3 la unicidad se comprobará con una *validation*, que además da un mensaje claro al usuario.
 
 En esta unidad no hay test automático: los datos de base de datos se comprueban mirándolos. En el Bloque 3 llegarán los tests que trabajan con tablas.

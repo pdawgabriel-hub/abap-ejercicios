@@ -87,7 +87,7 @@ Las tablas no declaran claves foráneas: `titular_uuid` es una columna más. La 
 
 ## Preparación del entorno de trabajo
 
-Todas las tablas del ERP van en `ZGOR_DDIC`. Para crear cada una: clic derecho en `ZGOR_DDIC` → **New → Other ABAP Repository Object** → *Database Table*, nombre en minúsculas y descripción. Si una tabla no activa, lee el error de la pestaña *Problems*: casi siempre es un punto y coma que falta o un tipo mal escrito.
+Todas las tablas del ERP van en `ZGOR_DDIC`. Para crear cada una: **Ctrl+Shift+Alt+N** → *Database Table*, paquete `ZGOR_DDIC`, nombre en minúsculas y descripción. Si una tabla no activa, lee el error de la pestaña **Problemas**: casi siempre es un punto y coma que falta o un tipo mal escrito.
 
 Al terminar, `ZGOR_DDIC` tendrá 16 tablas:
 
@@ -107,7 +107,7 @@ ZGOR_DDIC
 Todas las tablas llevan las anotaciones del principio, `key client`, su clave UUID (primera columna de cada fila de las tablas de abajo) y los cinco campos de administración al final. En las tablas de los ejercicios, `char(8)` significa `abap.char(8)`, `dec(15,2)` es `abap.dec(15,2)`, `dats` es `abap.dats` e `int4` es `abap.int4`; `abap_boolean` y `sysuuid_x16` se escriben tal cual. Los UUID de los padres en las tablas hijas, **not null**.
 
 1. **Presupuestos.**
-    - **Dónde:** clic derecho en `ZGOR_DDIC` → **New → Other ABAP Repository Object** → *Database Table*, una vez por tabla, con el nombre y la descripción de la tabla de abajo.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Database Table*, paquete `ZGOR_DDIC`, una vez por tabla, con el nombre y la descripción de la tabla de abajo.
     - **Qué contienen** (§3.6 del informe), con comentarios `//` como en `ztl_prs`:
 
     | Tabla (descripción) | Columnas, en este orden |
@@ -137,11 +137,11 @@ Todas las tablas llevan las anotaciones del principio, `key client`, su clave UU
     | `zgor_pp` (Partes de proveedor, §3.11) | Igual que `zgor_pe`, con `proveedor_uuid` en lugar de `especialista_uuid` |
 
     Los UUID sin tipo indicado son `sysuuid_x16`.
-    - **Comprueba:** activa todas a la vez (clic derecho en `ZGOR_DDIC` → *Activate*) sin errores.
+    - **Comprueba:** activa todas a la vez (**Ctrl+Shift+F3**, o *Activate All* en la barra inferior) sin errores.
 
 3. **Lo que no está.** Repasa la tabla de «qué se guarda» de 1.9 y explica en `diseno.md`, con una frase cada uno, por qué **no** hay columna para el total de la obra, el `debe` de un ingreso, las horas acumuladas de un trabajador ni la lista de trabajadores de una obra. Y por qué **sí** la hay para `dias` (falta), `total` (proveedor), `horas_totales` y `coste_total` (parte) y `coste_subtotal` (línea).
 4. **Comprueba los nombres.** En `ZCL_GOR_SQL_DEMO`, añade al final un `SELECT COUNT( * )` de cada una de las 16 tablas y escribe el resultado: si alguna no existe, la clase no activa. (También puedes pulsar **Ctrl+Shift+A** y escribir `zgor_`: deben salir las 16.) En el Bloque 3, cada tabla tendrá una gemela para los borradores (*draft*) con `_d` al final, y el nombre completo sigue sin poder pasar de 16 caracteres. ¿Por qué crees que la tabla de faltas se llama `zgor_falta` y no `zgor_trab_falta`?
-5. **Investiga.** En el Data Preview de `zgor_presu` (todavía vacía) pulsa **Add filter** y mira qué operadores ofrece para `fecha` y para `estado`. Anota cuál usarías para ver los presupuestos de 2026.
+5. **Investiga.** Abre un SQL Notebook sobre `zgor_presu` (todavía vacía; [F](./F_vscode.md#ver-datos-data-preview)) y escribe la consulta que verías para sacar solo los presupuestos de 2026. ¿Qué operador usarías con `fecha`: `BETWEEN`, `>=` y `<=`, o `LIKE`? Anota por qué.
 
 En esta unidad no hay test: el sistema comprueba la sintaxis al activar. Los datos llegan en [2.5](./2_5_proyecto.md).
 

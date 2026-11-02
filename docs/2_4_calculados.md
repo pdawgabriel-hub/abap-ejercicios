@@ -198,7 +198,7 @@ ZGOR_CDS
 
 ## Ejercicios
 
-En todos los ejercicios, **Comprueba** lee la vista desde `ZCL_GOR_SQL_DEMO`, en un bloque nuevo de `main` con el comentario `" 2.4 Campos calculados`. Si quieres verla además con el ratón, el **Data Preview** (clic derecho en la vista → *Open With → Data Preview*, o **F8**) enseña lo mismo.
+En todos los ejercicios, **Comprueba** lee la vista desde `ZCL_GOR_SQL_DEMO`, en un bloque nuevo de `main` con el comentario `" 2.4 Campos calculados`. Si quieres verla además con el ratón, el **Data Preview** (en VS Code, un SQL Notebook sobre la vista: [F](./F_vscode.md#ver-datos-data-preview)) enseña lo mismo.
 
 1. **Campos de texto.**
     - **Dónde:** `ZI_GorCliente`, `ZI_GorTrabajador`, `ZI_GorPresupuesto` y `ZI_GorIngreso`.

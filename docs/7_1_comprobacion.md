@@ -8,8 +8,8 @@ Antes de enseñar el proyecto a nadie, una última pasada con la misma lista que
 
 **El código**
 
-- [ ] Todo activo: clic derecho en `ZGOR` → *Activate*, sin errores ([2.1](./2_1_tablas.md) a [4.3](./4_3_metadataExtensions.md)).
-- [ ] Todos los tests en verde: clic derecho en `ZGOR` → *Run As → ABAP Unit Test* ([1.8](./1_8_abapUnit.md), [3.8](./3_8_proyecto.md)).
+- [ ] Todo activo (**Ctrl+Shift+F3** sin nada pendiente) y sin errores en **Problemas** ([2.1](./2_1_tablas.md) a [4.3](./4_3_metadataExtensions.md)).
+- [ ] Todos los tests de `ZGOR` en verde ([F](./F_vscode.md#tests)) ([1.8](./1_8_abapUnit.md), [3.8](./3_8_proyecto.md)).
 - [ ] ATC sin prioridad 1; las de prioridad 2 corregidas o justificadas en `diseno.md` ([5.1](./5_1_atc.md)).
 - [ ] Ningún resto de pruebas: clases de consola que ya no sirven borradas, o explicadas como herramientas.
 
@@ -31,7 +31,7 @@ Antes de enseñar el proyecto a nadie, una última pasada con la misma lista que
 ## Ejercicios
 
 1. **Pasa la lista.** Marca cada punto. Lo que no puedas marcar, arréglalo o anótalo como pendiente en el README.
-2. **Cuenta.** Apunta, para el README: número de tablas, vistas, BO, tests y líneas de la clase de reglas. Sale en el *Project Explorer* y en la vista de resultados de ABAP Unit.
+2. **Cuenta.** Apunta, para el README: número de tablas, vistas, BO, tests y líneas de la clase de reglas. Sale en el explorador y en los resultados de ABAP Unit.
 3. **Una prueba en frío.** Pide a alguien que no conozca el proyecto que siga el anexo de restauración con tu repositorio. Lo que le cueste es lo que falta por explicar.
 
 ---
