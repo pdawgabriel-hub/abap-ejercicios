@@ -14,7 +14,7 @@
 | Alcance | **Todas las entidades desde el principio**: cada unidad trata las 10 raíces del informe, no solo un núcleo |
 | Método | Primero este plan; después se reescribe unidad a unidad, revisando cada una antes de pasar a la siguiente |
 | Nombre | **ERP de Obras y Reformas**. Repo `erp-obras-reformas-sap`; el paquete sigue siendo `ZGOR`. El módulo de Odoo conserva su nombre, `gestion_bd` |
-| IDE | **Eclipse con ADT** en los apuntes, en Linux; anexo F con las equivalencias en VS Code, que se escribe después de probarlo en el trial |
+| IDE | **VS Code** con la extensión *ABAP Development Tools for VS Code*, en Linux; Eclipse con ADT solo para abapGit y para lo que la extensión aún no haga. Anexo F: chuleta de VS Code con las equivalencias de Eclipse |
 | Ejemplos de la teoría | **Taller RuedaLibre** (prefijo `ZTL`, paquete `ZEJ`), con todas las funcionalidades de `gestion_bd` y nombres distintos (titular, mecánico, orden de reparación, hoja de costes, abono…). Los ejercicios no traen código; los tests de `docs/materiales/tests/` los comprueban |
 | Draft | En **todas** las BO |
 | Commits | Los hace el autor |
@@ -93,7 +93,7 @@ La columna «Guiada» indica la entidad con código completo; el resto se hace c
 
 | Unidad | Se construye | Test |
 |---|---|---|
-| 0.1 Instalación | Eclipse con ADT, trial y booster; paquete `ZEJ` de pruebas | — |
+| 0.1 Instalación | VS Code con ADT, trial y booster; Eclipse para abapGit; paquete `ZEJ` de pruebas | — |
 | 0.2 Introducción | Se presenta el proyecto: el ciclo de negocio (§1 del informe) y qué tendremos al final de cada bloque | — |
 
 ### Bloque 1. Fundamentos del lenguaje: las reglas de negocio en ABAP
@@ -181,7 +181,7 @@ El contenido actual de 7.1 (mapa de entidades) pasa a 1.9 y al apartado 3.2 de e
 | `docs/1_*.md` a `docs/6_*.md` | Teoría con objetos `ZGOR` en lugar de `ZTL`; ejercicios según el apartado 4 |
 | `docs/7_*.md` | Nuevo Bloque 7 de cierre (apartado 4) |
 | `docs/E_reglas.md` | Nuevo anexo con las reglas de negocio |
-| `docs/F_vscode.md` | Nuevo anexo: el mismo flujo en VS Code (instalación, conexión al trial, atajos equivalentes y qué falta respecto a Eclipse). Se escribe tras probarlo en el trial |
+| `docs/F_vscode.md` | Chuleta de VS Code: conexión al trial, área de trabajo, crear, activar, ejecutar, tests, depurar, qué sigue en Eclipse y equivalencias de atajos |
 | `docs/B_nombres.md` | Se añaden las tablas satélite, las vistas de agregados, `ZCL_GOR_*`, `ZCX_GOR_*` y `ZIF_GOR_*`. Desaparece `ZCL_EJ_*` |
 | `docs/materiales/tests/` | **Nuevo**: un fichero por test de la columna «Test», única copia del código |
 | `ejercicios/` | Se elimina cuando sus tests se hayan migrado a `docs/materiales/tests/` |

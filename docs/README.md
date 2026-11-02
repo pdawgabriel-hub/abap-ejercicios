@@ -8,7 +8,7 @@ Los contenidos que se presentan a continuación enseñan **ABAP Cloud** y el mod
 >
 > **Aviso.** El código del taller pasa en cada *push* dos comprobaciones automáticas (abaplint, que revisa la sintaxis de ABAP Cloud y CDS, y un comprobador de la coherencia de RAP), pero **no se ha activado en un sistema real**. Si algo da error al activar, copia el mensaje exacto: es parte del aprendizaje. Las unidades menos verificadas lo indican al principio.
 
-**Antes de empezar:** todo el material comparte el mismo entorno (Eclipse con ADT y una cuenta trial de SAP BTP). Prepáralo siguiendo [0.1. Preparación del entorno](./00_instalacionEntorno.md). La cuenta trial dura **90 días** y hay que entrar al menos una vez cada 30: el repositorio es tu copia de seguridad ([5.3](./5_3_ciclo90dias.md)).
+**Antes de empezar:** todo el material comparte el mismo entorno (VS Code con la extensión ABAP Development Tools, Eclipse para abapGit y una cuenta trial de SAP BTP). Prepáralo siguiendo [0.1. Preparación del entorno](./00_instalacionEntorno.md). La cuenta trial dura **90 días** y hay que entrar al menos una vez cada 30: el repositorio es tu copia de seguridad ([5.3](./5_3_ciclo90dias.md)).
 
 | Bloque | Contenido | Horas |
 |-------:|-----------|------:|
@@ -117,5 +117,5 @@ Del ERP terminado al portfolio.
 - [C. Glosario](./C_glosario.md)
 - [D. Planificación y hoja de ruta](./D_planificacion.md)
 - [E. Reglas de negocio](./E_reglas.md)
-- [F. El mismo flujo en VS Code](./F_vscode.md)
+- [F. Chuleta de VS Code](./F_vscode.md): conectar, abrir paquetes, crear, activar, ejecutar, probar y depurar
 - [Restaurar en un trial nuevo](./RESTAURAR.md)

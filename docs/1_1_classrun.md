@@ -2,13 +2,13 @@
 
 > **Bloque 1 · Fundamentos del lenguaje: las reglas de negocio en ABAP.** Empezamos el **ERP de Obras y Reformas**, el port a SAP de `gestion_bd`. Antes de crear tablas o apps, en este bloque escribiremos en ABAP puro **las reglas de negocio** del informe técnico: cómo se calcula un presupuesto, cuándo está pagada una obra o qué validaciones hay que pasar. Todo irá a una clase, `ZCL_GOR_REGLAS`, con tests automáticos que comprueban cada fórmula. Terminaremos con una simulación que calcula en memoria los indicadores de una obra completa. En el Bloque 3, el comportamiento RAP **reutilizará esa misma clase**.
 
-En esta primera unidad preparamos el terreno: los paquetes del proyecto y una clase que se ejecuta desde Eclipse y escribe en la consola.
+En esta primera unidad preparamos el terreno: los paquetes del proyecto y una clase que se ejecuta desde el editor y escribe en la consola.
 
 > **Dos proyectos.** La teoría usa como ejemplo el **taller RuedaLibre** ([0.5](./0_5_taller.md)); los ejercicios construyen **tu ERP**. Puedes probar los ejemplos en tu paquete `ZEJ`, pero lo que entregas es lo de `ZGOR`.
 
 ## Clases ejecutables
 
-En ABAP Cloud no hay `REPORT` ni `WRITE`. Para ejecutar código creamos una **clase** que implementa la interfaz **`IF_OO_ADT_CLASSRUN`**. Esa interfaz obliga a escribir un método, `main`, que recibe un parámetro `out`: lo que pasemos a `out->write( )` aparece en la pestaña **Console** de Eclipse al ejecutar la clase con **F9**.
+En ABAP Cloud no hay `REPORT` ni `WRITE`. Para ejecutar código creamos una **clase** que implementa la interfaz **`IF_OO_ADT_CLASSRUN`**. Esa interfaz obliga a escribir un método, `main`, que recibe un parámetro `out`: lo que pasemos a `out->write( )` aparece en la consola, en el panel inferior de VS Code, al ejecutar la clase con **F5**.
 
 Una clase tiene dos partes:
 
@@ -21,14 +21,14 @@ Una clase tiene dos partes:
 " CREATE PUBLIC: cualquiera puede crear objetos de esta clase.
 CLASS zcl_tl_bienvenida DEFINITION PUBLIC FINAL CREATE PUBLIC.
   PUBLIC SECTION.
-    " Implementar esta interfaz convierte la clase en ejecutable con F9
+    " Implementar esta interfaz convierte la clase en ejecutable (F5)
     INTERFACES if_oo_adt_classrun.
 ENDCLASS.
 
 " IMPLEMENTACION: el codigo de cada metodo.
 CLASS zcl_tl_bienvenida IMPLEMENTATION.
-  " El metodo main de la interfaz: es lo que se ejecuta al pulsar F9.
-  " out es el objeto que escribe en la pestana Console.
+  " El metodo main de la interfaz: es lo que se ejecuta al pulsar F5.
+  " out es el objeto que escribe en la consola.
   METHOD if_oo_adt_classrun~main.
     " Cabecera del taller
     out->write( 'Taller RuedaLibre' ).
@@ -47,7 +47,7 @@ Es la clase de bienvenida del taller: escribe su nombre y dos de sus series de c
 
 - **Cada sentencia termina en punto.** Olvidar un punto es el error más común al empezar.
 - **Los comentarios** empiezan por una comilla doble `"` (desde ahí hasta el final de la línea) o por un asterisco `*` en la primera columna (toda la línea).
-- **Las palabras clave no distinguen mayúsculas.** `CLASS` y `class` son lo mismo. Eclipse las formatea según tus preferencias con **Shift+F1** (*Format*).
+- **Las palabras clave no distinguen mayúsculas.** `CLASS` y `class` son lo mismo. El formateador del editor (clic derecho → *Format Document*) las deja todas igual.
 - **Los textos entre comillas simples** (`'Taller RuedaLibre'`) son literales de texto. En 1.2 veremos las *plantillas de texto*, que permiten mezclar texto y variables.
 
 En los comentarios evitamos las tildes y la eñe. No dan error, pero algunas herramientas de comparación las muestran mal. En los textos que se ven por pantalla sí las usamos.
@@ -85,7 +85,20 @@ La consola de esta unidad presenta las entidades que vamos a construir. Son las 
 
 ## Preparación del entorno de trabajo
 
-Necesitas Eclipse con ADT conectado a tu trial, como se explica en [0.1. Preparación del entorno](./00_instalacionEntorno.md). En esta unidad creas los paquetes de `ZGOR`; a partir de aquí, todo el proyecto vive en ellos.
+Necesitas VS Code con la extensión de SAP conectado a tu trial, como se explica en [0.1. Preparación del entorno](./00_instalacionEntorno.md). En esta unidad creas los paquetes de `ZGOR`; a partir de aquí, todo el proyecto vive en ellos.
+
+> **Recuerda: lo básico del editor.** Lo usarás en todas las unidades, que ya no lo repiten. La lista completa está en la chuleta **[F. VS Code](./F_vscode.md)**.
+>
+> | Para | Cómo |
+> |---|---|
+> | Empezar a trabajar | Abre tu área de trabajo (**Archivo → Abrir reciente**). Si `ZGOR` sale con un triángulo (*Disconnected*), clic derecho → **Logon to Destination** |
+> | Abrir un objeto | **Ctrl+Shift+A** y su nombre, o despliega `ZGOR` en el explorador |
+> | Crear un objeto | **Ctrl+Shift+Alt+N** → tipo (*Package*, *Class*, *Database Table*…) → paquete, nombre y descripción |
+> | Guardar / activar / activar todo | **Ctrl+S** / **Ctrl+F3** / **Ctrl+Shift+F3** |
+> | Ejecutar una clase de consola | **F5** (o clic derecho → *Run ABAP Application (Console)*); la salida, en el panel inferior |
+> | Ver los errores | Pestaña **Problemas** del panel inferior |
+> | Ver la firma o el tipo de algo | Pasa el ratón por encima |
+> | Ejecutar los tests de la clase | **Ctrl+Shift+F10** |
 
 Al terminar, el proyecto tendrá esta forma:
 
@@ -102,24 +115,24 @@ ZLOCAL
 
 ## Ejercicios
 
-1. **Comprueba que los nombres están libres.** En el trial compartido lo que no se puede repetir es el **nombre exacto** de un objeto, no el prefijo: es normal que otros usuarios tengan objetos que empiezan por las mismas letras. En Eclipse, pulsa **Ctrl+Shift+A** (*Open ABAP Development Object*) y busca, uno a uno, estos nombres:
+1. **Comprueba que los nombres están libres.** En el trial compartido lo que no se puede repetir es el **nombre exacto** de un objeto, no el prefijo: es normal que otros usuarios tengan objetos que empiezan por las mismas letras. Pulsa **Ctrl+Shift+A** (abrir un objeto) y busca, uno a uno, estos nombres:
     - `ZGOR`: no debe existir ningún **paquete** con ese nombre. Puede salir otro objeto que empiece por `ZGOR` (una tabla `ZGORXYZ`, por ejemplo): eso no molesta.
     - `ZCL_GOR_REGLAS`, `ZI_GORCLIENTE` y `ZGOR_CLI`: tres de los nombres que vas a crear. No debe salir ninguno exacto.
 
     Si alguno de esos nombres exactos ya es de otra persona, para aquí: hay que elegir otro prefijo para todo el proyecto (ver la nota de abajo). Si solo salen objetos con otros nombres que empiezan igual, adelante.
-2. **El paquete principal.** Clic derecho en `ZLOCAL` → **New → ABAP Package**:
+2. **El paquete principal.** **Ctrl+Shift+Alt+N** → *Package*:
     - *Name*: `ZGOR`.
     - *Description*: `ERP de Obras y Reformas`.
     - *Superpackage*: `ZLOCAL`. *Software Component*: `ZLOCAL`.
 
-    Pulsa **Next**. La última pantalla, *Select Transport Request*, avisa arriba de *«No change recording enabled for package»*: `ZLOCAL` es un paquete local, sus objetos no viajan a otros sistemas y no necesitan orden de transporte. No elijas nada y pulsa **Finish**. (Las órdenes de transporte se ven en [5.2](./5_2_abapgit.md).)
+    Si al final te pide una **orden de transporte** y avisa de *«No change recording enabled for package»*, no elijas ninguna y termina: `ZLOCAL` es un paquete local, sus objetos no viajan a otros sistemas y no necesitan orden. (Las órdenes de transporte se ven en [5.2](./5_2_abapgit.md).)
 
-    Para tenerlo a mano, añádelo a favoritos: en el *Project Explorer*, clic derecho en **Favorite Packages** → **Add Package…**, escribe `ZGOR` y **OK**. Si no, quedará escondido dentro de `ZLOCAL`. No añadas `ZLOCAL` a favoritos: contiene los objetos de todos los usuarios del trial y desplegarlo es muy lento.
-3. **Los subpaquetes.** Clic derecho en `ZGOR` → **New → ABAP Package**, cinco veces: `ZGOR_DDIC`, `ZGOR_CDS`, `ZGOR_BUS`, `ZGOR_SRV` y `ZGOR_TEST`, con *Superpackage* `ZGOR` y la descripción de la tabla de [Los paquetes del proyecto](#los-paquetes-del-proyecto). Comprueba en el *Project Explorer* que cuelgan de `ZGOR`.
+    Para tenerlo a mano, **añádelo al área de trabajo**: **Ctrl+Shift+P** → `ABAP: Add Package as Folder to Workspace...` → `ZGOR`, y guarda el área (**Archivo → Guardar área de trabajo**). Aparecerá en el explorador como `ZGOR [TRIAL]`. No añadas `ZLOCAL`: contiene los objetos de todos los usuarios del trial y desplegarlo es muy lento. Si `ZGOR` sale con un triángulo y no se despliega, inicia sesión (clic derecho → **Logon to Destination**).
+3. **Los subpaquetes.** **Ctrl+Shift+Alt+N** → *Package*, cinco veces: `ZGOR_DDIC`, `ZGOR_CDS`, `ZGOR_BUS`, `ZGOR_SRV` y `ZGOR_TEST`, con *Superpackage* `ZGOR` y la descripción de la tabla de [Los paquetes del proyecto](#los-paquetes-del-proyecto). Comprueba en el explorador que cuelgan de `ZGOR` (si no salen, pulsa refrescar).
 4. **La clase de inicio.**
-    - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_INICIO`, descripción `Presentacion del proyecto`.
+    - **Dónde:** **Ctrl+Shift+Alt+N** → *Class*, paquete `ZGOR_TEST`. Nombre `ZCL_GOR_INICIO`, descripción `Presentacion del proyecto`, interfaz `if_oo_adt_classrun` (si el asistente no la pide, la escribes tú en el código).
     - **Qué hace:** es una clase ejecutable, como la del taller (implementa `if_oo_adt_classrun`). Su `main` escribe dos líneas.
-    - **Comprueba:** guarda (**Ctrl+S**), activa (**Ctrl+F3**) y ejecuta (**F9**). En la pestaña *Console* debe salir exactamente:
+    - **Comprueba:** guarda (**Ctrl+S**), activa (**Ctrl+F3**) y ejecuta (**F5**). En la consola del panel inferior debe salir exactamente:
 
     ```text
     ERP de Obras y Reformas
@@ -149,8 +162,8 @@ ZLOCAL
     Parte de Especialista
     Parte de Proveedor
     ```
-6. **Lee los errores.** Quita el punto final de una de las líneas de `out->write` y activa. Fíjate en el mensaje de la pestaña *Problems* y en la línea que señala: a veces no es la línea del error, sino la siguiente. Vuelve a poner el punto. Haz lo mismo cambiando `out->write` por `out->writ`. Escribe en un comentario, encima de `main`, cómo es cada uno de los dos mensajes.
-7. **Investiga.** Con el cursor sobre `write`, pulsa **F2**. ¿Qué parámetros acepta el método? ¿Hay alguno opcional? Anótalo en un comentario: en 1.2 escribiremos con él estructuras completas, no solo textos.
+6. **Lee los errores.** Quita el punto final de una de las líneas de `out->write` y activa. Fíjate en el mensaje de la pestaña **Problemas** y en la línea que señala: a veces no es la línea del error, sino la siguiente. Vuelve a poner el punto. Haz lo mismo cambiando `out->write` por `out->writ`. Escribe en un comentario, encima de `main`, cómo es cada uno de los dos mensajes.
+7. **Investiga.** Pasa el ratón por encima de `write` para ver su firma. ¿Qué parámetros acepta el método? ¿Hay alguno opcional? Anótalo en un comentario: en 1.2 escribiremos con él estructuras completas, no solo textos. Pista: fíjate en el **tipo** de cada parámetro y en la palabra `OPTIONAL`.
 
 > **Si el ejercicio 1 encuentra alguno de esos nombres exactos**, no crees nada todavía. Elige un prefijo de 4 letras que no esté usado como paquete (compruébalo igual que en el ejercicio 1) y avisa antes de seguir: los apuntes se adaptarán a ese prefijo. El taller (`ZTL`) solo hay que comprobarlo si algún día quieres importarlo en tu sistema ([materiales/taller](./materiales/taller/README.md)): entonces, que no exista un paquete `ZTL` ni una tabla `ZTL_TIT`.
 

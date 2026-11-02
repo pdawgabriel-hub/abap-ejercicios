@@ -76,4 +76,4 @@ Resumen de las reglas de §11 del informe técnico de `gestion_bd` y de **dónde
 
 ---
 
-**Siguiente:** [F. El mismo flujo en VS Code](./F_vscode.md)
+**Siguiente:** [F. Chuleta de VS Code](./F_vscode.md)
