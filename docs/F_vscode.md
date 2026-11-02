@@ -61,6 +61,8 @@ En los ejercicios:
 
 La salida de una clase de consola sale en el **panel inferior**. Se ejecuta siempre la **versión activa**: si cambias algo y solo guardas, verás la salida antigua.
 
+> **Si no deja guardar.** Guardar envía el código al sistema SAP, y el sistema **rechaza el guardado si la estructura está rota**: sale un aviso *«No se pudo guardar… Save failed»* con el motivo al final (por ejemplo, *«The statement CLASS ... IMPLEMENTATION. is unexpected»*: falta el `ENDCLASS.` de la definición o un punto). Mientras tanto, el código **solo está en la pestaña**, marcada con un punto: si cierras VS Code, se pierde. Si el arreglo va para largo, copia el contenido (**Ctrl+A**, **Ctrl+C**) a un fichero de texto, corrige el error y guarda otra vez. En Eclipse esto no pasaba: guardaba con errores y fallaba al activar.
+
 Muchos objetos de RAP se mencionan entre sí (dos vistas con associations en los dos sentidos, una BDEF y su clase) y por separado no activan. Abre o modifica los que vayan juntos y usa **Ctrl+Shift+F3**: los activa a la vez.
 
 ## Errores y ayuda
