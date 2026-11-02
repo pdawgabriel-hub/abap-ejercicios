@@ -129,7 +129,26 @@ ZLOCAL
 5. **Las entidades.**
     - **Dónde:** el mismo `main` de `ZCL_GOR_INICIO`, a continuación de las dos líneas.
     - **Qué hace:** escribe, en este orden: una línea en blanco; el título `Entidades con codigo propio:`; una línea por cada una de las ocho entidades con código de la tabla de [Las entidades del ERP](#las-entidades-del-erp), con su nombre y su primer código (`Cliente        CLI0001`); el título `Entidades sin codigo:`; y los tres tipos de parte, uno por línea. Añade un comentario encima de cada grupo de líneas, como en el taller.
-    - **Comprueba:** activa y ejecuta. La consola debe mostrar 2 + 1 + 1 + 8 + 1 + 3 = **16 líneas**.
+    - **Comprueba:** activa y ejecuta. La consola debe mostrar estas **16 líneas** (la tercera, en blanco). Los espacios entre el nombre y el código van dentro del texto, para que quede alineado, como en `zcl_tl_bienvenida`:
+
+    ```text
+    ERP de Obras y Reformas
+    Port a SAP del modulo gestion_bd de Odoo
+
+    Entidades con codigo propio:
+    Cliente        CLI0001
+    Trabajador     TRB0001
+    Proveedor      PROV0001
+    Especialista   ESP0001
+    Presupuesto    PREP0001
+    Obra           OBR0001
+    Gasto          GAS0001
+    Ingreso        ING0001
+    Entidades sin codigo:
+    Parte de Trabajo
+    Parte de Especialista
+    Parte de Proveedor
+    ```
 6. **Lee los errores.** Quita el punto final de una de las líneas de `out->write` y activa. Fíjate en el mensaje de la pestaña *Problems* y en la línea que señala: a veces no es la línea del error, sino la siguiente. Vuelve a poner el punto. Haz lo mismo cambiando `out->write` por `out->writ`. Escribe en un comentario, encima de `main`, cómo es cada uno de los dos mensajes.
 7. **Investiga.** Con el cursor sobre `write`, pulsa **F2**. ¿Qué parámetros acepta el método? ¿Hay alguno opcional? Anótalo en un comentario: en 1.2 escribiremos con él estructuras completas, no solo textos.
 
