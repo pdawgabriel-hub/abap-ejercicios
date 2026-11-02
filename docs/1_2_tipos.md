@@ -203,7 +203,7 @@ ZGOR
     | `ty_codigo` | Texto de 8 caracteres |
     | `ty_estado` | Texto de 15 caracteres |
     | `ty_presu_linea` | Estructura con `descripcion` (`string`), `uds` (`i`) y `precio` (`ty_importe`): la línea de un presupuesto (§3.6) |
-    | `estado_presu` | Constantes `aprobado` y `no_aprobado`, de tipo `ty_estado`, con esos mismos valores |
+    | `estado_presu` | Constantes `aprobado` y `no_aprobado`, de tipo `ty_estado`, con los valores `'aprobado'` y `'no_aprobado'` (con guion bajo, sin espacio: es lo que se guardará en la tabla y lo que comparan los tests) |
 
     - **Comprueba:** la interfaz activa sin errores (**Ctrl+F3**).
 
