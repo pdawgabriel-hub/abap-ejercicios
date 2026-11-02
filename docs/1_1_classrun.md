@@ -112,7 +112,9 @@ ZLOCAL
     - *Description*: `ERP de Obras y Reformas`.
     - *Superpackage*: `ZLOCAL`. *Software Component*: `ZLOCAL`.
 
-    En `ZLOCAL` no hace falta orden de transporte. Si el asistente te pide una, créala con *Create New Request*.
+    Pulsa **Next**. La última pantalla, *Select Transport Request*, avisa arriba de *«No change recording enabled for package»*: `ZLOCAL` es un paquete local, sus objetos no viajan a otros sistemas y no necesitan orden de transporte. No elijas nada y pulsa **Finish**. (Las órdenes de transporte se ven en [5.2](./5_2_abapgit.md).)
+
+    > Si quieres tener `ZGOR` a mano, añádelo a *Favorite Packages* (clic derecho → *Add to Favorites*). No hagas lo mismo con `ZLOCAL`: contiene los objetos de todos los usuarios del trial y desplegarlo es muy lento.
 3. **Los subpaquetes.** Clic derecho en `ZGOR` → **New → ABAP Package**, cinco veces: `ZGOR_DDIC`, `ZGOR_CDS`, `ZGOR_BUS`, `ZGOR_SRV` y `ZGOR_TEST`, con *Superpackage* `ZGOR` y la descripción de la tabla de [Los paquetes del proyecto](#los-paquetes-del-proyecto). Comprueba en el *Project Explorer* que cuelgan de `ZGOR`.
 4. **La clase de inicio.**
     - **Dónde:** clic derecho en `ZGOR_TEST` → **New → ABAP Class**. Nombre `ZCL_GOR_INICIO`, descripción `Presentacion del proyecto`.
