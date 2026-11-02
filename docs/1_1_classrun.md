@@ -102,7 +102,11 @@ ZLOCAL
 
 ## Ejercicios
 
-1. **Comprueba que los nombres están libres.** En Eclipse, pulsa **Ctrl+Shift+A** (*Open ABAP Development Object*) y escribe `ZGOR`. Si la lista sale vacía, el nombre está libre. Repite con `ZCL_GOR`, `ZI_GOR` y, para los ejemplos, `ZTL`. Si aparece algún objeto que **no es tuyo**, para aquí: hay que elegir otro prefijo para todo el proyecto antes de seguir (ver la nota de abajo).
+1. **Comprueba que los nombres están libres.** En el trial compartido lo que no se puede repetir es el **nombre exacto** de un objeto, no el prefijo: es normal que otros usuarios tengan objetos que empiezan por las mismas letras. En Eclipse, pulsa **Ctrl+Shift+A** (*Open ABAP Development Object*) y busca, uno a uno, estos nombres:
+    - `ZGOR`: no debe existir ningún **paquete** con ese nombre. Puede salir otro objeto que empiece por `ZGOR` (una tabla `ZGORXYZ`, por ejemplo): eso no molesta.
+    - `ZCL_GOR_REGLAS`, `ZI_GORCLIENTE` y `ZGOR_CLI`: tres de los nombres que vas a crear. No debe salir ninguno exacto.
+
+    Si alguno de esos nombres exactos ya es de otra persona, para aquí: hay que elegir otro prefijo para todo el proyecto (ver la nota de abajo). Si solo salen objetos con otros nombres que empiezan igual, adelante.
 2. **El paquete principal.** Clic derecho en `ZLOCAL` → **New → ABAP Package**:
     - *Name*: `ZGOR`.
     - *Description*: `ERP de Obras y Reformas`.
@@ -127,7 +131,7 @@ ZLOCAL
 6. **Lee los errores.** Quita el punto final de una de las líneas de `out->write` y activa. Fíjate en el mensaje de la pestaña *Problems* y en la línea que señala: a veces no es la línea del error, sino la siguiente. Vuelve a poner el punto. Haz lo mismo cambiando `out->write` por `out->writ`. Escribe en un comentario, encima de `main`, cómo es cada uno de los dos mensajes.
 7. **Investiga.** Con el cursor sobre `write`, pulsa **F2**. ¿Qué parámetros acepta el método? ¿Hay alguno opcional? Anótalo en un comentario: en 1.2 escribiremos con él estructuras completas, no solo textos.
 
-> **Si el ejercicio 1 encuentra objetos de otra persona**, no crees nada todavía. Elige un prefijo de 4 letras que no exista (compruébalo igual que en el ejercicio 1) y avisa antes de seguir: los apuntes se adaptarán a ese prefijo. Lo mismo vale para `ZEJ`, el paquete de pruebas de [0.1](./00_instalacionEntorno.md).
+> **Si el ejercicio 1 encuentra alguno de esos nombres exactos**, no crees nada todavía. Elige un prefijo de 4 letras que no esté usado como paquete (compruébalo igual que en el ejercicio 1) y avisa antes de seguir: los apuntes se adaptarán a ese prefijo. El taller (`ZTL`) solo hay que comprobarlo si algún día quieres importarlo en tu sistema ([materiales/taller](./materiales/taller/README.md)): entonces, que no exista un paquete `ZTL` ni una tabla `ZTL_TIT`.
 
 En esta unidad no hay comprobación automática: el resultado se ve en la consola. A partir de 1.2, cada unidad trae su test.
 
